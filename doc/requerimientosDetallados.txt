@@ -1,0 +1,116 @@
+Sistema de Venta de Entradas para un Cinema
+Diseñar e implementar una aplicación que permita gestionar la venta de entradas para un
+cinema, con las siguientes especificaciones:
+1. El cinema consta de dos salas: una para funciones 2D y otra para funciones 3D. La sala
+2D todas las boletas son generales y para la sala 3D se tienen dos categorías: general y
+preferencial.
+2. Definen 100 sillas que tiene cada una de las salas estableciendo Estándar: 80 sillas, Preferencial: 20 sillas, el costo de cada una de las entradas Estándar: $18.000, Preferencial: $25.000, Niño (Menor de 12 años): $15.000, Adulto Mayor (Mayor de 60 años): $16.000 por persona y los martes y jueves en la tarde para sillas preferenciales 2x1. 
+3. Para comprar una boleta se deben ingresar los datos del cliente realizar un registro a la aplicación con los datos identificación, nombre, correo, fecha de nacimiento
+4. La aplicación debe ser implementada usando el paradigma de programación orientada
+a objetos y deben usar herencia para al menos una clase, debe tener atributos públicos
+y privades y polimorfismo (sobreescritura y sobrecarga)
+5. El código debe estar debidamente documentado y comentado. Revise los lineamientos
+de la guía PEP8 para hacer la documentación y los comentarios.
+6. La aplicación debe permitir hacer la compra, mostrar todas las compras, cancelar la
+compra y mostrar las sillas disponibles. 
+7. La aplicación debe constar de varios archivos: los que implementan las clases y uno
+donde se implementa la aplicación.
+9. También son libres de elegir las soluciones
+que no se encuentren definidas dentro de las especificaciones, de tal manera que la
+aplicación sea funcional, robusta (tolerante a fallos) y fácil de usar.
+10. usa Pyfiglet para títulos principales, Rich para crear la interfaz del aplicación en consola
+11. usa entorno virtual
+12. Usa un controlador Python como base datos y para almacenar un archivo JSON
+13. debe haber 2 tipos de usuarios, cliente (compra, reserva y cancela), administrador (registra y gestiona el aplicativo)
+14. debe haber una lista de películas por sala con fecha, hora y jornada por películas
+15. debe tener un login para acceder al sistema venta
+16.Las películas y usuarios ya deben estar creados antes de que se ejecute el menú del sistema de Ventas 
+17. Para reservar una boleta se deben ingresar los datos del cliente realizar un registro a la aplicación con los datos identificación, nombre, correo, fecha de nacimiento
+18. Los usuarios deben registrase para realizar una reservación o compra
+19.Listar, consultar por (nombre, categoría, fecha, disponibilidad) de películas (cliente, administrador) 
+20. Crear, Actualizar, Listar, consultar por (nombre, categoría, fecha, disponibilidad) de películas (administrador)
+21. Crear, Actualizar, Listar, consultar por (identificación, nombre) de usuarios (administrador)
+22. Crear, Actualizar, Listar, consultar por (identificación, nombre) de usuarios (solo sus mismos datos)
+23. listar ventas y su estado (administrado todo, cliente solo sus mismos datos)
+24. listar reservas y su estado (administrado todo, cliente solo sus mismos datos)
+25. Usuario atributos. Identificación, nombre, correo, fecha_nacimiento, estado (activo, inactivo)
+26. Película atributos. Título, lanzamiento, director, género, Sinopsis duración, clasificación, idioma, origen, sala, fechas, horas, jornadas, estado (activo, inactivo)
+27. fecha de reserva máximo 7 días mínimo 2 día
+28. fecha para cancelar reserva máximo de 2 días mínimo 1 día 
+29. Clasifica por edad según la peliculas G (General), PG (Parental Guidance Suggested - Se sugiere la guía de los padres), PG-13 (Parents Strongly Cautioned - Se advierte a los padres), R (Restricted - Restringida) Menores de 17 años requieren ir acompañados por un padre o tutor adulto, C (Clasificación para Adultos).
+31.Tipos de pago reserva (efectivo, transferencia, tarjeta), compra (efectivo. tarjeta) debe manejar el dar devuelta según sea el caso en la compra
+32.debe al meno tener un listado de 20 películas para un transcurso de 15 donde se podrá compra y reservar boletar para ver la películas.
+33.menu de comida: Atributos. Código, categoría, producto, tamaño, valor, estado
+34. debe haber un menú de comida al realizar la compra o reserva para ver una película 
+COMBOS DE CRISPETAS: Combo Crispetas Pequeñas + Gaseosa Pequeña: $15.000, Combo Crispetas Medianas + Gaseosa, Mediana: $22.000, Combo Crispetas Grandes + Gaseosa Grande: $28.000, Combo Crispetas Familiares + 2 Gaseosas Grandes: $35.000
+SNACKS: Crispetas Pequeñas: $8.000, Crispetas Medianas: $15.000, Crispetas Grandes: $20.000, Nachos con Queso: $18.000, Perro Caliente: $12.000, Hamburguesa Sencilla: $15.000
+BEBIDAS: Gaseosa Pequeña: $6.000, Gaseosa Mediana: $8.000, Gaseosa Grande: $10.000, Agua Embotellada: $5.000, Jugo en Caja: $7.000
+DULCES: Chocolatina: $4.000, Paquete de Dulces: $6.000
+35. Crear, Actualizar, Listar, consultar por (nombre, categoría) (administrador) menú de comida
+36. listar consultar por (nombre, categoría) menú de comida (cliente)
+37. el administrador puede listar y consultar toda la trazabilidad del sistema de venta
+38. usa la siguiente estructura de dato
+sistema_venta_entrada_cinema/
+│
+├── app/                            # 📂 Código fuente principal
+│   ├── __init__.py
+│   ├── main.py                     # Punto de entrada de la aplicación
+│
+│   ├── models/                     # 📂 Modelos del negocio
+│   │   ├── __init__.py
+│   │   ├── cinema.py               # Modelo de Salas y Entradas
+│   │   ├── reservation.py          # Modelo de Reservas
+│   │   ├── user.py                 # Modelo de Usuarios
+│   │   ├── movie.py                # 🎬 Modelo de Películas
+│   │   ├── ticket.py               # 🎟️ Modelo de Boletas
+│   │   ├── food_menu.py            # 🍿 Modelo de Menú de Comidas
+│   │   └── payment.py              # 💳 Modelo de pagos y métodos
+│
+│   ├── controllers/                # 📂 Lógica entre modelos y vistas
+│   │   ├── __init__.py
+│   │   ├── cinema_controller.py
+│   │   ├── reservation_controller.py
+│   │   ├── user_controller.py
+│   │   ├── movie_controller.py
+│   │   ├── food_menu_controller.py
+│   │   ├── ticket_controller.py
+│   │   └── payment_controller.py
+│
+│   ├── views/                      # 📂 Interfaz en consola con Rich y Pyfiglet
+│   │   ├── __init__.py
+│   │   ├── menu.py
+│   │   ├── login_view.py
+│   │   ├── user_view.py
+│   │   ├── movie_view.py
+│   │   ├── reservation_view.py
+│   │   ├── ticket_view.py
+│   │   ├── food_menu_view.py
+│   │   └── availability_view.py
+│
+│   ├── services/                   # 📂 Servicios de negocio o utilidades
+│   │   ├── __init__.py
+│   │   ├── date_utils.py           # Utilidades de fechas (validaciones, etc.)
+│   │   └── auth_service.py         # Servicio para login y permisos
+│
+│   ├── data/                       # 📂 Almacenamiento de datos
+│   │   ├── __init__.py
+│   │   ├── database.py             # Manejo de persistencia
+│   │   └── data.json               # 📄 Archivo con la información persistida
+│
+├── tests/                          # 📂 Pruebas unitarias
+│   ├── test_cinema.py
+│   ├── test_reservation.py
+│   ├── test_user.py
+│   ├── test_movie.py
+│   ├── test_food_menu.py
+│   └── test_payment.py
+│
+├── doc/                            # 📂 Documentación del proyecto
+│   ├── caracteristicas.txt
+│   ├── requerimientos.txt
+│   ├── requerimientos.txt          # 🎨 Diagrama opcional de arquitectura o clases
+│   └── diseño_base.png             # 🎨 Diagrama opcional de arquitectura o clases
+│
+├── requirements.txt                # 📜 Dependencias
+├── .gitignore                      # 🚫 Archivos a ignorar
+└── README.md                       # 📖 Documentación principal

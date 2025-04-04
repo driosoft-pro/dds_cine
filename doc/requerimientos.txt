@@ -1,0 +1,57 @@
+PROYECTO-2
+Objetivos
+ Familiarizar al estudiante con las fases de desarrollo de una solución software a un
+problema planteado: análisis, pseudocódigo, codificación, pruebas, depuración y
+documentación.
+ Comprender el uso y la sintaxis de la programación orientada a objetos en el lenguaje
+de programación Python.
+Metodología
+ El proyecto debe ser desarrollado en grupos de hasta cuatro personas (mínimo tres
+personas).
+ Para cada problema los entregables son:
+1. Análisis del problema y el diagrama de clases.
+2. Algoritmo en pseudocódigo.
+3. Implementación funcional en Python.
+4. Evidencias de ejecución del programa mediante capturas de pantalla.
+Entregables
+ (20%) Se debe entregar un informe en PDF con los puntos 1,2 y 4 de la metodología.
+ (40%) Código en Python debidamente comentado (archivos .py).
+ (40%) Sustentación: jueves 10 de abril de 2025 en el horario de clase. La presentación
+estará enfocada en mostrar todas las funcionalidades del aplicativo desarrollado
+(piensen que quieren vender su producto) y debe ser de máximo 12 minutos y pueden
+participar todos. Posteriormente, se hará una pregunta técnica sobre alguna
+funcionalidad y solo un integrante del equipo será el encargado de contestar. La
+respuesta debe ser clara y precisa, y debe abarcar todos los aspectos técnicos
+involucrados.
+
+Problema
+
+Sistema de Venta de Entradas para un Cinema
+
+Diseñar e implementar una aplicación que permita gestionar la venta de entradas para un
+cinema, con las siguientes especificaciones:
+1. El cinema consta de dos salas: una para funciones 2D y otra para funciones 3D. La sala
+2D todas las boletas son generales y para la sala 3D se tienen dos categorías: general y
+preferencial.
+2. Ustedes definen cuántas sillas tiene cada una de las salas y cuántas sillas por categoría
+y el costo de cada una de las entradas.
+3. Para comprar una boleta se deben ingresar los datos del cliente (ustedes definen la
+información).
+4. La aplicación debe ser implementada usando el paradigma de programación orientada
+a objetos y deben usar herencia para al menos una clase, debe tener atributos públicos
+y privades y polimorfismo (sobreescritura y sobrecarga)
+5. El código debe estar debidamente documentado y comentado. Revise los lineamientos
+de la guía PEP8 para hacer la documentación y los comentarios.
+6. La aplicación debe permitir hacer la compra, mostrar todas las compras, cancelar la
+compra y mostrar las sillas disponibles. Ustedes pueden adicionar todas las
+funcionalidades que consideren convenientes de acuerdo con la naturaleza del
+problema. Además, pueden usar los elementos gráficos que consideren convenientes.
+También son libres de elegir las soluciones que no se encuentren definidas dentro de
+las especificaciones.
+7. La aplicación debe ser desarrollada en VSCode.
+8. La aplicación debe constar de varios archivos: los que implementan las clases y uno
+donde se implementa la aplicación.
+9. Ustedes, como equipo de desarrollo, son libres de escoger los elementos gráficos y de
+interfaz gráfica que consideren adecuados. También son libres de elegir las soluciones
+que no se encuentren definidas dentro de las especificaciones, de tal manera que la
+aplicación sea funcional, robusta (tolerante a fallos) y fácil de usar. 
