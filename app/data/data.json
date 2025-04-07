@@ -1,0 +1,212 @@
+{
+    "users": [
+        {
+            "user_id": 1,
+            "username": "admin",
+            "identification": "12345678",
+            "name": "Administrador",
+            "email": "admin@cinema.com",
+            "birth_date": "1995-10-05",
+            "password": "admin123",
+            "status": "active",
+            "type": "admin"
+        }
+    ],
+    "movies": [
+        {
+            "movie_id": 1,
+            "title": "El Rey Le\u00f3n",
+            "release_year": 2019,
+            "director": "Jon Favreau",
+            "gender": "Animaci\u00f3n",
+            "synopsis": "Remake del cl\u00e1sico animado sobre el ciclo de la vida en la sabana africana.",
+            "duration": 118,
+            "rating": "PG",
+            "language": "Espa\u00f1ol",
+            "origin": "EE.UU.",
+            "showtimes": [
+                {
+                    "date": "2025-04-07",
+                    "time": "12:00",
+                    "session": "matin\u00e9"
+                },
+                {
+                    "date": "2025-04-07",
+                    "time": "15:00",
+                    "session": "tarde"
+                },
+                {
+                    "date": "2025-04-07",
+                    "time": "18:00",
+                    "session": "tarde"
+                },
+                {
+                    "date": "2025-04-07",
+                    "time": "21:00",
+                    "session": "noche"
+                },
+                {
+                    "date": "2025-04-08",
+                    "time": "12:00",
+                    "session": "matin\u00e9"
+                },
+                {
+                    "date": "2025-04-08",
+                    "time": "15:00",
+                    "session": "tarde"
+                },
+                {
+                    "date": "2025-04-08",
+                    "time": "18:00",
+                    "session": "tarde"
+                },
+                {
+                    "date": "2025-04-08",
+                    "time": "21:00",
+                    "session": "noche"
+                },
+                {
+                    "date": "2025-04-09",
+                    "time": "12:00",
+                    "session": "matin\u00e9"
+                },
+                {
+                    "date": "2025-04-09",
+                    "time": "15:00",
+                    "session": "tarde"
+                },
+                {
+                    "date": "2025-04-09",
+                    "time": "18:00",
+                    "session": "tarde"
+                },
+                {
+                    "date": "2025-04-09",
+                    "time": "21:00",
+                    "session": "noche"
+                }
+            ],
+            "type": "2D",
+            "hall": "regular",
+            "status": "active"
+        },
+        {
+            "movie_id": 2,
+            "title": "Par\u00e1sitos",
+            "release_year": 2019,
+            "director": "Bong Joon-ho",
+            "gender": "Drama",
+            "synopsis": "Una familia pobre que se infiltra en un hogar adinerado con consecuencias inesperadas.",
+            "duration": 132,
+            "rating": "R",
+            "language": "Espa\u00f1ol",
+            "origin": "Corea del Sur",
+            "showtimes": [
+                {
+                    "date": "2025-04-07",
+                    "time": "12:00",
+                    "session": "matin\u00e9"
+                },
+                {
+                    "date": "2025-04-07",
+                    "time": "15:00",
+                    "session": "tarde"
+                },
+                {
+                    "date": "2025-04-07",
+                    "time": "18:00",
+                    "session": "tarde"
+                },
+                {
+                    "date": "2025-04-07",
+                    "time": "21:00",
+                    "session": "noche"
+                },
+                {
+                    "date": "2025-04-08",
+                    "time": "12:00",
+                    "session": "matin\u00e9"
+                },
+                {
+                    "date": "2025-04-08",
+                    "time": "15:00",
+                    "session": "tarde"
+                },
+                {
+                    "date": "2025-04-08",
+                    "time": "18:00",
+                    "session": "tarde"
+                },
+                {
+                    "date": "2025-04-08",
+                    "time": "21:00",
+                    "session": "noche"
+                }
+            ],
+            "type": "3D",
+            "hall": "regular",
+            "status": "active"
+        },
+        {
+            "movie_id": 3,
+            "title": "Avatar",
+            "release_year": 2009,
+            "director": "James Cameron",
+            "gender": "Ciencia Ficci\u00f3n",
+            "synopsis": "Un marine parapl\u00e9jico es enviado a la luna Pandora en una misi\u00f3n \u00fanica.",
+            "duration": 162,
+            "rating": "PG-13",
+            "language": "Espa\u00f1ol",
+            "origin": "EE.UU.",
+            "showtimes": [
+                {
+                    "date": "2025-04-07",
+                    "time": "16:00",
+                    "session": "tarde"
+                },
+                {
+                    "date": "2025-04-07",
+                    "time": "20:00",
+                    "session": "noche"
+                },
+                {
+                    "date": "2025-04-08",
+                    "time": "16:00",
+                    "session": "tarde"
+                },
+                {
+                    "date": "2025-04-08",
+                    "time": "20:00",
+                    "session": "noche"
+                },
+                {
+                    "date": "2025-04-09",
+                    "time": "16:00",
+                    "session": "tarde"
+                },
+                {
+                    "date": "2025-04-09",
+                    "time": "20:00",
+                    "session": "noche"
+                },
+                {
+                    "date": "2025-04-10",
+                    "time": "16:00",
+                    "session": "tarde"
+                },
+                {
+                    "date": "2025-04-10",
+                    "time": "20:00",
+                    "session": "noche"
+                }
+            ],
+            "type": "3D",
+            "hall": "premium",
+            "status": "active"
+        }
+    ],
+    "screenings": [],
+    "tickets": [],
+    "reservations": [],
+    "food_menus": []
+}

@@ -1,0 +1,95 @@
+{
+    "users": [
+        {
+            "user_id": 1,
+            "username": "admin",
+            "identification": "admin",
+            "name": "Administrador",
+            "email": "admin@cinema.com",
+            "birth_date": "1980-01-01",
+            "password": "admin123",
+            "status": "active",
+            "type": "admin"
+        }
+    ],
+    "movies": [
+        {
+            "movie_id": 1,
+            "title": "asd",
+            "release_year": 2024,
+            "director": "dey",
+            "gender": "Comedia",
+            "synopsis": "jsjsj",
+            "duration": 124,
+            "rating": "G",
+            "language": "Esp",
+            "origin": "Col",
+            "room_type": "2D",
+            "showtimes": [
+                {
+                    "date": "2025-05-11",
+                    "time": "15:00",
+                    "session": "tarde"
+                }
+            ],
+            "hall": "regular",
+            "status": "active",
+            "type": "2d"
+        },
+        {
+            "movie_id": 2,
+            "title": "2d",
+            "release_year": 2025,
+            "director": "Dey",
+            "gender": "Comedia",
+            "synopsis": "asdasd",
+            "duration": 21,
+            "rating": "PG-13",
+            "language": "Esp",
+            "origin": "Col",
+            "room_type": "2D",
+            "showtimes": [
+                {
+                    "date": "2025-05-12",
+                    "time": "08:00",
+                    "session": "matin\u00e9"
+                }
+            ],
+            "hall": "regular",
+            "status": "active",
+            "type": "2d"
+        },
+        {
+            "movie_id": 3,
+            "title": "3d",
+            "release_year": 2025,
+            "director": "Dey",
+            "gender": "Drama",
+            "synopsis": "Eso mismo",
+            "duration": 23,
+            "rating": "NC-17",
+            "language": "Esp",
+            "origin": "Col",
+            "room_type": "3D",
+            "showtimes": [
+                {
+                    "date": "2025-05-30",
+                    "time": "09:30",
+                    "session": "matin\u00e9"
+                },
+                {
+                    "date": "2025-05-30",
+                    "time": "12:30",
+                    "session": "tarde"
+                }
+            ],
+            "hall": "premium",
+            "status": "active",
+            "type": "3d"
+        }
+    ],
+    "screenings": [],
+    "tickets": [],
+    "reservations": [],
+    "food_menus": []
+}
