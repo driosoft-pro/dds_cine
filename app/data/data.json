@@ -15,20 +15,20 @@
     "movies": [
         {
             "movie_id": 1,
-            "title": "El Rey Le\u00f3n",
+            "title": "El Rey León",
             "release_year": 2019,
             "director": "Jon Favreau",
-            "gender": "Animaci\u00f3n",
-            "synopsis": "Remake del cl\u00e1sico animado sobre el ciclo de la vida en la sabana africana.",
+            "gender": "Animación",
+            "synopsis": "Remake del clásico animado sobre el ciclo de la vida en la sabana africana.",
             "duration": 118,
             "rating": "PG",
-            "language": "Espa\u00f1ol",
+            "language": "Español",
             "origin": "EE.UU.",
             "showtimes": [
                 {
                     "date": "2025-04-07",
                     "time": "12:00",
-                    "session": "matin\u00e9"
+                    "session": "mañana"
                 },
                 {
                     "date": "2025-04-07",
@@ -48,7 +48,7 @@
                 {
                     "date": "2025-04-08",
                     "time": "12:00",
-                    "session": "matin\u00e9"
+                    "session": "mañana"
                 },
                 {
                     "date": "2025-04-08",
@@ -68,7 +68,7 @@
                 {
                     "date": "2025-04-09",
                     "time": "12:00",
-                    "session": "matin\u00e9"
+                    "session": "mañana"
                 },
                 {
                     "date": "2025-04-09",
@@ -92,20 +92,20 @@
         },
         {
             "movie_id": 2,
-            "title": "Par\u00e1sitos",
+            "title": "Parásitos",
             "release_year": 2019,
             "director": "Bong Joon-ho",
             "gender": "Drama",
             "synopsis": "Una familia pobre que se infiltra en un hogar adinerado con consecuencias inesperadas.",
             "duration": 132,
             "rating": "R",
-            "language": "Espa\u00f1ol",
+            "language": "Español",
             "origin": "Corea del Sur",
             "showtimes": [
                 {
                     "date": "2025-04-07",
                     "time": "12:00",
-                    "session": "matin\u00e9"
+                    "session": "mañana"
                 },
                 {
                     "date": "2025-04-07",
@@ -125,7 +125,7 @@
                 {
                     "date": "2025-04-08",
                     "time": "12:00",
-                    "session": "matin\u00e9"
+                    "session": "mañana"
                 },
                 {
                     "date": "2025-04-08",
@@ -152,11 +152,11 @@
             "title": "Avatar",
             "release_year": 2009,
             "director": "James Cameron",
-            "gender": "Ciencia Ficci\u00f3n",
-            "synopsis": "Un marine parapl\u00e9jico es enviado a la luna Pandora en una misi\u00f3n \u00fanica.",
+            "gender": "Ciencia Ficción",
+            "synopsis": "Un marine parapléjico es enviado a la luna Pandora en una misión única.",
             "duration": 162,
             "rating": "PG-13",
-            "language": "Espa\u00f1ol",
+            "language": "Español",
             "origin": "EE.UU.",
             "showtimes": [
                 {

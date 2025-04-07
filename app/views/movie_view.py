@@ -174,7 +174,7 @@ def handle_add_movie(console: Console, movie_controller: MovieController):
         console.print("2: Tarde")
         console.print("3: Noche")
         session_choice = Prompt.ask("Seleccione la sesión", choices=["1", "2", "3"])
-        session_map = {"1": "matiné", "2": "tarde", "3": "noche"}
+        session_map = {"1": "mañana", "2": "tarde", "3": "noche"}
         showtime['session'] = session_map[session_choice]
         
         movie_data['showtimes'].append(showtime)
@@ -194,7 +194,8 @@ def handle_add_movie(console: Console, movie_controller: MovieController):
 
 def display_all_movies(console: Console, movie_controller: MovieController, is_admin: bool):
     """
-    Muestra todas las películas en formato de tabla.
+    Muestra todas las películas en formato de tabla, incluyendo el tipo de sala (Premium o Regular)
+    y los horarios de las películas con fecha, hora y sesión.
     """
     console.clear()
     movies = movie_controller.get_all_movies()
@@ -211,19 +212,28 @@ def display_all_movies(console: Console, movie_controller: MovieController, is_a
     table.add_column("Duración", justify="right")
     table.add_column("Clasificación", justify="center")
     table.add_column("Sala", justify="center")
+    table.add_column("Tipo Sala", justify="center")  # Nueva columna para el tipo de sala
+    table.add_column("Horario", justify="center")  # Nueva columna para los horarios
     table.add_column("Estado", justify="center")
     
     for movie in movies:
         status = "[green]✔[/green]" if movie.status == 'active' else "[red]✖[/red]"
-        table.add_row(
-            str(movie.movie_id),
-            movie.title,
-            movie.gender,
-            f"{movie.duration} min",
-            movie.rating,
-            movie.room_type,
-            status
-        )
+        hall_type = "Premium" if movie.room_type.lower() == "premium" else "Regular"  # Determinar tipo de sala
+        
+        # Iterar sobre los horarios de la película
+        for showtime in movie.showtimes:
+            formatted_showtime = f"{showtime['date']} {showtime['time']} ({showtime['session']})"  # Formatear horario
+            table.add_row(
+                str(movie.movie_id),
+                movie.title,
+                movie.gender,
+                f"{movie.duration} min",
+                movie.rating,
+                movie.room_type.upper(),  # Mostrar "2D" o "3D"
+                hall_type,  # Mostrar "Premium" o "Regular"
+                formatted_showtime,  # Mostrar fecha, hora y sesión
+                status
+            )
     
     console.print(table)
     
@@ -329,8 +339,8 @@ def handle_edit_movie(console: Console, movie_controller: MovieController):
                     console.print("[bold red]Error: Formato de hora inválido (HH:MM)[/bold red]")
             
             # Sesión
-            showtime['session'] = Prompt.ask("Sesión (matiné, tarde, noche)", 
-                                            choices=["matiné", "tarde", "noche"])
+            showtime['session'] = Prompt.ask("Sesión (mañana, tarde, noche)", 
+                                            choices=["mañana", "tarde", "noche"])
             
             new_showtimes.append(showtime)
             

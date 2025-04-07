@@ -64,7 +64,7 @@ class Database:
     
     def _save_data(self):
         with open(self.data_file, 'w', encoding='utf-8') as file:
-            json.dump(self.data, file, indent=4)
+            json.dump(self.data, file, indent=4, ensure_ascii=False)  # Asegurar que los caracteres especiales se guarden correctamente
     
     def save_user(self, user: User):
         user_dict = user.to_dict()
@@ -141,7 +141,7 @@ class Database:
             else:
                 # Horarios para 2D (más funciones)
                 showtimes.extend([
-                    {"date": date, "time": "12:00", "session": "matiné"},
+                    {"date": date, "time": "12:00", "session": "mañana"},
                     {"date": date, "time": "15:00", "session": "tarde"},
                     {"date": date, "time": "18:00", "session": "tarde"},
                     {"date": date, "time": "21:00", "session": "noche"}
