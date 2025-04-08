@@ -44,7 +44,19 @@ class Database:
                     "status": "active",
                     "type": "admin",
                 }
+                client_data = {
+                    "user_id": 1,
+                    "username": "client",
+                    "identification": "12345679",
+                    "name": "Cliente",
+                    "email": "admin@cinema.com",
+                    "birth_date": "1995-05-10",
+                    "password": "client123",
+                    "status": "active",
+                    "type": "user",
+                }
                 self.data['users'].append(admin_data)
+                self.data['users'].append(client_data)
                 self._save_data()
             
             # Crear películas por defecto si no existen

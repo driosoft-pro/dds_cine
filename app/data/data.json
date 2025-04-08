@@ -10,6 +10,17 @@
             "password": "admin123",
             "status": "active",
             "type": "admin"
+        },
+        {
+            "user_id": 2,
+            "username": "Dey",
+            "identification": "12345679",
+            "name": "Deyton Riascos Ortiz",
+            "email": "dey@cinema.com",
+            "birth_date": "1993-04-12",
+            "password": "dey123",
+            "status": "active",
+            "type": "client"
         }
     ],
     "movies": [
