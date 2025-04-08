@@ -10,6 +10,17 @@
             "password": "admin123",
             "status": "active",
             "type": "admin"
+        },
+        {
+            "user_id": 2,
+            "username": "client",
+            "identification": "12345679",
+            "name": "cliente",
+            "email": "client@cinema.com",
+            "birth_date": "1999-02-01",
+            "password": "client123",
+            "status": "active",
+            "type": "client"
         }
     ],
     "movies": [
@@ -208,5 +219,204 @@
     "screenings": [],
     "tickets": [],
     "reservations": [],
-    "food_menus": []
+    "food_menus": [
+        {
+            "item_id": 1,
+            "code": "CP-001",
+            "category": "Combo",
+            "product": "Combo Familiar",
+            "size": "Familiar",
+            "price": 35000,
+            "status": "active",
+            "type": "combo",
+            "included_items": [
+                "Crispetas Grandes",
+                "2 Gaseosas Grandes",
+                "1 Nachos"
+            ]
+        },
+        {
+            "item_id": 2,
+            "code": "CP-002",
+            "category": "Combo",
+            "product": "Combo Pareja",
+            "size": "Mediano",
+            "price": 28000,
+            "status": "active",
+            "type": "combo",
+            "included_items": [
+                "Crispetas Medianas",
+                "2 Gaseosas Medianas"
+            ]
+        },
+        {
+            "item_id": 3,
+            "code": "CP-003",
+            "category": "Combo",
+            "product": "Combo Individual",
+            "size": "Pequeño",
+            "price": 18000,
+            "status": "active",
+            "type": "combo",
+            "included_items": [
+                "Crispetas Pequeñas",
+                "1 Gaseosa Pequeña"
+            ]
+        },
+        {
+            "item_id": 4,
+            "code": "CP-004",
+            "category": "Combo",
+            "product": "Combo Infantil",
+            "size": "Pequeño",
+            "price": 15000,
+            "status": "active",
+            "type": "combo",
+            "included_items": [
+                "Crispetas Pequeñas",
+                "1 Jugo",
+                "1 Chocolatina"
+            ]
+        },
+        {
+            "item_id": 5,
+            "code": "SN-001",
+            "category": "Snack",
+            "product": "Crispetas Grandes",
+            "size": "Grande",
+            "price": 20000,
+            "status": "active",
+            "type": "base"
+        },
+        {
+            "item_id": 6,
+            "code": "SN-002",
+            "category": "Snack",
+            "product": "Crispetas Medianas",
+            "size": "Mediano",
+            "price": 15000,
+            "status": "active",
+            "type": "base"
+        },
+        {
+            "item_id": 7,
+            "code": "SN-003",
+            "category": "Snack",
+            "product": "Crispetas Pequeñas",
+            "size": "Pequeño",
+            "price": 8000,
+            "status": "active",
+            "type": "base"
+        },
+        {
+            "item_id": 8,
+            "code": "SN-004",
+            "category": "Snack",
+            "product": "Nachos con Queso",
+            "size": "Mediano",
+            "price": 18000,
+            "status": "active",
+            "type": "base"
+        },
+        {
+            "item_id": 9,
+            "code": "SN-005",
+            "category": "Snack",
+            "product": "Perro Caliente",
+            "size": "Estándar",
+            "price": 12000,
+            "status": "active",
+            "type": "base"
+        },
+        {
+            "item_id": 10,
+            "code": "BD-001",
+            "category": "Drink",
+            "product": "Gaseosa Grande",
+            "size": "Grande",
+            "price": 10000,
+            "status": "active",
+            "type": "base"
+        },
+        {
+            "item_id": 11,
+            "code": "BD-002",
+            "category": "Drink",
+            "product": "Gaseosa Mediana",
+            "size": "Mediano",
+            "price": 8000,
+            "status": "active",
+            "type": "base"
+        },
+        {
+            "item_id": 12,
+            "code": "BD-003",
+            "category": "Drink",
+            "product": "Gaseosa Pequeña",
+            "size": "Pequeño",
+            "price": 6000,
+            "status": "active",
+            "type": "base"
+        },
+        {
+            "item_id": 13,
+            "code": "BD-004",
+            "category": "Drink",
+            "product": "Agua Mineral",
+            "size": "500ml",
+            "price": 5000,
+            "status": "active",
+            "type": "base"
+        },
+        {
+            "item_id": 14,
+            "code": "BD-005",
+            "category": "Drink",
+            "product": "Jugo Natural",
+            "size": "350ml",
+            "price": 7000,
+            "status": "active",
+            "type": "base"
+        },
+        {
+            "item_id": 15,
+            "code": "DC-001",
+            "category": "Candy",
+            "product": "Chocolatina",
+            "size": "Único",
+            "price": 4000,
+            "status": "active",
+            "type": "base"
+        },
+        {
+            "item_id": 16,
+            "code": "DC-002",
+            "category": "Candy",
+            "product": "Gomitas",
+            "size": "Único",
+            "price": 6000,
+            "status": "active",
+            "type": "base"
+        },
+        {
+            "item_id": 17,
+            "code": "DC-003",
+            "category": "Candy",
+            "product": "Paleta de Caramelo",
+            "size": "Único",
+            "price": 3000,
+            "status": "active",
+            "type": "base"
+        },
+        {
+            "item_id": 18,
+            "code": "DC-004",
+            "category": "Candy",
+            "product": "Paquete de Galletas",
+            "size": "Único",
+            "price": 8000,
+            "status": "active",
+            "type": "base"
+        }
+    ]
 }

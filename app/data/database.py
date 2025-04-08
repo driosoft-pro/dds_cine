@@ -5,6 +5,7 @@ from datetime import datetime, timedelta
 from typing import Dict, Optional, List
 from models.user import User, Client, Admin
 from models.movie import Movie, TwoDMovie, ThreeDMovie
+from models.food_menu import MenuItem
 
 class Database:
     """Clase para manejar la base de datos JSON del sistema."""
@@ -54,6 +55,14 @@ class Database:
                 self._save_data()
             else:
                 print("Películas ya existentes en la base de datos.")
+                
+            # Crear ítems de menú por defecto si no existen
+            if not self.data['food_menus']:
+                print("No se encontraron ítems de menú. Creando ítems por defecto...")
+                self._create_default_food_items()
+                self._save_data()
+            else:
+                print("Ítems de menú ya existentes en la base de datos.")
         
         except Exception as e:
             print(f"Error initializing database: {e}")
@@ -272,3 +281,127 @@ class Database:
         for movie in default_movies:
             self.data['movies'].append(movie)
         print(f"{len(default_movies)} películas por defecto agregadas.")
+        
+    def save_food_item(self, item: MenuItem) -> bool:
+        """Guarda un ítem del menú"""
+        try:
+            item_dict = item.to_dict()
+            
+            # Actualizar si existe
+            for i, existing in enumerate(self.data['food_menus']):
+                if existing['item_id'] == item.item_id:
+                    self.data['food_menus'][i] = item_dict
+                    break
+            else:
+                self.data['food_menus'].append(item_dict)
+                
+            self._save_data()
+            return True
+        except Exception:
+            return False
+
+    def get_food_item(self, item_id: int) -> Optional[MenuItem]:
+        """Obtiene un ítem del menú por ID"""
+        for item_data in self.data['food_menus']:
+            if item_data['item_id'] == item_id:
+                return self._dict_to_food_item(item_data)
+        return None
+
+    def get_all_food_items(self) -> List[MenuItem]:
+        """Obtiene todos los ítems del menú"""
+        return [self._dict_to_food_item(item) for item in self.data['food_menus']]
+
+    def _dict_to_food_item(self, item_data: dict) -> MenuItem:
+        """Convierte diccionario a objeto MenuItem"""
+        from models.food_menu import Combo, Snack, Drink, Candy
+        
+        item_type = item_data.get('type', 'base')
+        
+        if item_type == 'combo':
+            return Combo(
+                item_id=item_data['item_id'],
+                code=item_data['code'],
+                product=item_data['product'],
+                size=item_data['size'],
+                price=item_data['price'],
+                included_items=item_data['included_items'],
+                status=item_data.get('status', 'active')
+            )
+        elif item_type == 'snack':
+            return Snack(
+                item_id=item_data['item_id'],
+                code=item_data['code'],
+                product=item_data['product'],
+                size=item_data['size'],
+                price=item_data['price'],
+                status=item_data.get('status', 'active')
+            )
+        elif item_type == 'drink':
+            return Drink(
+                item_id=item_data['item_id'],
+                code=item_data['code'],
+                product=item_data['product'],
+                size=item_data['size'],
+                price=item_data['price'],
+                status=item_data.get('status', 'active')
+            )
+        elif item_type == 'candy':
+            return Candy(
+                item_id=item_data['item_id'],
+                code=item_data['code'],
+                product=item_data['product'],
+                price=item_data['price'],
+                status=item_data.get('status', 'active')
+            )
+        else:
+            return MenuItem(
+                item_id=item_data['item_id'],
+                code=item_data['code'],
+                category=item_data['category'],
+                product=item_data['product'],
+                size=item_data['size'],
+                price=item_data['price'],
+                status=item_data.get('status', 'active')
+            )
+
+    def _create_default_food_items(self):
+        """Crea ítems de menú por defecto más completos"""
+        from models.food_menu import Combo, Snack, Drink, Candy
+        
+        default_items = [
+            # Combos (4 items)
+            Combo(1, "CP-001", "Combo Familiar", "Familiar", 35000,
+                    ["Crispetas Grandes", "2 Gaseosas Grandes", "1 Nachos"]),
+            Combo(2, "CP-002", "Combo Pareja", "Mediano", 28000,
+                    ["Crispetas Medianas", "2 Gaseosas Medianas"]),
+            Combo(3, "CP-003", "Combo Individual", "Pequeño", 18000,
+                    ["Crispetas Pequeñas", "1 Gaseosa Pequeña"]),
+            Combo(4, "CP-004", "Combo Infantil", "Pequeño", 15000,
+                    ["Crispetas Pequeñas", "1 Jugo", "1 Chocolatina"]),
+            
+            # Snacks (5 items)
+            Snack(5, "SN-001", "Crispetas Grandes", "Grande", 20000),
+            Snack(6, "SN-002", "Crispetas Medianas", "Mediano", 15000),
+            Snack(7, "SN-003", "Crispetas Pequeñas", "Pequeño", 8000),
+            Snack(8, "SN-004", "Nachos con Queso", "Mediano", 18000),
+            Snack(9, "SN-005", "Perro Caliente", "Estándar", 12000),
+            
+            # Bebidas (5 items)
+            Drink(10, "BD-001", "Gaseosa Grande", "Grande", 10000),
+            Drink(11, "BD-002", "Gaseosa Mediana", "Mediano", 8000),
+            Drink(12, "BD-003", "Gaseosa Pequeña", "Pequeño", 6000),
+            Drink(13, "BD-004", "Agua Mineral", "500ml", 5000),
+            Drink(14, "BD-005", "Jugo Natural", "350ml", 7000),
+            
+            # Dulces (4 items)
+            Candy(15, "DC-001", "Chocolatina", 4000),
+            Candy(16, "DC-002", "Gomitas", 6000),
+            Candy(17, "DC-003", "Paleta de Caramelo", 3000),
+            Candy(18, "DC-004", "Paquete de Galletas", 8000)
+        ]
+        
+        # Asegurarse que los combos tengan included_items
+        for item in default_items:
+            if isinstance(item, Combo) and not hasattr(item, 'included_items'):
+                item.included_items = []
+            self.data['food_menus'].append(item.to_dict())
