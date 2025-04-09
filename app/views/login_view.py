@@ -43,7 +43,7 @@ def handle_login(console: Console, auth_service) -> Optional[User]:
     while True:
         username = Prompt.ask("Ingrese su nombre de usuario")
         if not User.validate_username(username):
-            console.print("[bold red]Error: Usuario inválido (3-20 caracteres alfanuméricos)[/bold red]")
+            console.print("[red]Error: Usuario inválido (4-20 caracteres alfanuméricos)[/red]")
             continue
         break
     
@@ -53,11 +53,9 @@ def handle_login(console: Console, auth_service) -> Optional[User]:
     
     if user:
         console.print(f"\n[bold green]¡Bienvenido, {user.name}![/bold green]")
-        Prompt.ask("\nPresione Enter para continuar...")
         return user
     else:
         console.print("\n[bold red]Error: Usuario o contraseña incorrecta[/bold red]")
-        Prompt.ask("\nPresione Enter para continuar...")
         return None
 
 def handle_register(console: Console, auth_service):
@@ -84,7 +82,7 @@ def handle_register(console: Console, auth_service):
     # Validación de identificación
     while True:
         identification = Prompt.ask("Ingrese su identificación (cédula, pasaporte, etc.)")
-        if not User.validate_identification(identification):
+        if not User.get_user_by_identification(identification):
             console.print("[bold red]Error: Identificación inválida (5-20 caracteres)[/bold red]")
             continue
         if auth_service.user_controller.get_user_by_identification(identification):

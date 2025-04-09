@@ -8,8 +8,18 @@ class AuthService:
         from controllers.user_controller import UserController
         self.user_controller = UserController(db)
     
-    def authenticate(self, identification: str, password: str) -> Optional[User]:
-        return self.user_controller.authenticate_user(identification, password)
+    def authenticate(self, username: str, password: str) -> Optional[User]:
+        """
+        Autentica un usuario basado en username y password.
+        Valida primero los formatos antes de consultar la base de datos.
+        """
+        if not User.validate_username(username):
+            return None
+            
+        if not User.validate_password(password):
+            return None
+            
+        return self.user_controller.authenticate_user(username, password)
     
     def register(self, user_data: dict, user_type: str) -> Optional[User]:
         return self.user_controller.create_user(user_data, user_type)
