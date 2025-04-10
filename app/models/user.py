@@ -72,9 +72,16 @@ class User:
     # Métodos estáticos para validación
     @staticmethod
     def validate_username(username: str) -> bool:
-        """Valida que el username tenga entre 4 y 20 caracteres alfanuméricos"""
         return 4 <= len(username) <= 20 and username.isalnum()
 
+    @staticmethod
+    def validate_identification(identification: str) -> bool:
+        return 5 <= len(identification) <= 20
+    
+    @staticmethod
+    def validate_name(name: str) -> bool:
+        return len(name) >= 3
+    
     @staticmethod
     def validate_email(email: str) -> bool:
         return bool(re.match(r"^[\w\.-]+@[\w\.-]+\.\w+$", email))

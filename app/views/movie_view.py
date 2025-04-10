@@ -138,7 +138,7 @@ def handle_add_movie(console: Console, movie_controller: MovieController):
         console.print("2: Premium")
         hall_choice = Prompt.ask("Seleccione el tipo de sala", choices=["1", "2"])
     
-    movie_data['hall'] = "regular" if hall_choice == "1" else "premium"
+    movie_data['hall'] = "Regular" if hall_choice == "1" else "Premium"
 
     # Horarios con opciones mejoradas
     movie_data['showtimes'] = []
@@ -218,8 +218,6 @@ def display_all_movies(console: Console, movie_controller: MovieController, is_a
     
     for movie in movies:
         status = "[green]✔[/green]" if movie.status == 'active' else "[red]✖[/red]"
-        hall_type = "Premium" if movie.room_type.lower() == "premium" else "Regular"  # Determinar tipo de sala
-        
         # Iterar sobre los horarios de la película
         for showtime in movie.showtimes:
             formatted_showtime = f"{showtime['date']} {showtime['time']} ({showtime['session']})"  # Formatear horario
@@ -229,9 +227,9 @@ def display_all_movies(console: Console, movie_controller: MovieController, is_a
                 movie.gender,
                 f"{movie.duration} min",
                 movie.rating,
-                movie.room_type.upper(),  # Mostrar "2D" o "3D"
-                hall_type,  # Mostrar "Premium" o "Regular"
-                formatted_showtime,  # Mostrar fecha, hora y sesión
+                movie.room_type,  
+                movie.hall,  
+                formatted_showtime,  
                 status
             )
     
@@ -305,7 +303,7 @@ def handle_edit_movie(console: Console, movie_controller: MovieController):
         console.print("\n1: Regular")
         console.print("2: Premium")
         hall_choice = Prompt.ask("Seleccione el tipo de sala", choices=["1", "2"])
-        update_data['hall'] = "regular" if hall_choice == "1" else "premium"
+        update_data['hall'] = "Regular" if hall_choice == "1" else "Premium"
     
     # Horarios
     if Confirm.ask("\n¿Desea modificar los horarios de presentación?"):

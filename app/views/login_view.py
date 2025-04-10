@@ -82,11 +82,8 @@ def handle_register(console: Console, auth_service):
     # Validación de identificación
     while True:
         identification = Prompt.ask("Ingrese su identificación (cédula, pasaporte, etc.)")
-        if not User.get_user_by_identification(identification):
+        if not User.validate_identification(identification):
             console.print("[bold red]Error: Identificación inválida (5-20 caracteres)[/bold red]")
-            continue
-        if auth_service.user_controller.get_user_by_identification(identification):
-            console.print("[bold red]Error: Esta identificación ya está registrada[/bold red]")
             continue
         user_data['identification'] = identification
         break

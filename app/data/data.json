@@ -37,68 +37,68 @@
             "origin": "EE.UU.",
             "showtimes": [
                 {
-                    "date": "2025-04-08",
+                    "date": "2025-04-10",
                     "time": "12:00",
                     "session": "mañana"
                 },
                 {
-                    "date": "2025-04-08",
+                    "date": "2025-04-10",
                     "time": "15:00",
                     "session": "tarde"
                 },
                 {
-                    "date": "2025-04-08",
+                    "date": "2025-04-10",
                     "time": "18:00",
                     "session": "tarde"
                 },
                 {
-                    "date": "2025-04-08",
+                    "date": "2025-04-10",
                     "time": "21:00",
                     "session": "noche"
                 },
                 {
-                    "date": "2025-04-09",
+                    "date": "2025-04-11",
                     "time": "12:00",
                     "session": "mañana"
                 },
                 {
-                    "date": "2025-04-09",
+                    "date": "2025-04-11",
                     "time": "15:00",
                     "session": "tarde"
                 },
                 {
-                    "date": "2025-04-09",
+                    "date": "2025-04-11",
                     "time": "18:00",
                     "session": "tarde"
                 },
                 {
-                    "date": "2025-04-09",
+                    "date": "2025-04-11",
                     "time": "21:00",
                     "session": "noche"
                 },
                 {
-                    "date": "2025-04-10",
+                    "date": "2025-04-12",
                     "time": "12:00",
                     "session": "mañana"
                 },
                 {
-                    "date": "2025-04-10",
+                    "date": "2025-04-12",
                     "time": "15:00",
                     "session": "tarde"
                 },
                 {
-                    "date": "2025-04-10",
+                    "date": "2025-04-12",
                     "time": "18:00",
                     "session": "tarde"
                 },
                 {
-                    "date": "2025-04-10",
+                    "date": "2025-04-12",
                     "time": "21:00",
                     "session": "noche"
                 }
             ],
-            "type": "2D",
-            "hall": "regular",
+            "room_type": "2D",
+            "hall": "Regular",
             "status": "active"
         },
         {
@@ -114,48 +114,48 @@
             "origin": "Corea del Sur",
             "showtimes": [
                 {
-                    "date": "2025-04-08",
+                    "date": "2025-04-10",
                     "time": "12:00",
                     "session": "mañana"
                 },
                 {
-                    "date": "2025-04-08",
+                    "date": "2025-04-10",
                     "time": "15:00",
                     "session": "tarde"
                 },
                 {
-                    "date": "2025-04-08",
+                    "date": "2025-04-10",
                     "time": "18:00",
                     "session": "tarde"
                 },
                 {
-                    "date": "2025-04-08",
+                    "date": "2025-04-10",
                     "time": "21:00",
                     "session": "noche"
                 },
                 {
-                    "date": "2025-04-09",
+                    "date": "2025-04-11",
                     "time": "12:00",
                     "session": "mañana"
                 },
                 {
-                    "date": "2025-04-09",
+                    "date": "2025-04-11",
                     "time": "15:00",
                     "session": "tarde"
                 },
                 {
-                    "date": "2025-04-09",
+                    "date": "2025-04-11",
                     "time": "18:00",
                     "session": "tarde"
                 },
                 {
-                    "date": "2025-04-09",
+                    "date": "2025-04-11",
                     "time": "21:00",
                     "session": "noche"
                 }
             ],
-            "type": "3D",
-            "hall": "regular",
+            "room_type": "3D",
+            "hall": "Regular",
             "status": "active"
         },
         {
@@ -171,26 +171,6 @@
             "origin": "EE.UU.",
             "showtimes": [
                 {
-                    "date": "2025-04-08",
-                    "time": "16:00",
-                    "session": "tarde"
-                },
-                {
-                    "date": "2025-04-08",
-                    "time": "20:00",
-                    "session": "noche"
-                },
-                {
-                    "date": "2025-04-09",
-                    "time": "16:00",
-                    "session": "tarde"
-                },
-                {
-                    "date": "2025-04-09",
-                    "time": "20:00",
-                    "session": "noche"
-                },
-                {
                     "date": "2025-04-10",
                     "time": "16:00",
                     "session": "tarde"
@@ -207,12 +187,32 @@
                 },
                 {
                     "date": "2025-04-11",
+                    "time": "20:00",
+                    "session": "noche"
+                },
+                {
+                    "date": "2025-04-12",
+                    "time": "16:00",
+                    "session": "tarde"
+                },
+                {
+                    "date": "2025-04-12",
+                    "time": "20:00",
+                    "session": "noche"
+                },
+                {
+                    "date": "2025-04-13",
+                    "time": "16:00",
+                    "session": "tarde"
+                },
+                {
+                    "date": "2025-04-13",
                     "time": "20:00",
                     "session": "noche"
                 }
             ],
-            "type": "3D",
-            "hall": "premium",
+            "room_type": "3D",
+            "hall": "Premium",
             "status": "active"
         }
     ],

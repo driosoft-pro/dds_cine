@@ -207,7 +207,7 @@ class Database:
                 if m.get('status', 'active') == status]
 
     def _dict_to_movie(self, movie_data: dict) -> Optional[Movie]:
-        if 'type' not in movie_data or movie_data['type'] == 'regular':
+        if 'type' not in movie_data or movie_data['type'] == 'Regular':
             return TwoDMovie(
                 movie_id=movie_data['movie_id'],
                 title=movie_data['title'],
@@ -219,6 +219,7 @@ class Database:
                 rating=movie_data['rating'],
                 language=movie_data['language'],
                 origin=movie_data['origin'],
+                room_type=movie_data.get('room_type', '2D'),
                 showtimes=movie_data['showtimes'],
                 hall=movie_data['hall'],
                 status=movie_data.get('status', 'active')
@@ -236,6 +237,7 @@ class Database:
                 rating=movie_data['rating'],
                 language=movie_data['language'],
                 origin=movie_data['origin'],
+                room_type=movie_data.get('room_type', '3D'),
                 showtimes=movie_data['showtimes'],
                 hall=movie_data['hall'],
                 status=movie_data.get('status', 'active')
@@ -256,8 +258,8 @@ class Database:
                 "language": "Español",
                 "origin": "EE.UU.",
                 "showtimes": self._generate_showtimes(3),
-                "type": "2D",
-                "hall": "regular",
+                "room_type": "2D",
+                "hall": "Regular",
                 "status": "active"
             },
             {
@@ -272,8 +274,8 @@ class Database:
                 "language": "Español",
                 "origin": "Corea del Sur",
                 "showtimes": self._generate_showtimes(2),
-                "type": "3D",
-                "hall": "regular",
+                "room_type": "3D",
+                "hall": "Regular",
                 "status": "active"
             },
             {
@@ -288,8 +290,8 @@ class Database:
                 "language": "Español",
                 "origin": "EE.UU.",
                 "showtimes": self._generate_showtimes(4, True),
-                "type": "3D",
-                "hall": "premium",
+                "room_type": "3D",
+                "hall": "Premium",
                 "status": "active"
             }
         ]

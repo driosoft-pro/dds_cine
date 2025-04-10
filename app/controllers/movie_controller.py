@@ -12,7 +12,7 @@ class MovieController:
         movies = self.db.get_all_movies()
         return max(movie.movie_id for movie in movies) + 1 if movies else 1
     
-    def create_movie(self, movie_data: Dict, movie_type: Literal['2d', '3d']) -> Optional[Movie]:
+    def create_movie(self, movie_data: Dict, movie_type: Literal['2D', '3D']) -> Optional[Movie]:
         """
         Crea una nueva película en el sistema.
         """
@@ -52,7 +52,7 @@ class MovieController:
                 'hall': movie_data['hall']
             }
             
-            if movie_type == '2d':
+            if movie_type == '2D':
                 movie = TwoDMovie(**common_args)
             else:
                 movie = ThreeDMovie(**common_args)

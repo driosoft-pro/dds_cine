@@ -6,8 +6,9 @@ class Movie:
     
     def __init__(self, movie_id: int, title: str, release_year: int, director: str,
                 gender: str, synopsis: str, duration: int, rating: str, 
-                language: str, origin: str, room_type: Literal['2D', '3D'],
-                showtimes: List[dict], hall: Literal['regular','premium'] = 'regular', 
+                language: str, origin: str, showtimes: List[dict], 
+                room_type: Literal['2D', '3D'] = '2D', 
+                hall: Literal['Regular','Premium'] = 'Regular', 
                 status: Literal['active', 'inactive'] = 'active'):
         """
         Inicializa una película con todos sus atributos.
@@ -80,7 +81,7 @@ class Movie:
         return self._hall
     
     @hall.setter
-    def hall(self, value: Literal['regular','premium']):
+    def hall(self, value: Literal['Regular','Premium']):
         self._hall = value
     
     @property
@@ -124,28 +125,30 @@ class TwoDMovie(Movie):
     def __init__(self, movie_id: int, title: str, release_year: int, director: str,
                 gender: str, synopsis: str, duration: int, rating: str, 
                 language: str, origin: str, showtimes: List[dict],
-                hall: Literal['regular','premium'] = 'regular', 
+                room_type: Literal['2D', '3D'] = '2D', 
+                hall: Literal['Regular','Premium'] = 'Regular', 
                 status: Literal['active', 'inactive'] = 'active'):
         super().__init__(movie_id, title, release_year, director, gender, synopsis,
-                        duration, rating, language, origin, '2D', showtimes, hall, status)
+                        duration, rating, language, origin, showtimes, room_type,  hall, status)
     
     def to_dict(self) -> dict:
         movie_dict = super().to_dict()
-        movie_dict["type"] = "2d"
+        movie_dict["type"] = "2D"
         return movie_dict
 
 class ThreeDMovie(Movie):
-    """Clase que representa una película 3D (regular o premium)."""
+    """Clase que representa una película 3D (Regular o Premium)."""
     
     def __init__(self, movie_id: int, title: str, release_year: int, director: str,
                 gender: str, synopsis: str, duration: int, rating: str, 
                 language: str, origin: str, showtimes: List[dict],
-                hall: Literal['regular','premium'] = 'regular', 
+                room_type: Literal['2D', '3D'] = '3D', 
+                hall: Literal['Regular','Premium'] = 'Regular', 
                 status: Literal['active', 'inactive'] = 'active'):
         super().__init__(movie_id, title, release_year, director, gender, synopsis,
-                        duration, rating, language, origin, '3D', showtimes, hall, status)
+                        duration, rating, language, origin, showtimes, room_type,  hall, status)
     
     def to_dict(self) -> dict:
         movie_dict = super().to_dict()
-        movie_dict["type"] = "3d"
+        movie_dict["type"] = "3D"
         return movie_dict
