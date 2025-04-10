@@ -55,7 +55,6 @@ sistema_venta_entrada_cinema/
 │
 │   ├── views/                      # 📂 Interfaz en consola con Rich y Pyfiglet
 │   │   ├── __init__.py
-Servicio para generación de reportes y estadísticas.
 │   │   ├── menu.py
 │   │   ├── login_view.py
 │   │   ├── user_view.py
@@ -68,11 +67,7 @@ Servicio para generación de reportes y estadísticas.
 │   ├── services/                   # 📂 Servicios de negocio o utilidades
 │   │   ├── __init__.py
 │   │   ├── auth_service.py           # Servicio para login y permisos 
-│   │   ├── payment_service.py        # Servicio para menejo de metodos de pago
 │   │   ├── date_utils.py             # Utilidades de fechas (validaciones, etc.)
-│   │   ├── validation_service.py     # Servicio para validación de datos de entrada
-│   │   ├── report_service.py         # Servicio para generación de reportes y estadísticas
-│   │   └── ticket_pricing.py         # Servicio para menejo de presios de tickes
 │
 │   ├── data/                       # 📂 Almacenamiento de datos
 │   │   ├── __init__.py

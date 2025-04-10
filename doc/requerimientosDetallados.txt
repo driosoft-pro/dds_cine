@@ -18,38 +18,38 @@ donde se implementa la aplicación.
 9. También son libres de elegir las soluciones
 que no se encuentren definidas dentro de las especificaciones, de tal manera que la
 aplicación sea funcional, robusta (tolerante a fallos) y fácil de usar.
-10. usa Pyfiglet para títulos principales, Rich para crear la interfaz del aplicación en consola
-11. usa entorno virtual
+10. Usa Pyfiglet para títulos principales, Rich para crear la interfaz del aplicación en consola
+11. Usa entorno virtual
 12. Usa un controlador Python como base datos y para almacenar un archivo JSON
-13. debe haber 2 tipos de usuarios, cliente (compra, reserva y cancela), administrador (registra y gestiona el aplicativo)
-14. debe haber una lista de películas por sala con fecha, hora y jornada por películas
-15. debe tener un login para acceder al sistema venta
-16.Las películas y usuarios ya deben estar creados antes de que se ejecute el menú del sistema de Ventas 
+13. Debe haber 2 tipos de usuarios, cliente (compra, reserva y cancela), administrador (registra y gestiona el aplicativo)
+14. Debe haber una lista de películas por sala con fecha, hora y jornada por películas
+15. Debe tener un login para acceder al sistema venta
+16. Las películas y usuarios ya deben estar creados antes de que se ejecute el menú del sistema de Ventas 
 17. Para reservar una boleta se deben ingresar los datos del cliente realizar un registro a la aplicación con los datos identificación, nombre, correo, fecha de nacimiento
 18. Los usuarios deben registrase para realizar una reservación o compra
-19.Listar, consultar por (nombre, categoría, fecha, disponibilidad) de películas (cliente, administrador) 
+19. Listar, consultar por (nombre, categoría, fecha, disponibilidad) de películas (cliente, administrador) 
 20. Crear, Actualizar, Listar, consultar por (nombre, categoría, fecha, disponibilidad) de películas (administrador)
 21. Crear, Actualizar, Listar, consultar por (identificación, nombre) de usuarios (administrador)
 22. Crear, Actualizar, Listar, consultar por (identificación, nombre) de usuarios (solo sus mismos datos)
-23. listar ventas y su estado (administrado todo, cliente solo sus mismos datos)
-24. listar reservas y su estado (administrado todo, cliente solo sus mismos datos)
+23. Listar ventas y su estado (administrado todo, cliente solo sus mismos datos)
+24. Listar reservas y su estado (administrado todo, cliente solo sus mismos datos)
 25. Usuario atributos. Identificación, nombre, correo, fecha_nacimiento, estado (activo, inactivo)
 26. Película atributos. Título, lanzamiento, director, género, Sinopsis duración, clasificación, idioma, origen, sala, fechas, horas, jornadas, estado (activo, inactivo)
-27. fecha de reserva máximo 7 días mínimo 2 día
-28. fecha para cancelar reserva máximo de 2 días mínimo 1 día 
+27. Fecha de reserva máximo 7 días mínimo 2 día
+28. Fecha para cancelar reserva máximo de 2 días mínimo 1 día 
 29. Clasifica por edad según la peliculas G (General), PG (Parental Guidance Suggested - Se sugiere la guía de los padres), PG-13 (Parents Strongly Cautioned - Se advierte a los padres), R (Restricted - Restringida) Menores de 17 años requieren ir acompañados por un padre o tutor adulto, C (Clasificación para Adultos).
-31.Tipos de pago reserva (efectivo, transferencia, tarjeta), compra (efectivo. tarjeta) debe manejar el dar devuelta según sea el caso en la compra
-32.debe al meno tener un listado de 20 películas para un transcurso de 15 donde se podrá compra y reservar boletar para ver la películas.
-33.menu de comida: Atributos. Código, categoría, producto, tamaño, valor, estado
-34. debe haber un menú de comida al realizar la compra o reserva para ver una película 
+31. Tipos de pago reserva (efectivo, transferencia, tarjeta), compra (efectivo. tarjeta) debe manejar el dar devuelta según sea el caso en la compra
+32. Debe al meno tener un listado de 20 películas para un transcurso de 15 donde se podrá compra y reservar boletar para ver la películas.
+33. Menu de comida: Atributos. Código, categoría, producto, tamaño, valor, estado
+34. Debe haber un menú de comida al realizar la compra o reserva para ver una película 
 COMBOS DE CRISPETAS: Combo Crispetas Pequeñas + Gaseosa Pequeña: $15.000, Combo Crispetas Medianas + Gaseosa, Mediana: $22.000, Combo Crispetas Grandes + Gaseosa Grande: $28.000, Combo Crispetas Familiares + 2 Gaseosas Grandes: $35.000
 SNACKS: Crispetas Pequeñas: $8.000, Crispetas Medianas: $15.000, Crispetas Grandes: $20.000, Nachos con Queso: $18.000, Perro Caliente: $12.000, Hamburguesa Sencilla: $15.000
 BEBIDAS: Gaseosa Pequeña: $6.000, Gaseosa Mediana: $8.000, Gaseosa Grande: $10.000, Agua Embotellada: $5.000, Jugo en Caja: $7.000
 DULCES: Chocolatina: $4.000, Paquete de Dulces: $6.000
 35. Crear, Actualizar, Listar, consultar por (nombre, categoría) (administrador) menú de comida
-36. listar consultar por (nombre, categoría) menú de comida (cliente)
-37. el administrador puede listar y consultar toda la trazabilidad del sistema de venta
-38. usa la siguiente estructura de dato
+36. Listar consultar por (nombre, categoría) menú de comida (cliente)
+37. El administrador puede listar y consultar toda la trazabilidad del sistema de venta
+38. Usa la siguiente estructura de dato
 sistema_venta_entrada_cinema/
 │
 ├── app/                            # 📂 Código fuente principal

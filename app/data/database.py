@@ -6,6 +6,7 @@ from typing import Dict, Optional, List
 from models.user import User, Client, Admin
 from models.movie import Movie, TwoDMovie, ThreeDMovie
 from models.food_menu import MenuItem
+from models.ticket import Ticket, Purchase, Reservation
 
 class Database:
     """Clase para manejar la base de datos JSON del sistema."""
@@ -420,3 +421,122 @@ class Database:
             if isinstance(item, Combo) and not hasattr(item, 'included_items'):
                 item.included_items = []
             self.data['food_menus'].append(item.to_dict())
+    
+# Añadir estos métodos a la clase Database
+
+def save_ticket(self, ticket: Ticket) -> bool:
+    try:
+        ticket_dict = ticket.to_dict()
+        # Actualizar si existe
+        for i, t in enumerate(self.data['tickets']):
+            if t['ticket_id'] == ticket.ticket_id:
+                self.data['tickets'][i] = ticket_dict
+                break
+        else:
+            self.data['tickets'].append(ticket_dict)
+        self._save_data()
+        return True
+    except Exception:
+        return False
+
+def get_ticket(self, ticket_id: int) -> Optional[Ticket]:
+    for ticket_data in self.data['tickets']:
+        if ticket_data['ticket_id'] == ticket_id:
+            return self._dict_to_ticket(ticket_data)
+    return None
+
+def get_all_tickets(self) -> List[Ticket]:
+    return [self._dict_to_ticket(t) for t in self.data['tickets']]
+
+def save_purchase(self, purchase: Purchase) -> bool:
+    try:
+        purchase_dict = purchase.to_dict()
+        # Actualizar si existe
+        for i, p in enumerate(self.data['purchases']):
+            if p['purchase_id'] == purchase.purchase_id:
+                self.data['purchases'][i] = purchase_dict
+                break
+        else:
+            self.data['purchases'].append(purchase_dict)
+        self._save_data()
+        return True
+    except Exception:
+        return False
+
+def get_purchase(self, purchase_id: int) -> Optional[Purchase]:
+    for purchase_data in self.data['purchases']:
+        if purchase_data['purchase_id'] == purchase_id:
+            return self._dict_to_purchase(purchase_data)
+    return None
+
+def get_all_purchases(self) -> List[Purchase]:
+    return [self._dict_to_purchase(p) for p in self.data['purchases']]
+
+def save_reservation(self, reservation: Reservation) -> bool:
+    try:
+        reservation_dict = reservation.to_dict()
+        # Actualizar si existe
+        for i, r in enumerate(self.data['reservations']):
+            if r['reservation_id'] == reservation.reservation_id:
+                self.data['reservations'][i] = reservation_dict
+                break
+        else:
+            self.data['reservations'].append(reservation_dict)
+        self._save_data()
+        return True
+    except Exception:
+        return False
+
+def get_reservation(self, reservation_id: int) -> Optional[Reservation]:
+    for reservation_data in self.data['reservations']:
+        if reservation_data['reservation_id'] == reservation_id:
+            return self._dict_to_reservation(reservation_data)
+    return None
+
+def get_all_reservations(self) -> List[Reservation]:
+    return [self._dict_to_reservation(r) for r in self.data['reservations']]
+
+# Métodos de conversión
+def _dict_to_ticket(self, data: dict) -> Ticket:
+    return Ticket(
+        ticket_id=data['ticket_id'],
+        user_id=data['user_id'],
+        movie_id=data['movie_id'],
+        showtime=data['showtime'],
+        room_type=data['room_type'],
+        seats=data['seats'],
+        ticket_type=data['ticket_type'],
+        price=data['price'],
+        purchase_date=data['purchase_date'],
+        status=data['status']
+    )
+
+def _dict_to_purchase(self, data: dict) -> Purchase:
+    from models.ticket import FoodItem
+    return Purchase(
+        purchase_id=data['purchase_id'],
+        user_id=data['user_id'],
+        tickets=[self._dict_to_ticket(t) for t in data['tickets']],
+        food_items=[
+            FoodItem(
+                item_id=f['item_id'],
+                quantity=f['quantity'],
+                unit_price=f['unit_price']
+            ) for f in data['food_items']
+        ],
+        payment_method=data['payment_method'],
+        total_amount=data['total_amount'],
+        purchase_date=data['purchase_date']
+    )
+
+def _dict_to_reservation(self, data: dict) -> Reservation:
+    return Reservation(
+        reservation_id=data['reservation_id'],
+        user_id=data['user_id'],
+        movie_id=data['movie_id'],
+        showtime=data['showtime'],
+        seats=data['seats'],
+        reservation_date=data['reservation_date'],
+        expiry_date=data['expiry_date'],
+        status=data['status']
+    )
