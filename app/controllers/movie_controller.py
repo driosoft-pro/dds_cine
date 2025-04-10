@@ -6,6 +6,10 @@ class MovieController:
     
     def __init__(self, db):
         self.db = db
+
+    def get_active_movies(self) -> List[Movie]:
+        # Implementación real que consulta la base de datos
+        return [m for m in self.db.get_all_movies() if m.status == 'active']
     
     def get_next_movie_id(self) -> int:
         """Obtiene el próximo ID autoincremental para una nueva película."""
