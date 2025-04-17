@@ -1,127 +1,92 @@
-from typing import List, Optional, Dict, Literal
-from models.user import User, Client, Admin
+import json
+from datetime import datetime
+from typing import Dict, List, Optional
+from models.user import User, Admin
+from core.database import Database
 
 class UserController:
-    def __init__(self, db):
+    """Controlador para manejar operaciones relacionadas con usuarios."""
+    
+    def __init__(self, db: Database):
         self.db = db
-
-    def get_next_user_id(self) -> int:
-        users = self.db.get_all_users()
-        return max(u.user_id for u in users) + 1 if users else 1
-
-    def create_user(self, user_data: Dict, user_type: Literal['client', 'admin']) -> Optional[User]:
-        try:
-            # Validación de datos
-            required = ['username', 'identification', 'name', 'email', 'birth_date', 'password']
-            if not all(field in user_data for field in required):
-                return None
-
-            if not User.validate_email(user_data['email']):
-                return None
-
-            if not User.validate_password(user_data['password']):
-                return None
-
-            if not User.validate_birth_date(user_data['birth_date']):
-                return None
-
-            user_id = self.get_next_user_id()
-
-            if user_type == 'client':
-                user = Client(
-                    user_id=user_id,
-                    username=user_data['username'],
-                    identification=user_data['identification'],
-                    name=user_data['name'],
-                    email=user_data['email'],
-                    birth_date=user_data['birth_date'],
-                    password=user_data['password']
-                )
-            else:
-                user = Admin(
-                    user_id=user_id,
-                    username=user_data['username'],
-                    identification=user_data['identification'],
-                    name=user_data['name'],
-                    email=user_data['email'],
-                    birth_date=user_data['birth_date'],
-                    password=user_data['password']
-                )
-
-            self.db.save_user(user)
-            return user
-
-        except Exception as e:
-            print(f"Error creating user: {e}")
-            return None
-
-    def get_user(self, user_id: int) -> Optional[User]:
-        return self.db.get_user(user_id)
-
-    def get_user_by_username(self, username: str) -> Optional[User]:
-        return self.db.get_user_by_username(username)
-
-    def get_user_by_identification(self, identification: str) -> Optional[User]:
-        return self.db.get_user_by_identification(identification)
-
-    def get_all_users(self) -> List[User]:
-        return self.db.get_all_users()
-
-    def update_user(self, user_id: int, update_data: Dict) -> Optional[User]:
-        user = self.get_user(user_id)
-        if not user:
-            return None
-
-        # Validar campos actualizables
-        valid_fields = ['name', 'email', 'birth_date', 'status']
-        updates = {k: v for k, v in update_data.items() if k in valid_fields}
-
-        # Validación específica
-        if 'email' in updates and not User.validate_email(updates['email']):
-            return None
-
-        if 'birth_date' in updates and not User.validate_birth_date(updates['birth_date']):
-            return None
-
-        for field, value in updates.items():
-            setattr(user, f"_{field}", value)
-
-        self.db.save_user(user)
-        return user
-
-    def change_password(self, user_id: int, new_password: str) -> bool:
-        if not User.validate_password(new_password):
-            return False
-
-        user = self.get_user(user_id)
-        if not user:
-            return False
-
-        user._password = new_password
-        self.db.save_user(user)
-        return True
-
-    def change_status(self, user_id: int, status: str) -> bool:
-        user = self.get_user(user_id)
-        if not user:
-            return False
-
-        user._status = status
-        self.db.save_user(user)
-        return True
-
-    def authenticate_user(self, username: str, password: str) -> Optional[User]:
-        """Autentica un usuario basado en username y password."""
-        user = self.get_user_by_username(username)
-        if user and user.password == password and user.status == 'active':
-            return user
+        self.users_file = "users.json"
+    
+    def create_user(self, username: str, identification: str, name: str, 
+                    email: str, birth_date: datetime, password: str, 
+                    is_admin: bool = False) -> Dict:
+        """Crea un nuevo usuario."""
+        users = self.db.load_data(self.users_file)
+        user_id = self.db.get_next_id(self.users_file)
+        
+        if any(u['username'] == username for u in users):
+            raise ValueError("El nombre de usuario ya existe")
+        
+        if any(u['email'] == email for u in users):
+            raise ValueError("El correo electrónico ya está registrado")
+        
+        user_class = Admin if is_admin else User
+        new_user = user_class(
+            user_id=user_id,
+            username=username,
+            identification=identification,
+            name=name,
+            email=email,
+            birth_date=birth_date,
+            password=password
+        )
+        
+        users.append(new_user.to_dict())
+        self.db.save_data(self.users_file, users)
+        return new_user.to_dict()
+    
+    def get_user_by_id(self, user_id: int) -> Optional[Dict]:
+        """Obtiene un usuario por su ID."""
+        users = self.db.load_data(self.users_file)
+        for user in users:
+            if user['user_id'] == user_id:
+                return user
         return None
     
-    def search_user(self, term: str) -> Optional[User]:
-        """Busca un usuario por username, email o identificación"""
-        for user in self.get_all_users():
-            if term.lower() in user.username.lower() or \
-                term.lower() in user.email.lower() or \
-                term == user.identification:
+    def get_user_by_username(self, username: str) -> Optional[Dict]:
+        """Obtiene un usuario por su nombre de usuario."""
+        users = self.db.load_data(self.users_file)
+        for user in users:
+            if user['username'] == username:
                 return user
+        return None
+    
+    def update_user(self, user_id: int, **kwargs) -> Optional[Dict]:
+        """Actualiza los datos de un usuario."""
+        users = self.db.load_data(self.users_file)
+        for i, user in enumerate(users):
+            if user['user_id'] == user_id:
+                for key, value in kwargs.items():
+                    if key in user and key != 'user_id':
+                        users[i][key] = value
+                self.db.save_data(self.users_file, users)
+                return users[i]
+        return None
+    
+    def delete_user(self, user_id: int) -> bool:
+        """Elimina un usuario (cambia su estado a inactivo)."""
+        users = self.db.load_data(self.users_file)
+        for i, user in enumerate(users):
+            if user['user_id'] == user_id:
+                users[i]['status'] = 'inactivo'
+                self.db.save_data(self.users_file, users)
+                return True
+        return False
+    
+    def list_users(self, active_only: bool = True) -> List[Dict]:
+        """Lista todos los usuarios."""
+        users = self.db.load_data(self.users_file)
+        if active_only:
+            return [u for u in users if u['status'] == 'activo']
+        return users
+    
+    def authenticate(self, username: str, password: str) -> Optional[Dict]:
+        """Autentica a un usuario."""
+        user = self.get_user_by_username(username)
+        if user and user['password'] == password and user['status'] == 'activo':
+            return user
         return None

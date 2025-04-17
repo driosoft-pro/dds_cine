@@ -1,40 +1,55 @@
-from datetime import datetime
+from datetime import datetime, timedelta
+from typing import List, Dict, Tuple
 
-def calcular_edad(fecha_nacimiento: str) -> int:
-    """
-    Calcula la edad a partir de una fecha de nacimiento (formato YYYY-MM-DD).
-    """
-    nacimiento = datetime.strptime(fecha_nacimiento, "%Y-%m-%d")
-    hoy = datetime.now()
-    edad = hoy.year - nacimiento.year
-    if (hoy.month, hoy.day) < (nacimiento.month, nacimiento.day):
-        edad -= 1
-    return edad
-
-def esta_en_rango_para_reserva(fecha_funcion: str) -> bool:
-    """
-    Verifica si la fecha de la función está entre 2 y 7 días desde hoy.
-    """
-    fecha = datetime.strptime(fecha_funcion, "%Y-%m-%d")
-    hoy = datetime.now()
-    diferencia = (fecha - hoy).days
-    return 2 <= diferencia <= 7
-
-def se_puede_cancelar_reserva(fecha_funcion: str) -> bool:
-    """
-    Verifica si se puede cancelar una reserva (hasta 2 días antes).
-    """
-    fecha = datetime.strptime(fecha_funcion, "%Y-%m-%d")
-    hoy = datetime.now()
-    diferencia = (fecha - hoy).days
-    return diferencia >= 2
-
-def es_fecha_valida(fecha_str: str) -> bool:
-    """
-    Verifica si una cadena es una fecha válida en formato YYYY-MM-DD.
-    """
-    try:
-        datetime.strptime(fecha_str, "%Y-%m-%d")
-        return True
-    except ValueError:
-        return False
+class DateUtils:
+    """Utilidades para manejo de fechas y horarios."""
+    
+    @staticmethod
+    def is_valid_reservation_date(showtime_date: datetime) -> Tuple[bool, str]:
+        """Valida que una fecha de reserva esté dentro del rango permitido (2-7 días)."""
+        today = datetime.now()
+        min_date = today + timedelta(days=2)
+        max_date = today + timedelta(days=7)
+        
+        if showtime_date < min_date:
+            return False, "La reserva debe hacerse con al menos 2 días de anticipación"
+        if showtime_date > max_date:
+            return False, "La reserva no puede hacerse con más de 7 días de anticipación"
+        return True, "Fecha de reserva válida"
+    
+    @staticmethod
+    def is_valid_cancellation_date(showtime_date: datetime) -> Tuple[bool, str]:
+        """Valida que una cancelación esté dentro del rango permitido (1-2 días antes)."""
+        today = datetime.now()
+        min_date = today + timedelta(days=1)
+        max_date = today + timedelta(days=2)
+        
+        if showtime_date < min_date:
+            return False, "La cancelación debe hacerse con al menos 1 día de anticipación"
+        if showtime_date > max_date:
+            return False, "La cancelación no puede hacerse con más de 2 días de anticipación"
+        return True, "Fecha de cancelación válida"
+    
+    @staticmethod
+    def generate_showtimes(start_date: datetime, days: int = 15) -> List[Dict]:
+        """Genera horarios de funciones para un período de días."""
+        showtimes = []
+        jornadas = ['mañana', 'tarde', 'noche']
+        times = {
+            'mañana': ('09:00', '12:00'),
+            'tarde': ('15:00', '18:00'),
+            'noche': ('20:00', '23:00')
+        }
+        
+        for day in range(days):
+            current_date = start_date + timedelta(days=day)
+            for jornada in jornadas:
+                start_time, end_time = times[jornada]
+                showtimes.append({
+                    'date': current_date.strftime('%Y-%m-%d'),
+                    'start_time': start_time,
+                    'end_time': end_time,
+                    'jornada': jornada
+                })
+        
+        return showtimes

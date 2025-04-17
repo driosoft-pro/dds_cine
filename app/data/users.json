@@ -1,0 +1,24 @@
+[
+  {
+    "user_id": 1,
+    "username": "admin",
+    "identification": "123456789",
+    "name": "Admin00",
+    "email": "admin@ddscine.com",
+    "birth_date": "1980-01-01",
+    "password": "3b612c75a7b5048a435fb6ec81e52ff92d6d795a8b5a9c17070f6a63c97a53b2",
+    "status": "activo",
+    "is_admin": true
+  },
+  {
+    "user_id": 2,
+    "username": "client",
+    "identification": "987654321",
+    "name": "Samuel Mosquera",
+    "email": "samu@ddscine.com",
+    "birth_date": "1990-05-15",
+    "password": "b7827b17b0821b354fabf438d73691c2bf467af7a44c374f8c505a5ee08b0d5d",
+    "status": "activo",
+    "is_admin": false
+  }
+]

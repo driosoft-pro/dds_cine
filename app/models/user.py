@@ -1,123 +1,69 @@
-from typing import Literal
 from datetime import datetime
-import re
+from typing import Optional
 
 class User:
-    """Clase base para usuarios del sistema"""
-    def __init__(self, user_id: int, username: str, identification: str, 
-                    name: str, email: str, birth_date: str, password: str,
-                    status: Literal['active', 'inactive'] = 'active'):
-        self._user_id = user_id
-        self._username = username
-        self._identification = identification
-        self._name = name
-        self._email = email
-        self._birth_date = birth_date
-        self._password = password
-        self._status = status
-
-    # Propiedades (encapsulamiento)
-    @property
-    def user_id(self) -> int:
-        return self._user_id
-        
-    @property
-    def username(self) -> str:
-        return self._username
-        
-    @property
-    def identification(self) -> str:
-        return self._identification
-        
-    @property
-    def name(self) -> str:
-        return self._name
-        
-    @property
-    def email(self) -> str:
-        return self._email
-        
-    @property
-    def birth_date(self) -> str:
-        return self._birth_date
-        
-    @property
-    def status(self) -> str:
-        return self._status
-        
-    @property
-    def password(self) -> str:
-        return self._password
-
-    def get_age(self) -> int:
-        """Calcula la edad del usuario"""
-        birth_date = datetime.strptime(self._birth_date, "%Y-%m-%d")
-        today = datetime.now()
-        return today.year - birth_date.year - ((today.month, today.day) < (birth_date.month, birth_date.day))
-
+    """
+    Clase que representa a un usuario del sistema.
+    
+    Attributes:
+        user_id (int): Identificador único del usuario.
+        username (str): Nombre de usuario para login.
+        identification (str): Número de identificación.
+        name (str): Nombre completo del usuario.
+        email (str): Correo electrónico.
+        birth_date (datetime): Fecha de nacimiento.
+        password (str): Contraseña encriptada.
+        status (str): Estado del usuario (activo/inactivo).
+    """
+    
+    def __init__(self, user_id: int, username: str, identification: str, name: str, 
+                    email: str, birth_date: datetime, password: str, status: str = "activo"):
+        self.user_id = user_id
+        self.username = username
+        self.identification = identification
+        self.name = name
+        self.email = email
+        self.birth_date = birth_date
+        self.password = password
+        self.status = status
+    
     def to_dict(self) -> dict:
-        """Serializa el usuario a diccionario"""
+        """Convierte el objeto User a un diccionario para serialización."""
         return {
-            "user_id": self._user_id,
-            "username": self._username,
-            "identification": self._identification,
-            "name": self._name,
-            "email": self._email,
-            "birth_date": self._birth_date,
-            "password": self._password,
-            "status": self._status,
-            "type": "user"
+            "user_id": self.user_id,
+            "username": self.username,
+            "identification": self.identification,
+            "name": self.name,
+            "email": self.email,
+            "birth_date": self.birth_date.strftime("%Y-%m-%d"),
+            "password": self.password,
+            "status": self.status
         }
-
-    # Métodos estáticos para validación
-    @staticmethod
-    def validate_username(username: str) -> bool:
-        return 4 <= len(username) <= 20 and username.isalnum()
-
-    @staticmethod
-    def validate_identification(identification: str) -> bool:
-        return 5 <= len(identification) <= 20
     
-    @staticmethod
-    def validate_name(name: str) -> bool:
-        return len(name) >= 3
-    
-    @staticmethod
-    def validate_email(email: str) -> bool:
-        return bool(re.match(r"^[\w\.-]+@[\w\.-]+\.\w+$", email))
-        
-    @staticmethod
-    def validate_password(password: str) -> bool:
-        return len(password) >= 6
-        
-    @staticmethod
-    def validate_birth_date(date: str) -> bool:
-        try:
-            datetime.strptime(date, "%Y-%m-%d")
-            return True
-        except ValueError:
-            return False
-
-class Client(User):
-    """Clase para usuarios clientes"""
-    def __init__(self, user_id: int, username: str, identification: str, 
-                    name: str, email: str, birth_date: str, password: str,
-                    status: Literal['active', 'inactive'] = 'active'):
-        super().__init__(user_id, username, identification, name, email, birth_date, password, status)
-
-    def to_dict(self) -> dict:
-        data = super().to_dict()
-        data["type"] = "client"
-        return data
+    @classmethod
+    def from_dict(cls, data: dict) -> 'User':
+        """Crea un objeto User desde un diccionario."""
+        return cls(
+            user_id=data["user_id"],
+            username=data["username"],
+            identification=data["identification"],
+            name=data["name"],
+            email=data["email"],
+            birth_date=datetime.strptime(data["birth_date"], "%Y-%m-%d"),
+            password=data["password"],
+            status=data.get("status", "activo")
+        )
 
 class Admin(User):
-    """Clase para usuarios administradores"""
-    def __init__(self, user_id: int, username: str, identification: str, 
-                    name: str, email: str, birth_date: str, password: str,
-                    status: Literal['active', 'inactive'] = 'active'):
+    """Clase que representa a un administrador, hereda de User."""
+    
+    def __init__(self, user_id: int, username: str, identification: str, name: str, 
+                    email: str, birth_date: datetime, password: str, status: str = "activo"):
         super().__init__(user_id, username, identification, name, email, birth_date, password, status)
-
+        self.is_admin = True
+    
     def to_dict(self) -> dict:
+        """Convierte el objeto Admin a un diccionario."""
         data = super().to_dict()
-        data["type"] = "admin"
+        data['is_admin'] = True
         return data
