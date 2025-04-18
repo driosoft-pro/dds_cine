@@ -35,7 +35,8 @@ class FoodView:
             for category in categories:
                 self.console.print(f"\n[bold]{category}[/]")
                 table = Table(box=box.SIMPLE)
-                table.add_column("Código", style="cyan")
+                table.add_column("ID", style="cyan")
+                table.add_column("Código", style="yellow")
                 table.add_column("Producto", style="magenta")
                 table.add_column("Tamaño", style="white")
                 table.add_column("Precio", style="green")
@@ -51,7 +52,8 @@ class FoodView:
                 self.console.print(table)
         else:
             table = Table(title="[bold]Menú de Comida[/]", box=box.ROUNDED)
-            table.add_column("Código", style="cyan")
+            table.add_column("ID", style="cyan")
+            table.add_column("Código", style="yellow")
             table.add_column("Categoría", style="blue")
             table.add_column("Producto", style="magenta")
             table.add_column("Tamaño", style="white")
@@ -59,6 +61,7 @@ class FoodView:
             
             for item in items:
                 table.add_row(
+                    str(item['item_id']),
                     item['code'],
                     item['category'],
                     item['product'],
@@ -71,6 +74,7 @@ class FoodView:
     def get_food_item_data(self):
         """Obtiene datos para crear/actualizar un item de comida."""
         data = {
+            'item_id': Prompt.ask("ID del producto"),
             'code': Prompt.ask("Código del producto"),
             'category': Prompt.ask("Categoría"),
             'product': Prompt.ask("Nombre del producto"),

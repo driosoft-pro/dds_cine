@@ -403,8 +403,6 @@ class DDSMovieApp:
         """Maneja la visualización de la cartelera para clientes."""
         while True:
             
-            options = self.movie_view.show_movie_menu()
-            choice = self.menu_view.get_user_choice(options)
             choice = self.movie_view.show_movie_menu(is_admin=False)
             
             if choice == "0":

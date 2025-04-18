@@ -50,10 +50,6 @@ class MovieView:
             if showtimes:
                 movie_showtimes = [st for st in showtimes if st.get('movie_id') == movie.get('movie_id')]
             
-            # Depuración: Verificar si se encontraron horarios
-            if not movie_showtimes:
-                print(f"[DEBUG] No se encontraron horarios para la película ID {movie.get('movie_id')}")
-
             # Formatear horarios para mostrar
             showtimes_str = "Sin horarios"
             if movie_showtimes:
