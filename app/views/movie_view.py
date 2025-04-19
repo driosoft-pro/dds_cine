@@ -39,7 +39,9 @@ class MovieView:
         table.add_column("ID", style="cyan")
         table.add_column("Título", style="magenta")
         table.add_column("Duración", style="white")
-        table.add_column("Clasificación", style="green")
+        table.add_column("Categoria", style="cyan")	
+        table.add_column("Clasificación", style="white")
+        table.add_column("Idioma", style="magenta")
         table.add_column("Sala", style="blue")
         table.add_column("Horarios", style="yellow")
         table.add_column("Precio", style="yellow")
@@ -64,7 +66,9 @@ class MovieView:
                 str(movie.get('movie_id', 'N/D')),
                 movie.get('title', 'N/D'),
                 f"{movie.get('duration', 0)} min",
+                movie.get('category', 'N/D'),
                 movie.get('age_rating', 'N/D'),
+                movie.get('language', 'N/D'),
                 movie.get('room_type', 'N/D'),
                 showtimes_str,
                 f"${movie.get('ticket_price', 0):,.0f}"

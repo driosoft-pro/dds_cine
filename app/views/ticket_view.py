@@ -72,7 +72,7 @@ class TicketView:
         showtime_id = int(Prompt.ask("Ingrese ID del horario"))
         
         # Seleccionar tipo de asiento
-        seat_type_choice = Prompt.ask("Tipo de asiento (1: General, 2: Preferencial)", choices=["1", "2"])
+        seat_type_choice = Prompt.ask("Tipo de asiento \n1: General. \n2: Preferencial. \nOpciones",choices=["1", "2"])
         seat_type = "general" if seat_type_choice == "1" else "preferencial"
         
         # Cantidad de tickets
@@ -101,9 +101,9 @@ class TicketView:
     def get_payment_method(self):
         """Obtiene el método de pago."""
         return Prompt.ask(
-            "Método de pago", 
-            choices=["efectivo", "tarjeta", "transferencia"]
-        )
+            "Método de pago\n1: Efectivo.\n2: Tarjeta.\n3: Transferencia.\nOpciones",
+            choices=["1", "2", "3"]
+            )
     
     def get_cash_amount(self, total: float):
         """Obtiene el monto en efectivo para calcular el cambio."""
