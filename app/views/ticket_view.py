@@ -57,7 +57,8 @@ class TicketView:
         showtime_id = int(Prompt.ask("Ingrese ID del horario"))
         
         # Seleccionar tipo de asiento
-        seat_type = Prompt.ask("Tipo de asiento", choices=["general", "preferencial"])
+        seat_type_choice = Prompt.ask("Tipo de asiento (1: General, 2: Preferencial)", choices=["1", "2"])
+        seat_type = "general" if seat_type_choice == "1" else "preferencial"
         
         # Cantidad de tickets
         quantity = int(Prompt.ask("Cantidad de tickets", default="1"))

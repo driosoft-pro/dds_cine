@@ -452,7 +452,8 @@ class DDSMovieApp:
         
         if choice == "1":  # Comprar ticket
             movies = self.movie_controller.list_movies()
-            self.movie_view.show_movies(movies)
+            showtimes = self.showtime_controller.load_data("showtimes.json")            
+            self.movie_view.show_movies(movies, showtimes)
             
             purchase_data = self.ticket_view.get_ticket_purchase_data(movies, [])
             movie = self.movie_controller.get_movie_by_id(purchase_data['movie_id'])
