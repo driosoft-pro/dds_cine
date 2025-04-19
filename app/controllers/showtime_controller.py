@@ -53,10 +53,14 @@ class ShowtimeController:
         return new_showtime.to_dict()
     
     def get_showtime_by_id(self, showtime_id: int) -> Optional[Dict]:
-        """Obtiene un horario por su ID."""
+        """Versión con parseo robusto de fechas"""
         showtimes = self.db.load_data(self.showtimes_file)
         for showtime in showtimes:
             if showtime['showtime_id'] == showtime_id:
+                # Asegurar que las fechas sean strings
+                showtime['date'] = str(showtime.get('date', ''))
+                showtime['start_time'] = str(showtime.get('start_time', ''))
+                showtime['end_time'] = str(showtime.get('end_time', ''))
                 return showtime
         return None
     
