@@ -55,6 +55,7 @@ class MovieView:
             if movie_showtimes:
                 showtimes_str = "\n".join(
                     f"{st.get('date', 'N/D')} {st.get('start_time', 'N/D')} ({st.get('jornada', 'N/D')})"
+                    #for st in sorted(movie_showtimes,  # Mostrar todos los horarios
                     for st in sorted(movie_showtimes[:3],  # Mostrar máximo 3 horarios
                                     key=lambda x: (x.get('date', ''), x.get('start_time', '')))
                 )

@@ -210,7 +210,8 @@ class DDSMovieApp:
         elif choice == "2":  # Buscar película
             criteria = self.movie_view.get_movie_search_criteria()
             results = self.movie_controller.search_movies(**criteria)
-            self.movie_view.show_movies(results)
+            showtimes = self.showtime_controller.load_data("showtimes.json") 
+            self.movie_view.show_movies(results, showtimes)
             self.menu_view.press_enter_to_continue()
         
         elif choice == "3":  # Agregar película
