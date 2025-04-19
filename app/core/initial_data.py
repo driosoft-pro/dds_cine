@@ -148,28 +148,29 @@ def create_initial_data() -> Dict[str, List[Dict[str, Any]]]:
             "room_type": "2D",
             "capacity": {"general": 100},
             "seats": {
-                "general": [f"A{i}" for i in range(1, 101)]  # A1, A2, ..., A100
+                "general": [f"A{i}" for i in range(1, 101)]  # Asientos A1-A100
             },
             "available_seats": {
                 "general": [f"A{i}" for i in range(1, 101)]  # Todos disponibles inicialmente
-            }
+            },
+            "temp_reservations": {},  
+            "confirmed_seats": {}     
         },
         {
             "cinema_id": 2,
             "name": "Sala 3D",
             "room_type": "3D",
-            "capacity": {
-                "general": 80,
-                "preferencial": 20
-            },
+            "capacity": {"general": 80, "preferencial": 20},
             "seats": {
-                "general": [f"B{i}" for i in range(1, 81)],  # B1 a B80
-                "preferencial": [f"P{i}" for i in range(1, 21)]  # P1 a P20
+                "general": [f"B{i}" for i in range(1, 81)],      # B1-B80
+                "preferencial": [f"P{i}" for i in range(1, 21)]  # P1-P20
             },
             "available_seats": {
                 "general": [f"B{i}" for i in range(1, 81)],
                 "preferencial": [f"P{i}" for i in range(1, 21)]
-            }
+            },
+            "temp_reservations": {},  
+            "confirmed_seats": {}     
         }
     ]
     

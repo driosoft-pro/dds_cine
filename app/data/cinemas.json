@@ -213,7 +213,9 @@
         "A99",
         "A100"
       ]
-    }
+    },
+    "temp_reservations": {},
+    "confirmed_seats": {}
   },
   {
     "cinema_id": 2,
@@ -331,6 +333,8 @@
     },
     "available_seats": {
       "general": [
+        "B6",
+        "B8",
         "B9",
         "B10",
         "B11",
@@ -402,7 +406,12 @@
         "B77",
         "B78",
         "B79",
-        "B80"
+        "B80",
+        "B1",
+        "B2",
+        "B4",
+        "B3",
+        "B5"
       ],
       "preferencial": [
         "P1",
@@ -425,6 +434,14 @@
         "P18",
         "P19",
         "P20"
+      ]
+    },
+    "temp_reservations": {
+      "general": []
+    },
+    "confirmed_seats": {
+      "general": [
+        "B7"
       ]
     }
   }

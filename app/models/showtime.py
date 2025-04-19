@@ -31,10 +31,10 @@ class Showtime:
         return {
             "showtime_id": self.showtime_id,
             "movie_id": self.movie_id,
-            "cinema_id": self.cinema_id,  # Incluir en el dict
-            "date": self.date.strftime("%Y-%m-%d"),
-            "start_time": self.start_time.strftime("%H:%M"),
-            "end_time": self.end_time.strftime("%H:%M"),
+            "cinema_id": self.cinema_id,
+            "date": self.date.strftime("%Y-%m-%d") if hasattr(self.date, 'strftime') else self.date,
+            "start_time": self.start_time.strftime("%H:%M") if hasattr(self.start_time, 'strftime') else self.start_time,
+            "end_time": self.end_time.strftime("%H:%M") if hasattr(self.end_time, 'strftime') else self.end_time,
             "jornada": self.jornada,
             "available_seats": self.available_seats
         }

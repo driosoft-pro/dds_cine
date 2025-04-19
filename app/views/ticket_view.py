@@ -6,9 +6,10 @@ from rich.prompt import Prompt
 from rich import box
 from typing import List
 
-# Importando la clase MovieView para mostrar horarios de películas
+# Importando recursos necesarios
 from core.database import Database
 from views.movie_view import MovieView
+from services.ticket_service import TicketService
 from controllers.showtime_controller import ShowtimeController
 
 # Configuración
@@ -142,13 +143,14 @@ class TicketView:
         while True:
             try:
                 cash_input = Prompt.ask(
-                    f"Ingrese el monto recibido (Total: ${total:,.0f})"
-                    .replace(",", ".")
+                    f"Ingrese el monto recibido (Total: {TicketService.format_cop(total)})"
                 )
                 
-                # Remover puntos y comas, luego convertir a float
-                cash_str = cash_input.replace(".", "").replace(",", "")
-                cash = float(cash_str)
+                # Limpiar el input (quitar puntos y comas)
+                cash_clean = cash_input.replace(".", "").replace(",", "")
+                
+                # Convertir a float
+                cash = float(cash_clean)
                 
                 if cash < total:
                     self.console.print("[red]Error: El monto es menor al total[/]")

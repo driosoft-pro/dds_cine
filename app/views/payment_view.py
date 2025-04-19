@@ -11,10 +11,15 @@ class PaymentView:
     
     def show_payment_summary(self, payment: dict):
         """Muestra un resumen del pago realizado."""
+        # Formatear la fecha si es necesario
+        payment_date = payment.get('payment_date', 'Fecha no disponible')
+        if isinstance(payment_date, str) and 'T' in payment_date:
+            payment_date = payment_date.replace('T', ' ')
+        
         panel = Panel.fit(
             f"[bold]Comprobante de Pago[/]\n\n"
             f"ID de Transacción: [cyan]{payment['payment_id']}[/]\n"
-            f"Fecha: [white]{payment['payment_date']}[/]\n"
+            f"Fecha: [white]{payment_date}[/]\n"  # Usar la fecha formateada
             f"Método: [blue]{payment['payment_method']}[/]\n"
             f"Monto: [green]${payment['amount']:,.0f}[/]\n"
             f"Estado: [green]Confirmado[/]",

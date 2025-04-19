@@ -28,11 +28,11 @@ class TicketService:
         Returns:
             Precio calculado del ticket
         """
-        # Validación de tipos
-        if not isinstance(birth_date, date):
-            raise ValueError("birth_date debe ser date")
+        # Validaciones de tipo
         if not isinstance(showtime, datetime):
-            raise ValueError("showtime debe ser datetime")
+            raise TypeError(f"showtime debe ser datetime, no {type(showtime)}")
+        if not isinstance(birth_date, date):
+            raise TypeError(f"birth_date debe ser date, no {type(birth_date)}")
         
         try:
             # Determinar si aplica descuento por edad
@@ -67,13 +67,13 @@ class TicketService:
         return today.year - birth_date.year - (
             (today.month, today.day) < (birth_date.month, birth_date.day))
         
-    def format_cop(self, amount: float) -> str:
-        """Formatea un monto como moneda colombiana.
-        
-        Args:
-            amount: Monto numérico (ej: 18000)
-            
-        Returns:
-            str: Monto formateado (ej: $18.000)
-        """
-        return f"${amount:,.0f}".replace(",", ".")
+    @staticmethod
+    def format_cop(amount: float) -> str:
+        """Formatea un monto como moneda colombiana con validación."""
+        try:
+            # Asegurar que es numérico
+            amount_float = float(amount)
+            # Formatear con separador de miles y sin decimales
+            return f"${amount_float:,.0f}".replace(",", ".")
+        except (ValueError, TypeError):
+            return f"${amount}"  # Fallback si no se puede formatear
