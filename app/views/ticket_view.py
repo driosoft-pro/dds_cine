@@ -4,12 +4,22 @@ from rich.panel import Panel
 from rich.prompt import Prompt
 from rich import box
 
+# importando la clase MovieView para mostrar horarios de películas
+from core.database import Database
+from views.movie_view import MovieView
+from controllers.showtime_controller import ShowtimeController
+
+# Configuración
+from config import Config
+
 class TicketView:
     """Vista para compra y gestión de tickets."""
-    
     def __init__(self):
+        self.db = Database(str(Config.DATA_DIR))
         self.console = Console()
-    
+        self.movie_view = MovieView()
+        self.showtime_controller = ShowtimeController(self.db)
+        
     def show_ticket_menu(self):
         """Muestra el menú de tickets."""
         self.console.print("\n[bold]Gestión de Tickets[/]")
@@ -52,7 +62,12 @@ class TicketView:
         
         # Seleccionar película
         movie_id = int(Prompt.ask("Ingrese ID de la película"))
-        
+                
+        # Mostrar horarios específicos
+        showtimes = self.showtime_controller.load_data("showtimes.json")
+        movie_showtimes = [st for st in showtimes if st['movie_id'] == movie_id]
+        self.movie_view.show_showtimes(movie_showtimes)
+            
         # Seleccionar horario
         showtime_id = int(Prompt.ask("Ingrese ID del horario"))
         

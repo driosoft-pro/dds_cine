@@ -697,7 +697,7 @@ class DDSMovieApp:
         try:
             # Obtener películas y showtimes
             movies = self.movie_controller.list_movies()
-            showtimes = self.showtime_controller.load_data("showtimes.json")  # Cambiado de list_showtimes()
+            showtimes = self.showtime_controller.load_data("showtimes.json")
             
             # Mostrar cartelera con horarios
             self.movie_view.show_movies(movies, showtimes)

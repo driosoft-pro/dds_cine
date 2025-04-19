@@ -141,7 +141,7 @@ class MovieView:
                 st.get('date', ''),
                 f"{st.get('start_time', '')}-{st.get('end_time', '')}",
                 st.get('jornada', ''),
-                f"{available} asientos"
+                f"{available} Boletas" if available > 0 else "Sin Boletas"
             )
         
         self.console.print(table)
