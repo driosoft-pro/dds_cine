@@ -4,11 +4,22 @@ from rich.panel import Panel
 from rich.prompt import Prompt
 from rich import box
 
+# importando la clase MovieView para mostrar horarios de películas
+from core.database import Database
+from views.movie_view import MovieView
+from controllers.showtime_controller import ShowtimeController
+
+# Configuración
+from config import Config
+
 class ReservationView:
     """Vista para reservación y gestión de reservas."""
     
     def __init__(self):
+        self.db = Database(str(Config.DATA_DIR))
         self.console = Console()
+        self.movie_view = MovieView()
+        self.showtime_controller = ShowtimeController(self.db)
     
     def show_reservation_menu(self):
         """Muestra el menú de reservaciones."""
@@ -57,11 +68,14 @@ class ReservationView:
         # Seleccionar película
         movie_id = int(Prompt.ask("Ingrese ID de la película"))
         
-        # Seleccionar horario
-        showtime_id = int(Prompt.ask("Ingrese ID del horario"))
+        # Seleccionar y mostrar horarios específicos
+        showtimes = self.showtime_controller.load_data("showtimes.json")
+        movie_showtimes = [st for st in showtimes if st['movie_id'] == movie_id]
+        self.movie_view.show_showtimes(movie_showtimes)
         
         # Seleccionar tipo de asiento
-        seat_type = Prompt.ask("Tipo de asiento", choices=["general", "preferencial"])
+        seat_type_choice = Prompt.ask("Tipo de asiento \n1: General. \n2: Preferencial. \nOpciones",choices=["1", "2"])
+        seat_type = "general" if seat_type_choice == "1" else "preferencial"
         
         return {
             'movie_id': movie_id,

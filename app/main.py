@@ -453,12 +453,34 @@ class DDSMovieApp:
         choice = self.ticket_view.show_ticket_menu()
         
         if choice == "1":  # Comprar ticket
+            # Listar películas y horarios
             movies = self.movie_controller.list_movies()
-            showtimes = self.showtime_controller.load_data("showtimes.json")            
+            showtimes = self.showtime_controller.load_data("showtimes.json")
             self.movie_view.show_movies(movies, showtimes)
             
-            purchase_data = self.ticket_view.get_ticket_purchase_data(movies, [])
+            # Obtener datos de compra
+            purchase_data = self.ticket_view.get_ticket_purchase_data(movies, showtimes)
             movie = self.movie_controller.get_movie_by_id(purchase_data['movie_id'])
+            
+            # Obtener el horario seleccionado
+            selected_showtime = next(
+                (st for st in showtimes if st['movie_id'] == purchase_data['movie_id'] and st['showtime_id'] == purchase_data['showtime_id']),
+                None
+            )
+            if not selected_showtime:
+                self.menu_view.show_message("Horario no encontrado", is_error=True)
+                return
+            
+            # Seleccionar asiento
+            available_seats = selected_showtime.get('available_seats', {})
+            if not available_seats:
+                self.menu_view.show_message("No hay asientos disponibles", is_error=True)
+                return
+            
+            seat_number = self.ticket_view.select_seat(available_seats)
+            if not seat_number:
+                self.menu_view.show_message("Debe seleccionar un asiento", is_error=True)
+                return
             
             # Calcular precio
             user = self.user_controller.get_user_by_id(self.current_user['user_id'])
@@ -467,14 +489,14 @@ class DDSMovieApp:
                 room_type=movie['room_type'],
                 seat_type=purchase_data['seat_type'],
                 birth_date=birth_date,
-                showtime=datetime.strptime("2023-01-01 15:00", "%Y-%m-%d %H:%M")  # Ficticio
+                showtime=datetime.strptime(selected_showtime['date'] + " " + selected_showtime['start_time'], "%Y-%m-%d %H:%M")
             )
             
             # Mostrar resumen
             ticket_summary = {
                 'movie_title': movie['title'],
-                'showtime': "2023-01-01 15:00",  # Ficticio
-                'seat_number': "A12",  # Ficticio
+                'showtime': f"{selected_showtime['date']} {selected_showtime['start_time']}",
+                'seat_number': seat_number,
                 'ticket_type': purchase_data['seat_type'],
                 'price': price * purchase_data['quantity']
             }
@@ -495,14 +517,14 @@ class DDSMovieApp:
                     if change < 0:
                         self.menu_view.show_message("Monto insuficiente", is_error=True)
                         return
-                    self.ticket_view.show_change(cash, change)
+                    self.ticket_view.show_change(ticket_summary['price'], cash)
                 
                 # Crear ticket y pago
                 ticket_data = {
                     'user_id': self.current_user['user_id'],
                     'movie_id': purchase_data['movie_id'],
-                    'showtime': "2023-01-01 15:00",  # Ficticio
-                    'seat_number': "A12",  # Ficticio
+                    'showtime': f"{selected_showtime['date']} {selected_showtime['start_time']}",
+                    'seat_number': seat_number,
                     'ticket_type': purchase_data['seat_type'],
                     'price': price
                 }

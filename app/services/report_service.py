@@ -1,4 +1,4 @@
-from typing import List, Dict
+from typing import Dict
 from datetime import datetime
 from controllers import (
     TicketController, 

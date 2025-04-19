@@ -63,7 +63,7 @@ class TicketView:
         # Seleccionar película
         movie_id = int(Prompt.ask("Ingrese ID de la película"))
                 
-        # Mostrar horarios específicos
+        # Seleccionar y mostrar horarios específicos
         showtimes = self.showtime_controller.load_data("showtimes.json")
         movie_showtimes = [st for st in showtimes if st['movie_id'] == movie_id]
         self.movie_view.show_showtimes(movie_showtimes)
