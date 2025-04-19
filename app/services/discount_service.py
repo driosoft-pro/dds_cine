@@ -1,5 +1,11 @@
 from datetime import datetime
 
+# impiortando las librerías necesarias
+from typing import List, Dict
+
+# importando el servicio de precios de entradas
+from services.ticket_pricing_service import TicketPricingService
+
 class DiscountService:
     """Servicio para aplicar descuentos y promociones."""
     

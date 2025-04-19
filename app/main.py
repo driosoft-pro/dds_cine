@@ -10,6 +10,7 @@ from core.initial_data import create_initial_data
 # Importaciones de servicios
 from services.auth_service import AuthService
 from services.validation_service import ValidationService
+from services.ticket_pricing_service import TicketPricingService
 
 # Importaciones de controladores
 from controllers.user_controller import UserController
