@@ -6,9 +6,10 @@ from rich.prompt import Prompt
 from rich import box
 from typing import List
 
-# Importando la clase MovieView para mostrar horarios de películas
+# Importando recursos necesarios
 from core.database import Database
 from views.movie_view import MovieView
+from services.ticket_service import TicketService
 from controllers.showtime_controller import ShowtimeController
 
 # Configuración
@@ -58,6 +59,17 @@ class TicketView:
         
         self.console.print(table)
     
+    def select_seat(self, available_seats: List[str]) -> str:
+        """Muestra y permite seleccionar un asiento disponible"""
+        self.console.print("\n[bold]Asientos disponibles:[/]")
+        self.console.print("[green]" + ", ".join(available_seats) + "[/]")
+        
+        while True:
+            seat_number = Prompt.ask("Ingrese el número del asiento deseado").upper()
+            if seat_number in available_seats:
+                return seat_number
+            self.console.print("[red]Asiento no disponible. Intente nuevamente.[/]")
+            
     def get_ticket_purchase_data(self, movies: list, showtimes: list):
         """Obtiene datos para comprar un ticket."""
         self.console.print("\n[bold]Compra de Ticket[/]")
@@ -88,17 +100,29 @@ class TicketView:
         }
     
     def show_ticket_summary(self, ticket: dict):
-        """Muestra un resumen del ticket antes de confirmar la compra."""
-        panel = Panel.fit(
-            f"[bold]Resumen de Compra[/]\n\n"
-            f"Película: [magenta]{ticket['movie_title']}[/]\n"
-            f"Fecha: [white]{ticket['showtime']}[/]\n"
-            f"Asiento: [green]{ticket['seat_number']}[/] ([blue]{ticket['ticket_type']}[/])\n"
-            f"Precio: [yellow]${ticket['price']:,.0f}[/]\n\n"
-            f"[bold]Total a pagar:[/] [yellow]${ticket['price']:,.0f}[/]",
-            border_style="green"
-        )
-        self.console.print(panel)
+        """Versión mejorada con manejo robusto de fechas"""
+        try:
+            # Extraer y formatear fecha-hora
+            showtime_str = ticket['showtime']
+            if isinstance(showtime_str, str):
+                # Si ya es string, mostrarlo directamente
+                display_time = showtime_str
+            else:
+                # Si es datetime, formatearlo
+                display_time = showtime_str.strftime("%Y-%m-%d %H:%M")
+                
+            panel = Panel.fit(
+                f"[bold]Resumen de Compra[/]\n\n"
+                f"Película: [magenta]{ticket['movie_title']}[/]\n"
+                f"Fecha: [white]{display_time}[/]\n"
+                f"Asiento: [green]{ticket['seat_number']}[/] ([blue]{ticket['ticket_type']}[/])\n"
+                f"Precio: [yellow]${ticket['price']:,.0f}[/]\n\n"
+                f"[bold]Total a pagar:[/] [yellow]${ticket['price']:,.0f}[/]",
+                border_style="green"
+            )
+            self.console.print(panel)
+        except Exception as e:
+            self.console.print(f"[red]Error al mostrar resumen: {str(e)}[/]")
     
     def get_payment_method(self):
         """Obtiene el método de pago."""
@@ -107,17 +131,49 @@ class TicketView:
             choices=["1", "2", "3"]
             )
     
-    def get_cash_amount(self, total: float):
-        """Obtiene el monto en efectivo para calcular el cambio."""
-        return float(Prompt.ask(f"Ingrese el monto recibido (Total: ${total:,.0f})"))
-    
-    def select_seat(self, available_seats: List[str]) -> str:
-        """Muestra y permite seleccionar un asiento disponible"""
-        self.console.print("\n[bold]Asientos disponibles:[/]")
-        self.console.print("[green]" + ", ".join(available_seats) + "[/]")
+    def get_cash_amount(self, total: float) -> float:
+        """Obtiene el monto en efectivo y valida el formato.
         
+        Args:
+            total: Monto total a pagar (ej: 18000)
+            
+        Returns:
+            float: Monto recibido convertido a float
+        """
         while True:
-            seat_number = Prompt.ask("Ingrese el número del asiento deseado").upper()
-            if seat_number in available_seats:
-                return seat_number
-            self.console.print("[red]Asiento no disponible. Intente nuevamente.[/]")
+            try:
+                cash_input = Prompt.ask(
+                    f"Ingrese el monto recibido (Total: {TicketService.format_cop(total)})"
+                )
+                
+                # Limpiar el input (quitar puntos y comas)
+                cash_clean = cash_input.replace(".", "").replace(",", "")
+                
+                # Convertir a float
+                cash = float(cash_clean)
+                
+                if cash < total:
+                    self.console.print("[red]Error: El monto es menor al total[/]")
+                    continue
+                    
+                return cash
+                
+            except ValueError:
+                self.console.print("[red]Error: Ingrese un valor numérico válido[/]")
+    
+    def show_change(self, total: float, received: float):
+        """Muestra el cambio al usuario en formato COP.
+        
+        Args:
+            total: Monto total a pagar (ej: 18000)
+            received: Monto recibido (ej: 20000)
+        """
+        change = received - total
+        if change > 0:
+            # Formatear con separador de miles (punto) y sin decimales
+            formatted_change = f"${change:,.0f}".replace(",", ".")
+            self.console.print(f"[green]Cambio a devolver: {formatted_change}[/]")
+        elif change == 0:
+            self.console.print("[yellow]No hay cambio a devolver.[/]")
+        else:
+            self.console.print("[red]Error: Monto insuficiente[/]")

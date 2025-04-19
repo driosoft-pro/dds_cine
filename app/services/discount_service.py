@@ -4,7 +4,7 @@ from datetime import datetime
 from typing import List, Dict
 
 # importando el servicio de precios de entradas
-from services.ticket_pricing_service import TicketPricingService
+from app.services.ticket_service import TicketService
 
 class DiscountService:
     """Servicio para aplicar descuentos y promociones."""
@@ -22,12 +22,12 @@ class DiscountService:
     def apply_age_discount(birth_date: datetime, room_type: str, seat_type: str) -> float:
         """Aplica descuentos por edad (niños y adultos mayores)."""
         age = DiscountService.calculate_age(birth_date)
-        base_price = TicketPricingService.get_base_price(room_type, seat_type)
+        base_price = TicketService.get_base_price(room_type, seat_type)
         
         if age < 12:
-            return TicketPricingService.DISCOUNT_PRICES['child']
+            return TicketService.DISCOUNT_PRICES['child']
         elif age >= 60:
-            return TicketPricingService.DISCOUNT_PRICES['senior']
+            return TicketService.DISCOUNT_PRICES['senior']
         return base_price
     
     @staticmethod

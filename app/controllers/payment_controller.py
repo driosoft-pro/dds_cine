@@ -1,4 +1,5 @@
 from typing import Dict, List, Optional
+from datetime import datetime
 from models.payment import Payment
 from core.database import Database
 
@@ -9,25 +10,35 @@ class PaymentController:
         self.db = db
         self.payments_file = "payments.json"
     
-    def create_payment(self, user_id: int, amount: float, payment_method: str, 
-                        ticket_id: Optional[int] = None, 
-                        reservation_id: Optional[int] = None) -> Dict:
-        """Crea un nuevo pago."""
+    def create_payment(self, user_id: int, amount: float, 
+                        payment_method: str, ticket_id: Optional[int] = None) -> Dict:
+        """Crea un nuevo registro de pago."""
         payments = self.db.load_data(self.payments_file)
         payment_id = self.db.get_next_id(self.payments_file)
         
+        # Crear objeto Payment
         new_payment = Payment(
             payment_id=payment_id,
             user_id=user_id,
-            ticket_id=ticket_id,
-            reservation_id=reservation_id,
             amount=amount,
-            payment_method=payment_method
+            payment_method=self._get_payment_method_name(payment_method),
+            ticket_id=ticket_id
         )
         
+        # Guardar el pago
         payments.append(new_payment.to_dict())
         self.db.save_data(self.payments_file, payments)
+        
         return new_payment.to_dict()
+    
+    def _get_payment_method_name(self, method_code: str) -> str:
+        """Convierte código de método de pago a nombre descriptivo."""
+        methods = {
+            '1': 'Efectivo',
+            '2': 'Tarjeta',
+            '3': 'Transferencia'
+        }
+        return methods.get(method_code, 'Desconocido')
     
     def get_payment_by_id(self, payment_id: int) -> Optional[Dict]:
         """Obtiene un pago por su ID."""
