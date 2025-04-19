@@ -3,20 +3,36 @@ from typing import Dict, List, Optional
 from models.showtime import Showtime
 from core.database import Database
 
+# importando la clase CinemaController para manejar cines
+from controllers.cinema_controller import CinemaController
+
 class ShowtimeController:
     """Controlador para manejar operaciones relacionadas con horarios."""
     
     def __init__(self, db: Database):
         self.db = db
         self.showtimes_file = "showtimes.json"
+        self.cinema_controller = CinemaController(db)
     
     def load_data(self, filename: str) -> List[Dict]: 
         """Carga datos desde un archivo JSON."""
         return self.db.load_data(filename)
     
-    def create_showtime(self, movie_id: int, date: datetime.date, 
-                        start_time: time, end_time: time, jornada: str, 
-                        available_seats: Dict[str, int]) -> Dict:
+    def get_available_seats(self, showtime_id: int, seat_type: str) -> List[str]:
+        """Obtiene asientos disponibles para una función y tipo de asiento"""
+        showtime = self.get_showtime_by_id(showtime_id)
+        if not showtime:
+            return []
+        
+        cinema = self.cinema_controller.get_cinema_by_id(showtime['cinema_id'])
+        if not cinema:
+            return []
+        
+        return cinema['available_seats'].get(seat_type, [])
+        
+    def create_showtime(self, movie_id: int, cinema_id: int,  # Añade cinema_id
+                        date: datetime.date, start_time: time, end_time: time, 
+                        jornada: str, available_seats: Dict[str, int]) -> Dict:
         """Crea un nuevo horario para una película."""
         showtimes = self.db.load_data(self.showtimes_file)
         showtime_id = self.db.get_next_id(self.showtimes_file)
@@ -24,6 +40,7 @@ class ShowtimeController:
         new_showtime = Showtime(
             showtime_id=showtime_id,
             movie_id=movie_id,
+            cinema_id=cinema_id,  # Nuevo campo
             date=date,
             start_time=start_time,
             end_time=end_time,

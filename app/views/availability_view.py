@@ -1,6 +1,7 @@
 from rich.console import Console
 from rich.table import Table
 from rich.panel import Panel
+from rich.prompt import Prompt
 from rich import box
 
 class AvailabilityView:
@@ -22,17 +23,35 @@ class AvailabilityView:
         
         table = Table(box=box.ROUNDED)
         table.add_column("Tipo de Asiento", style="cyan")
-        table.add_column("Disponibles", style="green")
-        table.add_column("Capacidad", style="white")
+        table.add_column("Asientos Disponibles", style="green")
         
-        for seat_type, available in availability.items():
+        for seat_type, seats in availability.items():
+            seats_display = ', '.join(seats) if seats else "Ninguno"
             table.add_row(
                 seat_type.capitalize(),
-                str(available),
-                str(availability.get('capacity', {}).get(seat_type, 'N/A'))
+                seats_display
             )
         
         self.console.print(table)
+    
+    def select_seat(self, available_seats: dict):
+        """Permite al usuario seleccionar un asiento disponible."""
+        self.console.print("\n[bold]Selección de Asiento[/]")
+        
+        # Extraer el tipo de asiento (solo debería haber uno)
+        seat_type = next(iter(available_seats.keys()))
+        seats = available_seats[seat_type]
+        
+        if not seats:
+            return None
+        
+        self.console.print(f"Asientos {seat_type} disponibles: [green]{', '.join(seats)}[/]")
+        
+        while True:
+            seat_number = Prompt.ask("Ingrese el número del asiento deseado").upper()
+            if seat_number in seats:
+                return seat_number
+            self.console.print("[red]Asiento no disponible. Intente nuevamente.[/]")
     
     def show_seat_map(self, seat_map: list):
         """Muestra un mapa gráfico de los asientos."""

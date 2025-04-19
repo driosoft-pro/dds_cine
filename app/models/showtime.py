@@ -15,11 +15,12 @@ class Showtime:
         available_seats (Dict): Asientos disponibles por tipo.
     """
     
-    def __init__(self, showtime_id: int, movie_id: int, date: datetime.date, 
-                    start_time: time, end_time: time, jornada: str, 
-                    available_seats: Dict[str, int]):
+    def __init__(self, showtime_id: int, movie_id: int, cinema_id: int,  # Añade cinema_id
+                    date: datetime.date, start_time: time, end_time: time, 
+                    jornada: str, available_seats: Dict[str, int]):
         self.showtime_id = showtime_id
         self.movie_id = movie_id
+        self.cinema_id = cinema_id  # Nuevo campo
         self.date = date
         self.start_time = start_time
         self.end_time = end_time
@@ -27,10 +28,10 @@ class Showtime:
         self.available_seats = available_seats
     
     def to_dict(self) -> dict:
-        """Convierte el objeto Showtime a un diccionario."""
         return {
             "showtime_id": self.showtime_id,
             "movie_id": self.movie_id,
+            "cinema_id": self.cinema_id,  # Incluir en el dict
             "date": self.date.strftime("%Y-%m-%d"),
             "start_time": self.start_time.strftime("%H:%M"),
             "end_time": self.end_time.strftime("%H:%M"),
@@ -40,11 +41,10 @@ class Showtime:
     
     @classmethod
     def from_dict(cls, data: dict) -> 'Showtime':
-        """Crea un objeto Showtime desde un diccionario."""
-        from datetime import date
         return cls(
             showtime_id=data["showtime_id"],
             movie_id=data["movie_id"],
+            cinema_id=data["cinema_id"],  # Leer del dict
             date=date.fromisoformat(data["date"]),
             start_time=time.fromisoformat(data["start_time"]),
             end_time=time.fromisoformat(data["end_time"]),

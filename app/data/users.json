@@ -29,6 +29,7 @@
     "email": "test@dds.com",
     "birth_date": "1999-02-03",
     "password": "d9b5f58f0b38198293971865a14074f59eba3e82595becbe86ae51f1d9f1f65e",
-    "status": "activo"
+    "status": "activo",
+    "is_admin": false
   }
 ]

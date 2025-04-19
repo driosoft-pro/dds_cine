@@ -36,7 +36,8 @@
       {
         "showtime_id": 1,
         "movie_id": 1,
-        "date": "2025-04-16",
+        "cinema_id": 2,
+        "date": "2025-04-19",
         "start_time": "15:00",
         "end_time": "18:00",
         "jornada": "tarde",
@@ -48,7 +49,8 @@
       {
         "showtime_id": 2,
         "movie_id": 1,
-        "date": "2025-04-16",
+        "cinema_id": 2,
+        "date": "2025-04-19",
         "start_time": "20:00",
         "end_time": "23:00",
         "jornada": "noche",
@@ -60,7 +62,8 @@
       {
         "showtime_id": 3,
         "movie_id": 2,
-        "date": "2025-04-16",
+        "cinema_id": 1,
+        "date": "2025-04-19",
         "start_time": "09:00",
         "end_time": "12:00",
         "jornada": "mañana",
@@ -71,7 +74,8 @@
       {
         "showtime_id": 4,
         "movie_id": 2,
-        "date": "2025-04-16",
+        "cinema_id": 1,
+        "date": "2025-04-19",
         "start_time": "15:00",
         "end_time": "18:00",
         "jornada": "tarde",
@@ -82,7 +86,8 @@
       {
         "showtime_id": 5,
         "movie_id": 2,
-        "date": "2025-04-16",
+        "cinema_id": 1,
+        "date": "2025-04-19",
         "start_time": "20:00",
         "end_time": "23:00",
         "jornada": "noche",
@@ -93,7 +98,8 @@
       {
         "showtime_id": 6,
         "movie_id": 3,
-        "date": "2025-04-16",
+        "cinema_id": 2,
+        "date": "2025-04-19",
         "start_time": "20:00",
         "end_time": "23:00",
         "jornada": "noche",
@@ -105,7 +111,8 @@
       {
         "showtime_id": 7,
         "movie_id": 1,
-        "date": "2025-04-17",
+        "cinema_id": 2,
+        "date": "2025-04-20",
         "start_time": "15:00",
         "end_time": "18:00",
         "jornada": "tarde",
@@ -117,7 +124,8 @@
       {
         "showtime_id": 8,
         "movie_id": 1,
-        "date": "2025-04-17",
+        "cinema_id": 2,
+        "date": "2025-04-20",
         "start_time": "20:00",
         "end_time": "23:00",
         "jornada": "noche",
@@ -129,7 +137,8 @@
       {
         "showtime_id": 9,
         "movie_id": 2,
-        "date": "2025-04-17",
+        "cinema_id": 1,
+        "date": "2025-04-20",
         "start_time": "09:00",
         "end_time": "12:00",
         "jornada": "mañana",
@@ -140,7 +149,8 @@
       {
         "showtime_id": 10,
         "movie_id": 2,
-        "date": "2025-04-17",
+        "cinema_id": 1,
+        "date": "2025-04-20",
         "start_time": "15:00",
         "end_time": "18:00",
         "jornada": "tarde",
@@ -151,7 +161,8 @@
       {
         "showtime_id": 11,
         "movie_id": 2,
-        "date": "2025-04-17",
+        "cinema_id": 1,
+        "date": "2025-04-20",
         "start_time": "20:00",
         "end_time": "23:00",
         "jornada": "noche",
@@ -162,7 +173,8 @@
       {
         "showtime_id": 12,
         "movie_id": 3,
-        "date": "2025-04-17",
+        "cinema_id": 2,
+        "date": "2025-04-20",
         "start_time": "20:00",
         "end_time": "23:00",
         "jornada": "noche",
@@ -174,7 +186,8 @@
       {
         "showtime_id": 13,
         "movie_id": 1,
-        "date": "2025-04-18",
+        "cinema_id": 2,
+        "date": "2025-04-21",
         "start_time": "15:00",
         "end_time": "18:00",
         "jornada": "tarde",
@@ -186,7 +199,8 @@
       {
         "showtime_id": 14,
         "movie_id": 1,
-        "date": "2025-04-18",
+        "cinema_id": 2,
+        "date": "2025-04-21",
         "start_time": "20:00",
         "end_time": "23:00",
         "jornada": "noche",
@@ -198,7 +212,8 @@
       {
         "showtime_id": 15,
         "movie_id": 2,
-        "date": "2025-04-18",
+        "cinema_id": 1,
+        "date": "2025-04-21",
         "start_time": "09:00",
         "end_time": "12:00",
         "jornada": "mañana",
@@ -209,7 +224,8 @@
       {
         "showtime_id": 16,
         "movie_id": 2,
-        "date": "2025-04-18",
+        "cinema_id": 1,
+        "date": "2025-04-21",
         "start_time": "15:00",
         "end_time": "18:00",
         "jornada": "tarde",
@@ -220,7 +236,8 @@
       {
         "showtime_id": 17,
         "movie_id": 2,
-        "date": "2025-04-18",
+        "cinema_id": 1,
+        "date": "2025-04-21",
         "start_time": "20:00",
         "end_time": "23:00",
         "jornada": "noche",
@@ -231,7 +248,8 @@
       {
         "showtime_id": 18,
         "movie_id": 3,
-        "date": "2025-04-18",
+        "cinema_id": 2,
+        "date": "2025-04-21",
         "start_time": "20:00",
         "end_time": "23:00",
         "jornada": "noche",
@@ -243,7 +261,8 @@
       {
         "showtime_id": 19,
         "movie_id": 1,
-        "date": "2025-04-19",
+        "cinema_id": 2,
+        "date": "2025-04-22",
         "start_time": "15:00",
         "end_time": "18:00",
         "jornada": "tarde",
@@ -255,7 +274,8 @@
       {
         "showtime_id": 20,
         "movie_id": 1,
-        "date": "2025-04-19",
+        "cinema_id": 2,
+        "date": "2025-04-22",
         "start_time": "20:00",
         "end_time": "23:00",
         "jornada": "noche",
@@ -267,7 +287,8 @@
       {
         "showtime_id": 21,
         "movie_id": 2,
-        "date": "2025-04-19",
+        "cinema_id": 1,
+        "date": "2025-04-22",
         "start_time": "09:00",
         "end_time": "12:00",
         "jornada": "mañana",
@@ -278,7 +299,8 @@
       {
         "showtime_id": 22,
         "movie_id": 2,
-        "date": "2025-04-19",
+        "cinema_id": 1,
+        "date": "2025-04-22",
         "start_time": "15:00",
         "end_time": "18:00",
         "jornada": "tarde",
@@ -289,7 +311,8 @@
       {
         "showtime_id": 23,
         "movie_id": 2,
-        "date": "2025-04-19",
+        "cinema_id": 1,
+        "date": "2025-04-22",
         "start_time": "20:00",
         "end_time": "23:00",
         "jornada": "noche",
@@ -300,7 +323,8 @@
       {
         "showtime_id": 24,
         "movie_id": 3,
-        "date": "2025-04-19",
+        "cinema_id": 2,
+        "date": "2025-04-22",
         "start_time": "20:00",
         "end_time": "23:00",
         "jornada": "noche",
@@ -312,7 +336,8 @@
       {
         "showtime_id": 25,
         "movie_id": 1,
-        "date": "2025-04-20",
+        "cinema_id": 2,
+        "date": "2025-04-23",
         "start_time": "15:00",
         "end_time": "18:00",
         "jornada": "tarde",
@@ -324,7 +349,8 @@
       {
         "showtime_id": 26,
         "movie_id": 1,
-        "date": "2025-04-20",
+        "cinema_id": 2,
+        "date": "2025-04-23",
         "start_time": "20:00",
         "end_time": "23:00",
         "jornada": "noche",
@@ -336,7 +362,8 @@
       {
         "showtime_id": 27,
         "movie_id": 2,
-        "date": "2025-04-20",
+        "cinema_id": 1,
+        "date": "2025-04-23",
         "start_time": "09:00",
         "end_time": "12:00",
         "jornada": "mañana",
@@ -347,7 +374,8 @@
       {
         "showtime_id": 28,
         "movie_id": 2,
-        "date": "2025-04-20",
+        "cinema_id": 1,
+        "date": "2025-04-23",
         "start_time": "15:00",
         "end_time": "18:00",
         "jornada": "tarde",
@@ -358,7 +386,8 @@
       {
         "showtime_id": 29,
         "movie_id": 2,
-        "date": "2025-04-20",
+        "cinema_id": 1,
+        "date": "2025-04-23",
         "start_time": "20:00",
         "end_time": "23:00",
         "jornada": "noche",
@@ -369,7 +398,8 @@
       {
         "showtime_id": 30,
         "movie_id": 3,
-        "date": "2025-04-20",
+        "cinema_id": 2,
+        "date": "2025-04-23",
         "start_time": "20:00",
         "end_time": "23:00",
         "jornada": "noche",
@@ -381,7 +411,8 @@
       {
         "showtime_id": 31,
         "movie_id": 1,
-        "date": "2025-04-21",
+        "cinema_id": 2,
+        "date": "2025-04-24",
         "start_time": "15:00",
         "end_time": "18:00",
         "jornada": "tarde",
@@ -393,7 +424,8 @@
       {
         "showtime_id": 32,
         "movie_id": 1,
-        "date": "2025-04-21",
+        "cinema_id": 2,
+        "date": "2025-04-24",
         "start_time": "20:00",
         "end_time": "23:00",
         "jornada": "noche",
@@ -405,7 +437,8 @@
       {
         "showtime_id": 33,
         "movie_id": 2,
-        "date": "2025-04-21",
+        "cinema_id": 1,
+        "date": "2025-04-24",
         "start_time": "09:00",
         "end_time": "12:00",
         "jornada": "mañana",
@@ -416,7 +449,8 @@
       {
         "showtime_id": 34,
         "movie_id": 2,
-        "date": "2025-04-21",
+        "cinema_id": 1,
+        "date": "2025-04-24",
         "start_time": "15:00",
         "end_time": "18:00",
         "jornada": "tarde",
@@ -427,7 +461,8 @@
       {
         "showtime_id": 35,
         "movie_id": 2,
-        "date": "2025-04-21",
+        "cinema_id": 1,
+        "date": "2025-04-24",
         "start_time": "20:00",
         "end_time": "23:00",
         "jornada": "noche",
@@ -438,7 +473,8 @@
       {
         "showtime_id": 36,
         "movie_id": 3,
-        "date": "2025-04-21",
+        "cinema_id": 2,
+        "date": "2025-04-24",
         "start_time": "20:00",
         "end_time": "23:00",
         "jornada": "noche",
@@ -450,7 +486,8 @@
       {
         "showtime_id": 37,
         "movie_id": 1,
-        "date": "2025-04-22",
+        "cinema_id": 2,
+        "date": "2025-04-25",
         "start_time": "15:00",
         "end_time": "18:00",
         "jornada": "tarde",
@@ -462,7 +499,8 @@
       {
         "showtime_id": 38,
         "movie_id": 1,
-        "date": "2025-04-22",
+        "cinema_id": 2,
+        "date": "2025-04-25",
         "start_time": "20:00",
         "end_time": "23:00",
         "jornada": "noche",
@@ -474,7 +512,8 @@
       {
         "showtime_id": 39,
         "movie_id": 2,
-        "date": "2025-04-22",
+        "cinema_id": 1,
+        "date": "2025-04-25",
         "start_time": "09:00",
         "end_time": "12:00",
         "jornada": "mañana",
@@ -485,7 +524,8 @@
       {
         "showtime_id": 40,
         "movie_id": 2,
-        "date": "2025-04-22",
+        "cinema_id": 1,
+        "date": "2025-04-25",
         "start_time": "15:00",
         "end_time": "18:00",
         "jornada": "tarde",
@@ -496,7 +536,8 @@
       {
         "showtime_id": 41,
         "movie_id": 2,
-        "date": "2025-04-22",
+        "cinema_id": 1,
+        "date": "2025-04-25",
         "start_time": "20:00",
         "end_time": "23:00",
         "jornada": "noche",
@@ -507,7 +548,8 @@
       {
         "showtime_id": 42,
         "movie_id": 3,
-        "date": "2025-04-22",
+        "cinema_id": 2,
+        "date": "2025-04-25",
         "start_time": "20:00",
         "end_time": "23:00",
         "jornada": "noche",
@@ -519,7 +561,8 @@
       {
         "showtime_id": 43,
         "movie_id": 1,
-        "date": "2025-04-23",
+        "cinema_id": 2,
+        "date": "2025-04-26",
         "start_time": "15:00",
         "end_time": "18:00",
         "jornada": "tarde",
@@ -531,7 +574,8 @@
       {
         "showtime_id": 44,
         "movie_id": 1,
-        "date": "2025-04-23",
+        "cinema_id": 2,
+        "date": "2025-04-26",
         "start_time": "20:00",
         "end_time": "23:00",
         "jornada": "noche",
@@ -543,7 +587,8 @@
       {
         "showtime_id": 45,
         "movie_id": 2,
-        "date": "2025-04-23",
+        "cinema_id": 1,
+        "date": "2025-04-26",
         "start_time": "09:00",
         "end_time": "12:00",
         "jornada": "mañana",
@@ -554,7 +599,8 @@
       {
         "showtime_id": 46,
         "movie_id": 2,
-        "date": "2025-04-23",
+        "cinema_id": 1,
+        "date": "2025-04-26",
         "start_time": "15:00",
         "end_time": "18:00",
         "jornada": "tarde",
@@ -565,7 +611,8 @@
       {
         "showtime_id": 47,
         "movie_id": 2,
-        "date": "2025-04-23",
+        "cinema_id": 1,
+        "date": "2025-04-26",
         "start_time": "20:00",
         "end_time": "23:00",
         "jornada": "noche",
@@ -576,7 +623,8 @@
       {
         "showtime_id": 48,
         "movie_id": 3,
-        "date": "2025-04-23",
+        "cinema_id": 2,
+        "date": "2025-04-26",
         "start_time": "20:00",
         "end_time": "23:00",
         "jornada": "noche",
@@ -588,7 +636,8 @@
       {
         "showtime_id": 49,
         "movie_id": 1,
-        "date": "2025-04-24",
+        "cinema_id": 2,
+        "date": "2025-04-27",
         "start_time": "15:00",
         "end_time": "18:00",
         "jornada": "tarde",
@@ -600,7 +649,8 @@
       {
         "showtime_id": 50,
         "movie_id": 1,
-        "date": "2025-04-24",
+        "cinema_id": 2,
+        "date": "2025-04-27",
         "start_time": "20:00",
         "end_time": "23:00",
         "jornada": "noche",
@@ -612,7 +662,8 @@
       {
         "showtime_id": 51,
         "movie_id": 2,
-        "date": "2025-04-24",
+        "cinema_id": 1,
+        "date": "2025-04-27",
         "start_time": "09:00",
         "end_time": "12:00",
         "jornada": "mañana",
@@ -623,7 +674,8 @@
       {
         "showtime_id": 52,
         "movie_id": 2,
-        "date": "2025-04-24",
+        "cinema_id": 1,
+        "date": "2025-04-27",
         "start_time": "15:00",
         "end_time": "18:00",
         "jornada": "tarde",
@@ -634,7 +686,8 @@
       {
         "showtime_id": 53,
         "movie_id": 2,
-        "date": "2025-04-24",
+        "cinema_id": 1,
+        "date": "2025-04-27",
         "start_time": "20:00",
         "end_time": "23:00",
         "jornada": "noche",
@@ -645,7 +698,8 @@
       {
         "showtime_id": 54,
         "movie_id": 3,
-        "date": "2025-04-24",
+        "cinema_id": 2,
+        "date": "2025-04-27",
         "start_time": "20:00",
         "end_time": "23:00",
         "jornada": "noche",
@@ -657,7 +711,8 @@
       {
         "showtime_id": 55,
         "movie_id": 1,
-        "date": "2025-04-25",
+        "cinema_id": 2,
+        "date": "2025-04-28",
         "start_time": "15:00",
         "end_time": "18:00",
         "jornada": "tarde",
@@ -669,7 +724,8 @@
       {
         "showtime_id": 56,
         "movie_id": 1,
-        "date": "2025-04-25",
+        "cinema_id": 2,
+        "date": "2025-04-28",
         "start_time": "20:00",
         "end_time": "23:00",
         "jornada": "noche",
@@ -681,7 +737,8 @@
       {
         "showtime_id": 57,
         "movie_id": 2,
-        "date": "2025-04-25",
+        "cinema_id": 1,
+        "date": "2025-04-28",
         "start_time": "09:00",
         "end_time": "12:00",
         "jornada": "mañana",
@@ -692,7 +749,8 @@
       {
         "showtime_id": 58,
         "movie_id": 2,
-        "date": "2025-04-25",
+        "cinema_id": 1,
+        "date": "2025-04-28",
         "start_time": "15:00",
         "end_time": "18:00",
         "jornada": "tarde",
@@ -703,7 +761,8 @@
       {
         "showtime_id": 59,
         "movie_id": 2,
-        "date": "2025-04-25",
+        "cinema_id": 1,
+        "date": "2025-04-28",
         "start_time": "20:00",
         "end_time": "23:00",
         "jornada": "noche",
@@ -714,7 +773,8 @@
       {
         "showtime_id": 60,
         "movie_id": 3,
-        "date": "2025-04-25",
+        "cinema_id": 2,
+        "date": "2025-04-28",
         "start_time": "20:00",
         "end_time": "23:00",
         "jornada": "noche",
@@ -726,7 +786,8 @@
       {
         "showtime_id": 61,
         "movie_id": 1,
-        "date": "2025-04-26",
+        "cinema_id": 2,
+        "date": "2025-04-29",
         "start_time": "15:00",
         "end_time": "18:00",
         "jornada": "tarde",
@@ -738,7 +799,8 @@
       {
         "showtime_id": 62,
         "movie_id": 1,
-        "date": "2025-04-26",
+        "cinema_id": 2,
+        "date": "2025-04-29",
         "start_time": "20:00",
         "end_time": "23:00",
         "jornada": "noche",
@@ -750,7 +812,8 @@
       {
         "showtime_id": 63,
         "movie_id": 2,
-        "date": "2025-04-26",
+        "cinema_id": 1,
+        "date": "2025-04-29",
         "start_time": "09:00",
         "end_time": "12:00",
         "jornada": "mañana",
@@ -761,7 +824,8 @@
       {
         "showtime_id": 64,
         "movie_id": 2,
-        "date": "2025-04-26",
+        "cinema_id": 1,
+        "date": "2025-04-29",
         "start_time": "15:00",
         "end_time": "18:00",
         "jornada": "tarde",
@@ -772,7 +836,8 @@
       {
         "showtime_id": 65,
         "movie_id": 2,
-        "date": "2025-04-26",
+        "cinema_id": 1,
+        "date": "2025-04-29",
         "start_time": "20:00",
         "end_time": "23:00",
         "jornada": "noche",
@@ -783,7 +848,8 @@
       {
         "showtime_id": 66,
         "movie_id": 3,
-        "date": "2025-04-26",
+        "cinema_id": 2,
+        "date": "2025-04-29",
         "start_time": "20:00",
         "end_time": "23:00",
         "jornada": "noche",
@@ -795,7 +861,8 @@
       {
         "showtime_id": 67,
         "movie_id": 1,
-        "date": "2025-04-27",
+        "cinema_id": 2,
+        "date": "2025-04-30",
         "start_time": "15:00",
         "end_time": "18:00",
         "jornada": "tarde",
@@ -807,7 +874,8 @@
       {
         "showtime_id": 68,
         "movie_id": 1,
-        "date": "2025-04-27",
+        "cinema_id": 2,
+        "date": "2025-04-30",
         "start_time": "20:00",
         "end_time": "23:00",
         "jornada": "noche",
@@ -819,7 +887,8 @@
       {
         "showtime_id": 69,
         "movie_id": 2,
-        "date": "2025-04-27",
+        "cinema_id": 1,
+        "date": "2025-04-30",
         "start_time": "09:00",
         "end_time": "12:00",
         "jornada": "mañana",
@@ -830,7 +899,8 @@
       {
         "showtime_id": 70,
         "movie_id": 2,
-        "date": "2025-04-27",
+        "cinema_id": 1,
+        "date": "2025-04-30",
         "start_time": "15:00",
         "end_time": "18:00",
         "jornada": "tarde",
@@ -841,7 +911,8 @@
       {
         "showtime_id": 71,
         "movie_id": 2,
-        "date": "2025-04-27",
+        "cinema_id": 1,
+        "date": "2025-04-30",
         "start_time": "20:00",
         "end_time": "23:00",
         "jornada": "noche",
@@ -852,7 +923,8 @@
       {
         "showtime_id": 72,
         "movie_id": 3,
-        "date": "2025-04-27",
+        "cinema_id": 2,
+        "date": "2025-04-30",
         "start_time": "20:00",
         "end_time": "23:00",
         "jornada": "noche",
@@ -864,7 +936,8 @@
       {
         "showtime_id": 73,
         "movie_id": 1,
-        "date": "2025-04-28",
+        "cinema_id": 2,
+        "date": "2025-05-01",
         "start_time": "15:00",
         "end_time": "18:00",
         "jornada": "tarde",
@@ -876,7 +949,8 @@
       {
         "showtime_id": 74,
         "movie_id": 1,
-        "date": "2025-04-28",
+        "cinema_id": 2,
+        "date": "2025-05-01",
         "start_time": "20:00",
         "end_time": "23:00",
         "jornada": "noche",
@@ -888,7 +962,8 @@
       {
         "showtime_id": 75,
         "movie_id": 2,
-        "date": "2025-04-28",
+        "cinema_id": 1,
+        "date": "2025-05-01",
         "start_time": "09:00",
         "end_time": "12:00",
         "jornada": "mañana",
@@ -899,7 +974,8 @@
       {
         "showtime_id": 76,
         "movie_id": 2,
-        "date": "2025-04-28",
+        "cinema_id": 1,
+        "date": "2025-05-01",
         "start_time": "15:00",
         "end_time": "18:00",
         "jornada": "tarde",
@@ -910,7 +986,8 @@
       {
         "showtime_id": 77,
         "movie_id": 2,
-        "date": "2025-04-28",
+        "cinema_id": 1,
+        "date": "2025-05-01",
         "start_time": "20:00",
         "end_time": "23:00",
         "jornada": "noche",
@@ -921,7 +998,8 @@
       {
         "showtime_id": 78,
         "movie_id": 3,
-        "date": "2025-04-28",
+        "cinema_id": 2,
+        "date": "2025-05-01",
         "start_time": "20:00",
         "end_time": "23:00",
         "jornada": "noche",
@@ -933,7 +1011,8 @@
       {
         "showtime_id": 79,
         "movie_id": 1,
-        "date": "2025-04-29",
+        "cinema_id": 2,
+        "date": "2025-05-02",
         "start_time": "15:00",
         "end_time": "18:00",
         "jornada": "tarde",
@@ -945,7 +1024,8 @@
       {
         "showtime_id": 80,
         "movie_id": 1,
-        "date": "2025-04-29",
+        "cinema_id": 2,
+        "date": "2025-05-02",
         "start_time": "20:00",
         "end_time": "23:00",
         "jornada": "noche",
@@ -957,7 +1037,8 @@
       {
         "showtime_id": 81,
         "movie_id": 2,
-        "date": "2025-04-29",
+        "cinema_id": 1,
+        "date": "2025-05-02",
         "start_time": "09:00",
         "end_time": "12:00",
         "jornada": "mañana",
@@ -968,7 +1049,8 @@
       {
         "showtime_id": 82,
         "movie_id": 2,
-        "date": "2025-04-29",
+        "cinema_id": 1,
+        "date": "2025-05-02",
         "start_time": "15:00",
         "end_time": "18:00",
         "jornada": "tarde",
@@ -979,7 +1061,8 @@
       {
         "showtime_id": 83,
         "movie_id": 2,
-        "date": "2025-04-29",
+        "cinema_id": 1,
+        "date": "2025-05-02",
         "start_time": "20:00",
         "end_time": "23:00",
         "jornada": "noche",
@@ -990,7 +1073,8 @@
       {
         "showtime_id": 84,
         "movie_id": 3,
-        "date": "2025-04-29",
+        "cinema_id": 2,
+        "date": "2025-05-02",
         "start_time": "20:00",
         "end_time": "23:00",
         "jornada": "noche",
@@ -1002,7 +1086,8 @@
       {
         "showtime_id": 85,
         "movie_id": 1,
-        "date": "2025-04-30",
+        "cinema_id": 2,
+        "date": "2025-05-03",
         "start_time": "15:00",
         "end_time": "18:00",
         "jornada": "tarde",
@@ -1014,7 +1099,8 @@
       {
         "showtime_id": 86,
         "movie_id": 1,
-        "date": "2025-04-30",
+        "cinema_id": 2,
+        "date": "2025-05-03",
         "start_time": "20:00",
         "end_time": "23:00",
         "jornada": "noche",
@@ -1026,7 +1112,8 @@
       {
         "showtime_id": 87,
         "movie_id": 2,
-        "date": "2025-04-30",
+        "cinema_id": 1,
+        "date": "2025-05-03",
         "start_time": "09:00",
         "end_time": "12:00",
         "jornada": "mañana",
@@ -1037,7 +1124,8 @@
       {
         "showtime_id": 88,
         "movie_id": 2,
-        "date": "2025-04-30",
+        "cinema_id": 1,
+        "date": "2025-05-03",
         "start_time": "15:00",
         "end_time": "18:00",
         "jornada": "tarde",
@@ -1048,7 +1136,8 @@
       {
         "showtime_id": 89,
         "movie_id": 2,
-        "date": "2025-04-30",
+        "cinema_id": 1,
+        "date": "2025-05-03",
         "start_time": "20:00",
         "end_time": "23:00",
         "jornada": "noche",
@@ -1059,7 +1148,8 @@
       {
         "showtime_id": 90,
         "movie_id": 3,
-        "date": "2025-04-30",
+        "cinema_id": 2,
+        "date": "2025-05-03",
         "start_time": "20:00",
         "end_time": "23:00",
         "jornada": "noche",

@@ -70,11 +70,12 @@ def create_initial_data() -> Dict[str, List[Dict[str, Any]]]:
     for day in range(15):  # 15 días de programación
         current_date = (today + timedelta(days=day)).strftime('%Y-%m-%d')
         
-        # Avengers: Endgame - Solo tarde y noche
+        # Avengers: Endgame - Sala 3D (ID 2)
         showtimes.extend([
             {
                 "showtime_id": len(showtimes) + 1,
                 "movie_id": 1,
+                "cinema_id": 2,  # Sala 3D
                 "date": current_date,
                 "start_time": "15:00",
                 "end_time": "18:00",
@@ -84,6 +85,7 @@ def create_initial_data() -> Dict[str, List[Dict[str, Any]]]:
             {
                 "showtime_id": len(showtimes) + 2,
                 "movie_id": 1,
+                "cinema_id": 2,  # Sala 3D
                 "date": current_date,
                 "start_time": "20:00",
                 "end_time": "23:00",
@@ -92,11 +94,12 @@ def create_initial_data() -> Dict[str, List[Dict[str, Any]]]:
             }
         ])
         
-        # El Rey León - Todas las jornadas
+        # El Rey León - Sala 2D (ID 1)
         showtimes.extend([
             {
                 "showtime_id": len(showtimes) + 1,
                 "movie_id": 2,
+                "cinema_id": 1,  # Sala 2D
                 "date": current_date,
                 "start_time": "09:00",
                 "end_time": "12:00",
@@ -106,6 +109,7 @@ def create_initial_data() -> Dict[str, List[Dict[str, Any]]]:
             {
                 "showtime_id": len(showtimes) + 2,
                 "movie_id": 2,
+                "cinema_id": 1,  # Sala 2D
                 "date": current_date,
                 "start_time": "15:00",
                 "end_time": "18:00",
@@ -115,6 +119,7 @@ def create_initial_data() -> Dict[str, List[Dict[str, Any]]]:
             {
                 "showtime_id": len(showtimes) + 3,
                 "movie_id": 2,
+                "cinema_id": 1,  # Sala 2D
                 "date": current_date,
                 "start_time": "20:00",
                 "end_time": "23:00",
@@ -123,10 +128,11 @@ def create_initial_data() -> Dict[str, List[Dict[str, Any]]]:
             }
         ])
         
-        # Joker - Solo noche
+        # Joker - Sala 3D (ID 2)
         showtimes.append({
             "showtime_id": len(showtimes) + 1,
             "movie_id": 3,
+            "cinema_id": 2,  # Sala 3D
             "date": current_date,
             "start_time": "20:00",
             "end_time": "23:00",
@@ -141,14 +147,29 @@ def create_initial_data() -> Dict[str, List[Dict[str, Any]]]:
             "name": "Sala 2D",
             "room_type": "2D",
             "capacity": {"general": 100},
-            "available_seats": {"general": 100}
+            "seats": {
+                "general": [f"A{i}" for i in range(1, 101)]  # A1, A2, ..., A100
+            },
+            "available_seats": {
+                "general": [f"A{i}" for i in range(1, 101)]  # Todos disponibles inicialmente
+            }
         },
         {
             "cinema_id": 2,
             "name": "Sala 3D",
             "room_type": "3D",
-            "capacity": {"general": 80, "preferencial": 20},
-            "available_seats": {"general": 80, "preferencial": 20}
+            "capacity": {
+                "general": 80,
+                "preferencial": 20
+            },
+            "seats": {
+                "general": [f"B{i}" for i in range(1, 81)],  # B1 a B80
+                "preferencial": [f"P{i}" for i in range(1, 21)]  # P1 a P20
+            },
+            "available_seats": {
+                "general": [f"B{i}" for i in range(1, 81)],
+                "preferencial": [f"P{i}" for i in range(1, 21)]
+            }
         }
     ]
     

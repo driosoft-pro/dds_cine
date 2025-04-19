@@ -462,24 +462,61 @@ class DDSMovieApp:
             purchase_data = self.ticket_view.get_ticket_purchase_data(movies, showtimes)
             movie = self.movie_controller.get_movie_by_id(purchase_data['movie_id'])
             
-            # Obtener el horario seleccionado
+            # Obtener el horario seleccionado con validación
             selected_showtime = next(
-                (st for st in showtimes if st['movie_id'] == purchase_data['movie_id'] and st['showtime_id'] == purchase_data['showtime_id']),
+                (st for st in showtimes if st['movie_id'] == purchase_data['movie_id'] 
+                    and st['showtime_id'] == purchase_data['showtime_id']),
                 None
             )
+            
             if not selected_showtime:
                 self.menu_view.show_message("Horario no encontrado", is_error=True)
                 return
             
-            # Seleccionar asiento
-            available_seats = selected_showtime.get('available_seats', {})
+            # Listar cines
+            cinemas = self.cinema_controller.list_cinemas()
+            cinema = next((c for c in cinemas if c['cinema_id'] == selected_showtime['cinema_id']), None)
+                
+            # Validación crítica - asegura que el showtime tenga cinema_id
+            if 'cinema_id' not in selected_showtime:
+                self.menu_view.show_message("Error: Configuración inválida - el horario no tiene sala asignada", is_error=True)
+                return
+            
+            # Crear instancia de AvailabilityView
+            availability_view = AvailabilityView()
+            
+            # Obtener asientos disponibles para el tipo seleccionado
+            available_seats = self.showtime_controller.get_available_seats(
+                purchase_data['showtime_id'],
+                purchase_data['seat_type']
+            )
+            
             if not available_seats:
                 self.menu_view.show_message("No hay asientos disponibles", is_error=True)
                 return
             
-            seat_number = self.ticket_view.select_seat(available_seats)
-            if not seat_number:
-                self.menu_view.show_message("Debe seleccionar un asiento", is_error=True)
+            # Mostrar disponibilidad y seleccionar asiento
+            availability_data = {
+                purchase_data['seat_type']: available_seats
+            }
+            
+            availability_view.show_availability(
+                availability=availability_data,
+                cinema_name=cinema['name'],
+                movie_title=movie['title'],
+                showtime=f"{selected_showtime['date']} {selected_showtime['start_time']}"
+            )
+            
+            # Seleccionar asiento usando AvailabilityView
+            seat_number = availability_view.select_seat({purchase_data['seat_type']: available_seats})
+            
+            # Reservar el asiento
+            if not self.cinema_controller.reserve_seat(
+                selected_showtime['cinema_id'],
+                purchase_data['seat_type'],
+                seat_number
+            ):
+                self.menu_view.show_message("Error al reservar el asiento", is_error=True)
                 return
             
             # Calcular precio
@@ -578,7 +615,8 @@ class DDSMovieApp:
         
         if choice == "1":  # Hacer reservación
             movies = self.movie_controller.list_movies()
-            self.movie_view.show_movies(movies)
+            showimes = self.showtime_controller.load_data("showtimes.json")
+            self.movie_view.show_movies(movies, showimes)
             
             reservation_data = self.reservation_view.get_reservation_data(movies, [])
             movie = self.movie_controller.get_movie_by_id(reservation_data['movie_id'])

@@ -1,10 +1,12 @@
+# Importando la clase Console para mostrar mensajes en consola
 from rich.console import Console
 from rich.table import Table
 from rich.panel import Panel
 from rich.prompt import Prompt
 from rich import box
+from typing import List
 
-# importando la clase MovieView para mostrar horarios de películas
+# Importando la clase MovieView para mostrar horarios de películas
 from core.database import Database
 from views.movie_view import MovieView
 from controllers.showtime_controller import ShowtimeController
@@ -108,3 +110,14 @@ class TicketView:
     def get_cash_amount(self, total: float):
         """Obtiene el monto en efectivo para calcular el cambio."""
         return float(Prompt.ask(f"Ingrese el monto recibido (Total: ${total:,.0f})"))
+    
+    def select_seat(self, available_seats: List[str]) -> str:
+        """Muestra y permite seleccionar un asiento disponible"""
+        self.console.print("\n[bold]Asientos disponibles:[/]")
+        self.console.print("[green]" + ", ".join(available_seats) + "[/]")
+        
+        while True:
+            seat_number = Prompt.ask("Ingrese el número del asiento deseado").upper()
+            if seat_number in available_seats:
+                return seat_number
+            self.console.print("[red]Asiento no disponible. Intente nuevamente.[/]")
