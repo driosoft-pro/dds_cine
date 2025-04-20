@@ -59,7 +59,7 @@ dds_cine/
 │   │   ├── __init__.py               # Archivo de inicialización del paquete de servicios.
 │   │   ├── auth_service.py           # Servicio para autenticación (registro, login, sesión).
 │   │   ├── validation_service.py     # Servicio para validaciones de entradas.
-│   │   ├── ticket_pricing_service.py # Lógica de precios y promociones de entradas.
+│   │   ├── ticket_service.py         # Lógica de precios y promociones de entradas.
 │   │   ├── seat_service.py           # Lógica para la disponibilidad de sillas.
 │   │   ├── date_utils.py             # Utilidades para manejo de fechas.
 │   │   ├── report_service.py         # Servicio para generación de reportes.
