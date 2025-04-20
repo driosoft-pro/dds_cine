@@ -1,7 +1,7 @@
 import sys
 from rich.console import Console
 from rich.panel import Panel
-from datetime import datetime
+from datetime import datetime, timedelta
 
 # Importaciones de core
 from core.database import Database
@@ -449,7 +449,7 @@ class DDSMovieApp:
                 self.menu_view.press_enter_to_continue()
     
     def handle_ticket_purchase(self):
-        """Maneja el proceso de compra de tickets con reservas temporales y manejo robusto de errores."""
+        """Maneja el proceso de compra de tickets con reservas para clientes."""
         choice = self.ticket_view.show_ticket_menu()
         
         if choice == "1":  # Comprar ticket
@@ -457,10 +457,11 @@ class DDSMovieApp:
                 # Listar películas y horarios disponibles
                 movies = self.movie_controller.list_movies()
                 showtimes = self.showtime_controller.load_data("showtimes.json")
-                self.movie_view.show_movies(movies, showtimes)
                 
                 # Obtener datos de compra del usuario
                 purchase_data = self.ticket_view.get_ticket_purchase_data(movies, showtimes)
+                
+                # Resto del código permanece igual...
                 movie = self.movie_controller.get_movie_by_id(purchase_data['movie_id'])
                 
                 # Validar horario seleccionado
@@ -581,7 +582,7 @@ class DDSMovieApp:
                     ticket_data = {
                         'user_id': self.current_user['user_id'],
                         'movie_id': purchase_data['movie_id'],
-                        'showtime': showtime_datetime,  # <-- Aquí está el cambio clave
+                        'showtime': showtime_datetime, 
                         'seat_number': seat_number,
                         'ticket_type': purchase_data['seat_type'],
                         'price': price
@@ -664,21 +665,21 @@ class DDSMovieApp:
             self.menu_view.press_enter_to_continue()    
     
     def handle_reservation(self):
-        """Maneja el proceso de reservación con integración al sistema de tickets."""
+        """Maneja el proceso completo de reservación con manejo robusto de errores."""
         choice = self.reservation_view.show_reservation_menu()
         
         if choice == "1":  # Hacer reservación
             try:
-                # 1. Listar películas y horarios disponibles
+                # Listar películas y horarios disponibles
                 movies = self.movie_controller.list_movies()
                 showtimes = self.showtime_controller.load_data("showtimes.json")
                 self.movie_view.show_movies(movies, showtimes)
                 
-                # 2. Obtener datos de reservación
+                # Obtener datos de reservación
                 reservation_data = self.reservation_view.get_reservation_data(movies, showtimes)
                 movie = self.movie_controller.get_movie_by_id(reservation_data['movie_id'])
                 
-                # 3. Validar horario seleccionado
+                # Validar horario seleccionado
                 selected_showtime = next(
                     (st for st in showtimes if st['movie_id'] == reservation_data['movie_id'] 
                     and st['showtime_id'] == reservation_data['showtime_id']),
@@ -689,14 +690,18 @@ class DDSMovieApp:
                     self.menu_view.show_message("Horario no encontrado", is_error=True)
                     return
                 
-                # 4. Validar sala y asientos
-                cinema = self.cinema_controller.get_cinema_by_id(selected_showtime['cinema_id'])
+                showtime_id = selected_showtime['showtime_id']
+                cinema_id = selected_showtime['cinema_id']
+                
+                # Validar sala
+                cinema = self.cinema_controller.get_cinema_by_id(cinema_id)
                 if not cinema:
                     self.menu_view.show_message("Sala no encontrada", is_error=True)
                     return
                     
+                # Obtener asientos disponibles
                 available_seats = self.showtime_controller.get_available_seats(
-                    reservation_data['showtime_id'],
+                    showtime_id,
                     reservation_data['seat_type']
                 )
                 
@@ -704,12 +709,12 @@ class DDSMovieApp:
                     self.menu_view.show_message("No hay asientos disponibles", is_error=True)
                     return
                     
-                # 5. Seleccionar asiento
+                # Seleccionar asiento
                 seat_number = self.reservation_view.select_seat(available_seats)
                 
-                # 6. Reserva temporal del asiento
+                # Reserva temporal del asiento
                 if not self.cinema_controller.temp_reserve_seat(
-                    selected_showtime['cinema_id'],
+                    cinema_id,
                     reservation_data['seat_type'],
                     seat_number
                 ):
@@ -717,11 +722,11 @@ class DDSMovieApp:
                     return
                 
                 try:
-                    # 7. Calcular precio
+                    # Calcular precio
                     user = self.user_controller.get_user_by_id(self.current_user['user_id'])
                     birth_date = datetime.strptime(user['birth_date'], "%Y-%m-%d").date()
                     
-                    # Parseo seguro de fecha/hora
+                    # Parseo de fecha/hora
                     showtime_date = selected_showtime['date']
                     showtime_time = selected_showtime['start_time']
                     
@@ -739,7 +744,7 @@ class DDSMovieApp:
                         showtime=showtime_datetime
                     )
                     
-                    # 8. Mostrar resumen
+                    # Mostrar resumen
                     reservation_summary = {
                         'movie_title': movie['title'],
                         'showtime': f"{showtime_date} {showtime_time}",
@@ -751,41 +756,43 @@ class DDSMovieApp:
                     
                     self.reservation_view.show_reservation_summary(reservation_summary)
                     
-                    # 9. Confirmar reserva
+                    # Confirmar reserva
                     if not self.menu_view.confirm_action("Confirmar reserva?"):
                         raise Exception("Reserva cancelada por el usuario")
                     
-                    # 10. Crear reserva
-                    reservation_data.update({
-                        'user_id': self.current_user['user_id'],
-                        'showtime': f"{showtime_date} {showtime_time}",
-                        'seat_number': seat_number,
-                        'price': price,
-                        'expiration_date': (datetime.now() + timedelta(hours=24)).strftime("%Y-%m-%d %H:%M")
-                    })
-                    
-                    new_reservation = self.reservation_controller.create_reservation(**reservation_data)
-                    
+                    # Crear reserva en el sistema
+                    new_reservation = self.reservation_controller.create_reservation(
+                        user_id=self.current_user['user_id'],
+                        movie_id=reservation_data['movie_id'],
+                        showtime=f"{showtime_date} {showtime_time}",
+                        seat_number=seat_number,
+                        ticket_type=reservation_data['seat_type'],
+                        price=price,
+                        showtime_id=showtime_id,
+                        expiration_date=(datetime.now() + timedelta(hours=24)).isoformat()
+                    )                
+    
+                                        
                     # Confirmar reserva del asiento
                     self.cinema_controller.confirm_reservation(
-                        selected_showtime['cinema_id'],
+                        cinema_id,
                         reservation_data['seat_type'],
                         seat_number
                     )
                     
-                    self.menu_view.show_message("Reserva realizada con éxito! Válida por 24 horas.")
+                    self.menu_view.show_message("✅ Reserva realizada con éxito! Válida por 24 horas.")
                     
                 except Exception as e:
                     # Liberar asiento si hay error
                     self.cinema_controller.release_seat(
-                        selected_showtime['cinema_id'],
+                        cinema_id,
                         reservation_data['seat_type'],
                         seat_number
                     )
                     raise e
                     
             except ValueError as e:
-                self.menu_view.show_message(f"Error: {str(e)}", is_error=True)
+                self.menu_view.show_message(f"Error de datos: {str(e)}", is_error=True)
             except Exception as e:
                 self.menu_view.show_message(f"Error inesperado: {str(e)}", is_error=True)
             
@@ -798,7 +805,8 @@ class DDSMovieApp:
                 movie = self.movie_controller.get_movie_by_id(r['movie_id'])
                 enriched_reservations.append({
                     **r,
-                    'movie_title': movie['title'] if movie else "Película no disponible"
+                    'movie_title': movie['title'] if movie else "Película no disponible",
+                    'showtime': r.get('showtime', 'Horario no disponible')
                 })
             self.reservation_view.show_reservations(enriched_reservations)
             self.menu_view.press_enter_to_continue()
@@ -806,49 +814,48 @@ class DDSMovieApp:
         elif choice == "3":  # Cancelar reserva
             reservations = self.reservation_controller.get_reservations_by_user(self.current_user['user_id'])
             if not reservations:
-                self.menu_view.show_message("No tienes reservas para cancelar", is_error=True)
+                self.menu_view.show_message("No tienes reservas activas para cancelar", is_error=True)
                 self.menu_view.press_enter_to_continue()
                 return
             
-            enriched_reservations = []
-            for r in reservations:
-                movie = self.movie_controller.get_movie_by_id(r['movie_id'])
-                enriched_reservations.append({
-                    **r,
-                    'movie_title': movie['title'] if movie else "Película no disponible"
-                })
+            reservation_id = self.reservation_view.select_reservation_to_cancel([
+                {**r, 'movie_title': self.movie_controller.get_movie_by_id(r['movie_id'])['title']} 
+                for r in reservations
+            ])
             
-            reservation_id = self.reservation_view.select_reservation_to_cancel(enriched_reservations)
             if reservation_id and self.reservation_controller.cancel_reservation(reservation_id):
-                self.menu_view.show_message("Reserva cancelada con éxito!")
+                self.menu_view.show_message("✅ Reserva cancelada con éxito!")
             else:
                 self.menu_view.show_message("Error al cancelar la reserva", is_error=True)
             self.menu_view.press_enter_to_continue()
         
         elif choice == "4":  # Convertir reserva a ticket
-            reservations = self.reservation_controller.get_reservations_by_user(self.current_user['user_id'])
-            if not reservations:
-                self.menu_view.show_message("No tienes reservas para convertir", is_error=True)
+            active_reservations = [
+                r for r in self.reservation_controller.get_reservations_by_user(self.current_user['user_id'])
+                if r['status'] == 'activo'
+            ]
+            
+            if not active_reservations:
+                self.menu_view.show_message("No tienes reservas activas para convertir", is_error=True)
                 self.menu_view.press_enter_to_continue()
                 return
             
-            enriched_reservations = []
-            for r in reservations:
-                movie = self.movie_controller.get_movie_by_id(r['movie_id'])
-                enriched_reservations.append({
-                    **r,
-                    'movie_title': movie['title'] if movie else "Película no disponible"
-                })
+            reservation_id = self.reservation_view.select_reservation_to_convert([
+                {**r, 'movie_title': self.movie_controller.get_movie_by_id(r['movie_id'])['title']} 
+                for r in active_reservations
+            ])
             
-            reservation_id = self.reservation_view.select_reservation_to_convert(enriched_reservations)
             if reservation_id:
-                ticket = self.reservation_controller.convert_reservation_to_ticket(reservation_id)
-                if ticket:
-                    self.menu_view.show_message("Reserva convertida a ticket con éxito!")
-                else:
-                    self.menu_view.show_message("Error al convertir la reserva", is_error=True)
+                try:
+                    ticket = self.reservation_controller.convert_reservation_to_ticket(reservation_id)
+                    if ticket:
+                        self.menu_view.show_message("✅ Reserva convertida a ticket con éxito!")
+                    else:
+                        self.menu_view.show_message("Error al convertir la reserva", is_error=True)
+                except Exception as e:
+                    self.menu_view.show_message(f"Error: {str(e)}", is_error=True)
             
-            self.menu_view.press_enter_to_continue()
+            self.menu_view.press_enter_to_continue()    
     
     def handle_user_tickets(self):
         """Muestra los tickets y reservas del usuario (cliente)."""

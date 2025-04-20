@@ -1,12 +1,15 @@
+# Importando la clase Console para mostrar mensajes en consola
 from rich.console import Console
 from rich.table import Table
 from rich.panel import Panel
 from rich.prompt import Prompt
 from rich import box
+from typing import List
 
-# importando la clase MovieView para mostrar horarios de películas
+# Importando recursos necesarios
 from core.database import Database
 from views.movie_view import MovieView
+from services.ticket_service import TicketService
 from controllers.showtime_controller import ShowtimeController
 
 # Configuración
@@ -14,7 +17,6 @@ from config import Config
 
 class ReservationView:
     """Vista para reservación y gestión de reservas."""
-    
     def __init__(self):
         self.db = Database(str(Config.DATA_DIR))
         self.console = Console()
@@ -73,28 +75,45 @@ class ReservationView:
         movie_showtimes = [st for st in showtimes if st['movie_id'] == movie_id]
         self.movie_view.show_showtimes(movie_showtimes)
         
+        # Seleccionar horario
+        showtime_id = int(Prompt.ask("Ingrese ID del horario"))
+        
         # Seleccionar tipo de asiento
         seat_type_choice = Prompt.ask("Tipo de asiento \n1: General. \n2: Preferencial. \nOpciones",choices=["1", "2"])
         seat_type = "general" if seat_type_choice == "1" else "preferencial"
         
+        quantity = int(Prompt.ask("Cantidad de tickets", default="1"))
+        
         return {
             'movie_id': movie_id,
             'showtime_id': showtime_id,
-            'seat_type': seat_type
+            'seat_type': seat_type,
+            'quantity': quantity
         }
     
     def show_reservation_summary(self, reservation: dict):
         """Muestra un resumen de la reserva antes de confirmar."""
-        panel = Panel.fit(
-            f"[bold]Resumen de Reserva[/]\n\n"
-            f"Película: [magenta]{reservation['movie_title']}[/]\n"
-            f"Fecha: [white]{reservation['showtime']}[/]\n"
-            f"Asiento: [green]{reservation['seat_number']}[/] ([blue]{reservation['ticket_type']}[/])\n"
-            f"Precio: [yellow]${reservation['price']:,.0f}[/]\n\n"
-            f"[bold]La reserva debe ser confirmada 24 horas antes de la función.[/]",
-            border_style="green"
-        )
-        self.console.print(panel)
+        try:
+            # Extraer y formatear fecha-hora
+            showtime_str = reservation['showtime']
+            if isinstance(showtime_str, str):
+                # Si ya es string, mostrarlo directamente
+                display_time = showtime_str
+            else:
+                # Si es datetime, formatearlo
+                display_time = showtime_str.strftime("%Y-%m-%d %H:%M")
+            panel = Panel.fit(
+                f"[bold]Resumen de Reserva[/]\n\n"
+                f"Película: [magenta]{reservation['movie_title']}[/]\n"
+                f"Fecha: [white]{reservation['showtime']}[/]\n"
+                f"Asiento: [green]{reservation['seat_number']}[/] ([blue]{reservation['ticket_type']}[/])\n"
+                f"Precio: [yellow]${reservation['price']:,.0f}[/]\n\n"
+                f"[bold]La reserva debe ser confirmada 24 horas antes de la función.[/]",
+                border_style="green"
+            )
+            self.console.print(panel)
+        except Exception as e:
+            self.console.print(f"[red]Error al mostrar resumen: {str(e)}[/]")
     
     def select_reservation_to_cancel(self, reservations: list):
         """Permite seleccionar una reserva para cancelar."""
@@ -111,3 +130,44 @@ class ReservationView:
             return None
         
         return int(Prompt.ask("Ingrese ID de la reserva a convertir"))
+    
+    def select_seat(self, available_seats: List[str]) -> str:
+        """Muestra y permite seleccionar un asiento disponible"""
+        self.console.print("\n[bold]Asientos disponibles:[/]")
+        self.console.print("[green]" + ", ".join(available_seats) + "[/]")
+        
+        while True:
+            seat_number = Prompt.ask("Ingrese el número del asiento deseado").upper()
+            if seat_number in available_seats:
+                return seat_number
+            self.console.print("[red]Asiento no disponible. Intente nuevamente.[/]")
+            
+    def get_ticket_purchase_data(self, showtimes: list):
+        """Obtiene datos para comprar un ticket."""
+        self.console.print("\n[bold]Compra de Ticket[/]")
+        
+        # Seleccionar película
+        movie_id = int(Prompt.ask("Ingrese ID de la película"))
+                
+        # Seleccionar y mostrar horarios específicos
+        showtimes = self.showtime_controller.load_data("showtimes.json")
+        movie_showtimes = [st for st in showtimes if st['movie_id'] == movie_id]
+        self.movie_view.show_showtimes(movie_showtimes)
+            
+        # Seleccionar horario
+        showtime_id = int(Prompt.ask("Ingrese ID del horario"))
+        
+        # Seleccionar tipo de asiento
+        seat_type_choice = Prompt.ask("Tipo de asiento \n1: General. \n2: Preferencial. \nOpciones",choices=["1", "2"])
+        seat_type = "general" if seat_type_choice == "1" else "preferencial"
+        
+        # Cantidad de tickets
+        quantity = int(Prompt.ask("Cantidad de tickets", default="1"))
+        
+        return {
+            'movie_id': movie_id,
+            'showtime_id': showtime_id,
+            'seat_type': seat_type,
+            'quantity': quantity
+        }
+    

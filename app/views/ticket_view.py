@@ -71,14 +71,21 @@ class TicketView:
             self.console.print("[red]Asiento no disponible. Intente nuevamente.[/]")
             
     def get_ticket_purchase_data(self, movies: list, showtimes: list):
-        """Obtiene datos para comprar un ticket."""
+        """Obtiene datos para comprar un ticket.
+        
+        Args:
+            movies: Lista de películas disponibles
+            showtimes: Lista de horarios disponibles
+        """
         self.console.print("\n[bold]Compra de Ticket[/]")
+        
+        # Mostrar películas disponibles
+        self.movie_view.show_movies(movies, showtimes)
         
         # Seleccionar película
         movie_id = int(Prompt.ask("Ingrese ID de la película"))
                 
-        # Seleccionar y mostrar horarios específicos
-        showtimes = self.showtime_controller.load_data("showtimes.json")
+        # Filtrar y mostrar horarios para la película seleccionada
         movie_showtimes = [st for st in showtimes if st['movie_id'] == movie_id]
         self.movie_view.show_showtimes(movie_showtimes)
             
@@ -86,7 +93,10 @@ class TicketView:
         showtime_id = int(Prompt.ask("Ingrese ID del horario"))
         
         # Seleccionar tipo de asiento
-        seat_type_choice = Prompt.ask("Tipo de asiento \n1: General. \n2: Preferencial. \nOpciones",choices=["1", "2"])
+        seat_type_choice = Prompt.ask(
+            "Tipo de asiento \n1: General. \n2: Preferencial. \nOpciones",
+            choices=["1", "2"]
+        )
         seat_type = "general" if seat_type_choice == "1" else "preferencial"
         
         # Cantidad de tickets
@@ -100,7 +110,7 @@ class TicketView:
         }
     
     def show_ticket_summary(self, ticket: dict):
-        """Versión mejorada con manejo robusto de fechas"""
+        """mauestra un resumen de la compra."""
         try:
             # Extraer y formatear fecha-hora
             showtime_str = ticket['showtime']
