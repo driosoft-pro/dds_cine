@@ -11,23 +11,38 @@ class MovieView:
         self.console = Console()
     
     def show_movie_menu(self, is_admin: bool):
-        """Muestra el menú de películas según el tipo de usuario."""
-        self.console.print("\n[bold]Cartelera:[/]" if not is_admin else "[bold]Gestión de Películas:[/]")
-        
+        """Muestra el menú de películas según el tipo de usuario con estilo uniforme."""
+        titulo = "Gestión de Películas" if is_admin else "Cartelera"
+        table = Table(
+            title=titulo,
+            border_style="magenta",
+            box=box.ROUNDED,
+        )
+        table.add_column("ID", justify="center")
+        table.add_column("Descripción")
+
         if is_admin:
-            self.console.print("1. Listar películas")
-            self.console.print("2. Buscar película")
-            self.console.print("3. Agregar película")
-            self.console.print("4. Actualizar película")
-            self.console.print("5. Desactivar película")
-            self.console.print("0. Volver al menú principal")
-            return Prompt.ask("Seleccione una ID", choices=["0", "1", "2", "3", "4", "5"])
+            opciones = [
+                ("1", "Listar películas"),
+                ("2", "Buscar película"),
+                ("3", "Agregar película"),
+                ("4", "Actualizar película"),
+                ("5", "Desactivar película"),
+                ("0", "Volver al menú principal"),
+            ]
         else:
-            self.console.print("1. Ver cartelera completa")
-            self.console.print("2. Buscar por categoría")
-            self.console.print("3. Buscar por fecha")
-            self.console.print("0. Volver al menú principal")
-            return Prompt.ask("Seleccione una ID", choices=["0", "1", "2", "3"])        
+            opciones = [
+                ("1", "Ver cartelera completa"),
+                ("2", "Buscar por categoría"),
+                ("3", "Buscar por fecha"),
+                ("0", "Volver al menú principal"),
+            ]
+
+        for id, descripcion in opciones:
+            table.add_row(id, descripcion)
+
+        self.console.print(table)
+        return Prompt.ask("Seleccione una ID", choices=[id for id, _ in opciones])
         
     def show_movies(self, movies: list, showtimes: list = None):
         """Muestra una lista de películas con sus horarios."""

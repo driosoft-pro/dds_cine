@@ -11,22 +11,37 @@ class FoodView:
         self.console = Console()
     
     def show_food_menu(self, is_admin: bool):
-        """Muestra el menú de comida según el tipo de usuario."""
-        self.console.print("\n[bold]Menú de Comida[/]" if not is_admin else "[bold]Gestión de Menú[/]")
-        
+        """Muestra el menú de comida según el tipo de usuario con estilo uniforme."""
+        titulo = "Gestión de Menú de Comida" if is_admin else "Menú de Comida"
+        table = Table(
+            title=titulo,
+            border_style="magenta",
+            box=box.ROUNDED,
+        )
+        table.add_column("ID", justify="center")
+        table.add_column("Descripción")
+
         if is_admin:
-            self.console.print("1. Listar items")
-            self.console.print("2. Buscar item")
-            self.console.print("3. Agregar item")
-            self.console.print("4. Actualizar item")
-            self.console.print("5. Desactivar item")
-            self.console.print("0. Volver al menú principal")
-            return Prompt.ask("Seleccione una ID", choices=["0", "1", "2", "3", "4", "5"])
+            opciones = [
+                ("1", "Listar items"),
+                ("2", "Buscar item"),
+                ("3", "Agregar item"),
+                ("4", "Actualizar item"),
+                ("5", "Desactivar item"),
+                ("0", "Volver al menú principal"),
+            ]
         else:
-            self.console.print("1. Ver menú completo")
-            self.console.print("2. Buscar por categoría")
-            self.console.print("0. Volver al menú principal")
-            return Prompt.ask("Seleccione una ID", choices=["0", "1", "2"])
+            opciones = [
+                ("1", "Ver menú completo"),
+                ("2", "Buscar por categoría"),
+                ("0", "Volver al menú principal"),
+            ]
+
+        for id, descripcion in opciones:
+            table.add_row(id, descripcion)
+
+        self.console.print(table)
+        return Prompt.ask("Seleccione una ID", choices=[id for id, _ in opciones])
     
     def show_food_items(self, items: list, by_category: bool = False):
         """Muestra los items del menú de comida."""

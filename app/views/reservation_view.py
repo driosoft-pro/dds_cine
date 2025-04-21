@@ -24,13 +24,21 @@ class ReservationView:
         self.showtime_controller = ShowtimeController(self.db)
     
     def show_reservation_menu(self):
-        """Muestra el menú de reservaciones."""
-        self.console.print("\n[bold]Gestión de Reservas[/]")
-        self.console.print("1. Hacer reservación")
-        self.console.print("2. Ver mis reservas")
-        self.console.print("3. Cancelar reserva")
-        self.console.print("4. Convertir reserva a ticket")
-        self.console.print("0. Volver al menú principal")
+        """Muestra el menú de reservaciones con estilo uniforme."""
+        table = Table(
+            title="Gestión de Reservas",
+            border_style="magenta",
+            box=box.ROUNDED,)
+        table.add_column("ID", justify="center")
+        table.add_column("Descripción")
+
+        table.add_row("1", "Hacer reservación")
+        table.add_row("2", "Ver mis reservas")
+        table.add_row("3", "Cancelar reserva")
+        table.add_row("4", "Convertir reserva a ticket")
+        table.add_row("0", "Volver al menú principal")
+
+        self.console.print(table)
         return Prompt.ask("Seleccione una ID", choices=["0", "1", "2", "3", "4"])
     
     def show_reservations(self, reservations: list):

@@ -2,6 +2,8 @@ import sys
 from rich.console import Console
 from rich.panel import Panel
 from rich.prompt import Prompt
+from rich.table import Table
+from rich import box
 from datetime import datetime, timedelta
 
 # Importaciones de core
@@ -99,13 +101,17 @@ class DDSMovieApp:
         self.menu_view.show_welcome()
         self.console.print(Panel.fit("[bold]Inicio de Sesión[/]", border_style="blue"))
 
-        # Mostrar menú con estilo
-        self.console.print("\n[bold cyan]1.[/] Iniciar sesión")
-        self.console.print("[bold cyan]2.[/] Registrarse")
-        self.console.print("[bold cyan]0.[/] Salir")
+        """Muestra el menú de inicio de sesión con el mismo estilo del menú principal."""
+        table = Table(box=box.ROUNDED, border_style="blue")
+        table.add_column("ID", style="cyan")
+        table.add_column("Opciones", style="magenta")
 
-        # Usar Prompt para pedir opción válida
-        choice = Prompt.ask("[bold]Seleccione una ID[/]", choices=["1", "2", "0"])
+        table.add_row("1", "Iniciar sesión")
+        table.add_row("2", "Registrarse")
+        table.add_row("0", "Salir")
+
+        self.console.print(table)
+        choice= Prompt.ask("Seleccione una ID", choices=["0", "1", "2"])
 
         if choice == "1":
             username, password = self.login_view.show_login()

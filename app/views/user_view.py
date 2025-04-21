@@ -9,15 +9,29 @@ class UserView:
         self.console = Console()
     
     def show_user_menu(self):
-        """Muestra el menú de gestión de usuarios."""
-        self.console.print("\n[bold]Gestión de Usuarios[/]")
-        self.console.print("1. Listar usuarios")
-        self.console.print("2. Buscar usuario")
-        self.console.print("3. Crear usuario")
-        self.console.print("4. Actualizar usuario")
-        self.console.print("5. Desactivar usuario")
-        self.console.print("0. Volver al menú principal")
-        return Prompt.ask("Seleccione una ID", choices=["0", "1", "2", "3", "4", "5"])
+        """Muestra el menú de gestión de usuarios con estilo uniforme."""
+        table = Table(
+            title="Gestión de Usuarios",
+            border_style="magenta",
+            box=box.ROUNDED,
+        )
+        table.add_column("ID", justify="center")
+        table.add_column("Descripción")
+
+        opciones = [
+            ("1", "Listar usuarios"),
+            ("2", "Buscar usuario"),
+            ("3", "Crear usuario"),
+            ("4", "Actualizar usuario"),
+            ("5", "Desactivar usuario"),
+            ("0", "Volver al menú principal"),
+        ]
+
+        for id, descripcion in opciones:
+            table.add_row(id, descripcion)
+
+        self.console.print(table)
+        return Prompt.ask("Seleccione una ID", choices=[id for id, _ in opciones])
     
     def show_users(self, users: list):
         """Muestra una lista de usuarios en formato de tabla."""

@@ -24,12 +24,21 @@ class TicketView:
         self.showtime_controller = ShowtimeController(self.db)
         
     def show_ticket_menu(self):
-        """Muestra el menú de tickets."""
-        self.console.print("\n[bold]Gestión de Tickets[/]")
-        self.console.print("1. Comprar ticket")
-        self.console.print("2. Ver mis tickets")
-        self.console.print("3. Cancelar ticket")
-        self.console.print("0. Volver al menú principal")
+        """Muestra el menú de tickets con estilo uniforme."""
+        table = Table(
+            title="Gestión de Tickets",
+            border_style="magenta",
+            box=box.ROUNDED,
+        )
+        table.add_column("ID", justify="center")
+        table.add_column("Descripción")
+
+        table.add_row("1", "Comprar ticket")
+        table.add_row("2", "Ver mis tickets")
+        table.add_row("3", "Cancelar ticket")
+        table.add_row("0", "Volver al menú principal")
+
+        self.console.print(table)
         return Prompt.ask("Seleccione una ID", choices=["0", "1", "2", "3"])
     
     def show_tickets(self, tickets: list):
