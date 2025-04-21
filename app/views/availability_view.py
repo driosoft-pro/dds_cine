@@ -26,7 +26,15 @@ class AvailabilityView:
         table.add_column("Asientos Disponibles", style="green")
         
         for seat_type, seats in availability.items():
-            seats_display = ', '.join(seats) if seats else "Ninguno"
+            # Manejar casos donde seats podría ser None o no iterable
+            if not seats or not isinstance(seats, (list, tuple, set)):
+                seats_display = "Ninguno"
+            else:
+                try:
+                    seats_display = ', '.join(str(seat) for seat in seats)
+                except (TypeError, AttributeError):
+                    seats_display = "Ninguno"
+                    
             table.add_row(
                 seat_type.capitalize(),
                 seats_display
