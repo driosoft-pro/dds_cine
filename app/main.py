@@ -1,6 +1,7 @@
 import sys
 from rich.console import Console
 from rich.panel import Panel
+from rich.prompt import Prompt
 from datetime import datetime, timedelta
 
 # Importaciones de core
@@ -97,45 +98,57 @@ class DDSMovieApp:
         """Maneja el proceso de autenticación."""
         self.menu_view.show_welcome()
         self.console.print(Panel.fit("[bold]Inicio de Sesión[/]", border_style="blue"))
-        
-        choice = self.console.input("1. Iniciar sesión\n2. Registrarse\n0. Salir\n>> ")
-        
+
+        # Mostrar menú con estilo
+        self.console.print("\n[bold cyan]1.[/] Iniciar sesión")
+        self.console.print("[bold cyan]2.[/] Registrarse")
+        self.console.print("[bold cyan]0.[/] Salir")
+
+        # Usar Prompt para pedir opción válida
+        choice = Prompt.ask("[bold]Seleccione una ID[/]", choices=["1", "2", "0"])
+
         if choice == "1":
             username, password = self.login_view.show_login()
+
+            # Verificar si el usuario agotó los intentos
+            if username is None or password is None:
+                self.menu_view.show_message("Se ha excedido el número de intentos. Intenta más tarde.", is_error=True)
+                self.menu_view.press_enter_to_continue()
+                return
+
             user = self.auth_service.login(username, password)
-            
+
             if user:
-                # Verificar si es admin basado en los datos del usuario, no en la instancia
                 if user.get('is_admin', False):
                     welcome_msg = f"Bienvenido, Administrador {user['name']}!"
                 else:
                     welcome_msg = f"Bienvenido, {user['name']}!"
-                
+
                 self.console.print(f"[green]{welcome_msg}[/]")
                 self.current_user = user
                 self.is_admin = user.get('is_admin', False)
             else:
                 self.login_view.show_login_error()
                 self.menu_view.press_enter_to_continue()
-        
+
         elif choice == "2":
             user_data = self.login_view.show_register()
-            
+
             # Validar datos
             valid, msg = self.validation_service.validate_email(user_data['email'])
             if not valid:
                 self.menu_view.show_message(msg, is_error=True)
                 return
-            
+
             valid, msg, date = self.validation_service.validate_date(user_data['birth_date'])
             if not valid:
                 self.menu_view.show_message(msg, is_error=True)
                 return
-            
+
             if user_data['password'] != user_data['confirm_password']:
                 self.menu_view.show_message("Las contraseñas no coinciden", is_error=True)
                 return
-            
+
             try:
                 self.auth_service.register_user(
                     username=user_data['username'],
@@ -148,15 +161,17 @@ class DDSMovieApp:
                 self.login_view.show_register_success()
             except ValueError as e:
                 self.menu_view.show_message(str(e), is_error=True)
-            
+
             self.menu_view.press_enter_to_continue()
-        
+
         elif choice == "0":
             self.running = False
+
                 
     def handle_main_menu(self):
         """Maneja el menú principal según el tipo de usuario."""
         while True:
+            self.menu_view.show_title()
             self.menu_view.show_main_menu(self.is_admin)
             options = ["1", "2", "3", "4", "5", "6", "0"] if not self.is_admin else ["1", "2", "3", "4", "5", "0"]
             choice = self.menu_view.get_user_choice(options)

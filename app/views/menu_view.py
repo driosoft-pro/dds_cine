@@ -1,3 +1,4 @@
+import pyfiglet
 from rich.console import Console
 from rich.panel import Panel
 from rich.table import Table
@@ -9,10 +10,16 @@ class MenuView:
     
     def __init__(self):
         self.console = Console()
-    
+
+    def show_title(self):
+        """Muestra el título del sistema."""
+        title = pyfiglet.figlet_format("DDS-CINE", font="slant")
+        self.console.print(title)
+        
     def show_welcome(self):
         """Muestra la pantalla de bienvenida."""
         self.console.clear()
+        self.show_title()
         self.console.print(
             Panel.fit(
                 "[bold cyan]DDS-CINE[/] - Sistema de Gestión de Cine",

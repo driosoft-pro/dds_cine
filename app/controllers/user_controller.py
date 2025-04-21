@@ -1,4 +1,4 @@
-import json
+import hashlib
 from datetime import datetime
 from typing import Dict, List, Optional
 from models.user import User, Admin
@@ -55,6 +55,14 @@ class UserController:
                 return user
         return None
     
+    def get_password_user(self, username: str) -> Optional[str]:
+        """Obtiene la contraseña de un usuario."""
+        users = self.db.load_data(self.users_file)
+        for user in users:
+            if user['username'] == username:
+                return user['password']
+        return None
+    
     def update_user(self, user_id: int, **kwargs) -> Optional[Dict]:
         """Actualiza los datos de un usuario."""
         users = self.db.load_data(self.users_file)
@@ -90,3 +98,15 @@ class UserController:
         if user and user['password'] == password and user['status'] == 'activo':
             return user
         return None
+    
+    def exists_user(self, username: str) -> bool:
+        """Verifica si un usuario existe."""
+        return self.get_user_by_username(username) is not None
+    
+    def check_password_user(self, username: str, password: str) -> bool:
+        """Verifica si la contraseña de un usuario es correcta."""
+        user = self.get_user_by_username(username)
+        if user is None or user.get('password') is None:
+            return False
+        # Comparación segura incluso si password es None
+        return user['password'] == hashlib.sha256(password.encode()).hexdigest()

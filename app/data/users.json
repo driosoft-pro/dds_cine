@@ -20,16 +20,5 @@
     "password": "b7827b17b0821b354fabf438d73691c2bf467af7a44c374f8c505a5ee08b0d5d",
     "status": "activo",
     "is_admin": false
-  },
-  {
-    "user_id": 3,
-    "username": "test",
-    "identification": "123456789",
-    "name": "tester",
-    "email": "test@dds.com",
-    "birth_date": "1999-02-03",
-    "password": "d9b5f58f0b38198293971865a14074f59eba3e82595becbe86ae51f1d9f1f65e",
-    "status": "activo",
-    "is_admin": false
   }
 ]
