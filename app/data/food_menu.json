@@ -161,45 +161,5 @@
     "price": 6000,
     "description": "Surtido de dulces variados",
     "status": "activo"
-  },
-  {
-    "item_id": 18,
-    "code": "20",
-    "category": "CDD",
-    "product": "Pal",
-    "size": null,
-    "price": 12000.0,
-    "description": "X",
-    "status": "activo"
-  },
-  {
-    "item_id": 19,
-    "code": "CDD",
-    "category": "Snack",
-    "product": "Crispeta",
-    "size": "Pequeño",
-    "price": 20000.0,
-    "description": "Dulce",
-    "status": "inactivo"
-  },
-  {
-    "item_id": 20,
-    "code": "CM",
-    "category": "Snack",
-    "product": "Crispeta m",
-    "size": null,
-    "price": 25000.0,
-    "description": "X",
-    "status": "activo"
-  },
-  {
-    "item_id": 21,
-    "code": "CDD",
-    "category": "CD",
-    "product": "S",
-    "size": null,
-    "price": 25000.0,
-    "description": "x",
-    "status": "inactivo"
   }
 ]

@@ -1186,47 +1186,5 @@
       "preferencial": 20
     },
     "status": "activo"
-  },
-  {
-    "movie_id": 4,
-    "title": "adsd",
-    "release_year": 2004,
-    "director": "asdas",
-    "category": "Acción",
-    "synopsis": "sadsad",
-    "duration": 120,
-    "age_rating": "G",
-    "language": "Esp",
-    "origin": "Colombia",
-    "room_type": "2D",
-    "showtimes": [],
-    "hall": "regular",
-    "ticket_price": 18000.0,
-    "available_seats": {
-      "general": 100,
-      "preferencial": 50
-    },
-    "status": "activo"
-  },
-  {
-    "movie_id": 5,
-    "title": "x",
-    "release_year": 2004,
-    "director": "S",
-    "category": "Acción",
-    "synopsis": "X",
-    "duration": 120,
-    "age_rating": "PG",
-    "language": "Esp",
-    "origin": "Colombia",
-    "room_type": "2D",
-    "showtimes": [],
-    "hall": "regular",
-    "ticket_price": 20000.0,
-    "available_seats": {
-      "general": 100,
-      "preferencial": 50
-    },
-    "status": "activo"
   }
 ]
