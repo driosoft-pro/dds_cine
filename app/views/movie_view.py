@@ -45,10 +45,9 @@ class MovieView:
             opciones = [
                 ("1", "Ver cartelera completa"),
                 ("2", "Buscar por categoría"),
-                ("3", "Buscar por fecha"),
                 ("0", "Volver al menú principal"),
             ]
-            valid_choices = ["1", "2", "3", "0"]
+            valid_choices = ["1", "2", "0"]
 
         for id, descripcion in opciones:
             table.add_row(id, descripcion)

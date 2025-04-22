@@ -68,17 +68,6 @@ class TicketView:
         
         self.console.print(table)
     
-    def select_seat(self, available_seats: List[str]) -> str:
-        """Muestra y permite seleccionar un asiento disponible"""
-        self.console.print("\n[bold]Asientos disponibles:[/]")
-        self.console.print("[green]" + ", ".join(available_seats) + "[/]")
-        
-        while True:
-            seat_number = Prompt.ask("Ingrese el número del asiento deseado").upper()
-            if seat_number in available_seats:
-                return seat_number
-            self.console.print("[red]Asiento no disponible. Intente nuevamente.[/]")
-            
     def get_ticket_purchase_data(self, movies: list, showtimes: list):
         """Obtiene datos para comprar un ticket.
         
@@ -93,7 +82,10 @@ class TicketView:
         
         # Seleccionar película
         movie_id = int(Prompt.ask("Ingrese ID de la película"))
-                
+        # Saber si es 2D o 3D
+        movie = next(m for m in movies if m["movie_id"] == movie_id)
+        is_3d = movie.get("room_type", "").upper() == "3D"
+
         # Filtrar y mostrar horarios para la película seleccionada
         movie_showtimes = [st for st in showtimes if st['movie_id'] == movie_id]
         self.movie_view.show_showtimes(movie_showtimes)
@@ -101,12 +93,16 @@ class TicketView:
         # Seleccionar horario
         showtime_id = int(Prompt.ask("Ingrese ID del horario"))
         
-        # Seleccionar tipo de asiento
-        seat_type_choice = Prompt.ask(
-            "Tipo de asiento \n1: General. \n2: Preferencial. \nOpciones",
-            choices=["1", "2"]
-        )
-        seat_type = "general" if seat_type_choice == "1" else "preferencial"
+        # Seleccionar tipo de asiento, omitimos Preferencial si NO es 3D
+        if is_3d:
+            self.console.print("Tipo de asiento:\n1: General.\n2: Preferencial.")
+            seat_choice = Prompt.ask("Opciones", choices=["1", "2"])
+            seat_type = "general" if seat_choice == "1" else "preferencial"
+        else:
+            # Sólo general para 2D
+            self.console.print("Tipo de asiento:\n1: General. \nLa Sala 2D No Cuenta Con Asientos Preferenciales.")
+            Prompt.ask("Presiona 1 para continuar", choices=["1"], default="1")
+            seat_type = "general"
         
         # Cantidad de tickets
         quantity = int(Prompt.ask("Cantidad de tickets", default="1"))
@@ -196,3 +192,26 @@ class TicketView:
             self.console.print("[yellow]No hay cambio a devolver.[/]")
         else:
             self.console.print("[red]Error: Monto insuficiente[/]")
+
+    def select_seat(self, available_seats: List[str]) -> str:
+        """Permite seleccionar un solo asiento disponible."""
+        self.console.print("\n[bold]Asientos disponibles:[/]")
+        self.console.print("[green]" + ", ".join(available_seats) + "[/]")
+        while True:
+            seat = Prompt.ask("Ingrese el número del asiento deseado").upper()
+            if seat in available_seats:
+                return seat
+            self.console.print("[red]Asiento no disponible. Intente nuevamente.[/]")
+
+    def select_multiple_seats(self, available_seats: List[str], quantity: int) -> List[str]:
+        """Permite seleccionar N asientos distintos según la cantidad."""
+        self.console.print(f"\n[bold]Selecciona {quantity} asientos disponibles:[/]")
+        self.console.print("[green]" + ", ".join(available_seats) + "[/]")
+        selected: List[str] = []
+        while len(selected) < quantity:
+            seat = Prompt.ask(f"Asiento #{len(selected)+1}").upper()
+            if seat in available_seats and seat not in selected:
+                selected.append(seat)
+            else:
+                self.console.print("[red]Asiento no disponible o ya seleccionado. Intenta otro.[/]")
+        return selected

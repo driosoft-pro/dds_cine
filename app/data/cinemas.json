@@ -112,7 +112,6 @@
     },
     "available_seats": {
       "general": [
-        "A1",
         "A2",
         "A3",
         "A4",
@@ -214,8 +213,14 @@
         "A100"
       ]
     },
-    "temp_reservations": {},
-    "confirmed_seats": {}
+    "temp_reservations": {
+      "general": []
+    },
+    "confirmed_seats": {
+      "general": [
+        "A1"
+      ]
+    }
   },
   {
     "cinema_id": 2,
@@ -333,26 +338,6 @@
     },
     "available_seats": {
       "general": [
-        "B5",
-        "B6",
-        "B8",
-        "B9",
-        "B10",
-        "B11",
-        "B12",
-        "B13",
-        "B14",
-        "B15",
-        "B16",
-        "B17",
-        "B18",
-        "B19",
-        "B20",
-        "B21",
-        "B22",
-        "B23",
-        "B24",
-        "B25",
         "B26",
         "B27",
         "B28",
@@ -407,7 +392,19 @@
         "B77",
         "B78",
         "B79",
-        "B80"
+        "B80",
+        "B6",
+        "B9",
+        "B10",
+        "B11",
+        "B12",
+        "B13",
+        "B14",
+        "B15",
+        "B16",
+        "B17",
+        "B22",
+        "B23"
       ],
       "preferencial": [
         "P2",
@@ -432,7 +429,24 @@
       ]
     },
     "temp_reservations": {
-      "general": [],
+      "general": [
+        {
+          "seat_number": "B18",
+          "expires_at": "2025-04-22T09:34:21.035069"
+        },
+        {
+          "seat_number": "B19",
+          "expires_at": "2025-04-22T09:34:21.045890"
+        },
+        {
+          "seat_number": "B20",
+          "expires_at": "2025-04-22T09:35:48.403396"
+        },
+        {
+          "seat_number": "B21",
+          "expires_at": "2025-04-22T09:35:48.411948"
+        }
+      ],
       "preferencial": []
     },
     "confirmed_seats": {
@@ -441,7 +455,11 @@
         "B2",
         "B4",
         "B7",
-        "B3"
+        "B3",
+        "B5",
+        "B8",
+        "B24",
+        "B25"
       ],
       "preferencial": [
         "P1"

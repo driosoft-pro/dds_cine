@@ -32,7 +32,7 @@ class LoginView:
         self.console.print(Panel.fit("[bold]Iniciar Sesión[/]", border_style="blue"))
         
         for attempt in range(self.max_attempts):
-            username = Prompt.ask("[cyan]Usuario:[/]").strip()
+            username = Prompt.ask("[cyan]Usuario[/]").strip()
             
             if username.lower() == "volver":
                 return "volver", "volver"

@@ -36,6 +36,9 @@ from views.payment_view import PaymentView
 from views.food_view import FoodView
 from views.availability_view import AvailabilityView
 
+# Importaciones de utilidades
+from utils.date_utils import safe_parse_datetime
+
 # Configuración
 from config import Config
 
@@ -113,7 +116,7 @@ class DDSMovieApp:
         self.console.print(table)
 
         while True:
-            choice = Prompt.ask("Seleccione una ID [0/1/2] \nEscriba volver si desea regresar al menu").strip()
+            choice = Prompt.ask("Escriba volver si desea regresar al menu \nSeleccione una ID [0/1/2]").strip()
 
             if choice not in ["0", "1", "2"]:
                 self.console.print("[red]Por favor seleccione una opción válida: 0, 1 o 2.[/]")
@@ -532,352 +535,279 @@ class DDSMovieApp:
                 self.menu_view.press_enter_to_continue()
     
     def handle_ticket_purchase(self):
-        """Maneja el proceso de compra de tickets con reservas para clientes."""
+        """Maneja el proceso de compra de tickets con múltiples asientos."""
         choice = self.ticket_view.show_ticket_menu()
-        
+
         if choice == "1":  # Comprar ticket
             try:
-                # Listar películas y horarios disponibles
+                # 1. Películas y showtimes
                 movies = self.movie_controller.list_movies()
                 showtimes = self.showtime_controller.load_data("showtimes.json")
-                
-                # Obtener datos de compra del usuario
+
+                # 2. Datos de compra
                 purchase_data = self.ticket_view.get_ticket_purchase_data(movies, showtimes)
-                
-                # Resto del código permanece igual...
                 movie = self.movie_controller.get_movie_by_id(purchase_data['movie_id'])
-                
-                # Validar horario seleccionado
-                selected_showtime = next(
-                    (st for st in showtimes if st['movie_id'] == purchase_data['movie_id'] 
-                    and st['showtime_id'] == purchase_data['showtime_id']),
-                    None
-                )
-                
+
+                # 3. Validar showtime
+                selected_showtime = next((
+                    st for st in showtimes
+                    if st['movie_id'] == purchase_data['movie_id']
+                    and st['showtime_id'] == purchase_data['showtime_id']
+                ), None)
                 if not selected_showtime:
                     self.menu_view.show_message("Horario no encontrado", is_error=True)
                     return
-                
-                # Validar sala asociada al horario
-                if 'cinema_id' not in selected_showtime:
-                    self.menu_view.show_message("Error: El horario no tiene sala asignada", is_error=True)
-                    return
-                    
+
+                # 4. Validar sala
                 cinema = self.cinema_controller.get_cinema_by_id(selected_showtime['cinema_id'])
                 if not cinema:
                     self.menu_view.show_message("Sala no encontrada", is_error=True)
                     return
-                
-                # Obtener asientos disponibles para el tipo seleccionado
+
+                # 5. Asientos disponibles
                 available_seats = self.cinema_controller.get_available_seats_by_type(
                     selected_showtime['cinema_id'],
                     purchase_data['seat_type']
                 )
-                
                 if not available_seats:
                     self.menu_view.show_message("No hay asientos disponibles", is_error=True)
                     return
-                
-                # Seleccionar asiento específico
-                seat_number = self.ticket_view.select_seat(available_seats)
-                
-                # Reserva TEMPORAL del asiento (bloqueo por 10 minutos)
-                if not self.cinema_controller.temp_reserve_seat(
-                    selected_showtime['cinema_id'],
-                    purchase_data['seat_type'],
-                    seat_number
-                ):
-                    self.menu_view.show_message("Error al reservar el asiento", is_error=True)
-                    return
-                
+
+                # 6. Selección de N asientos
+                qty = purchase_data['quantity']
+                if qty > 1:
+                    seats = self.ticket_view.select_multiple_seats(available_seats, qty)
+                else:
+                    seats = [self.ticket_view.select_seat(available_seats)]
+
+                # 7. Reserva TEMPORAL
+                for seat in seats:
+                    if not self.cinema_controller.temp_reserve_seat(
+                        selected_showtime['cinema_id'],
+                        purchase_data['seat_type'],
+                        seat
+                    ):
+                        self.menu_view.show_message("Error al reservar el asiento", is_error=True)
+                        return
+
                 try:
-                    # Calcular precio con validación de fechas
+                    # 8. Calcular precio
                     user = self.user_controller.get_user_by_id(self.current_user['user_id'])
                     birth_date = datetime.strptime(user['birth_date'], "%Y-%m-%d").date()
-                    
-                    # Parseo seguro de fecha y hora del showtime
-                    showtime_date_str = selected_showtime['date']
-                    showtime_time_str = selected_showtime['start_time']
-                    
-                    # Convertir a objetos datetime/date/time
-                    if isinstance(showtime_date_str, str):
-                        try:
-                            showtime_date = datetime.strptime(showtime_date_str, "%Y-%m-%d").date()
-                        except ValueError:
-                            showtime_date = datetime.strptime(showtime_date_str, "%Y-%m-%d %H:%M:%S").date()
-                    elif hasattr(showtime_date_str, 'strftime'):  # Ya es date/datetime
-                        showtime_date = showtime_date_str
-                    else:
-                        raise ValueError("Formato de fecha inválido")
-                    
-                    if isinstance(showtime_time_str, str):
-                        try:
-                            showtime_time = datetime.strptime(showtime_time_str, "%H:%M").time()
-                        except ValueError:
-                            showtime_time = datetime.strptime(showtime_time_str, "%H:%M:%S").time()
-                    elif hasattr(showtime_time_str, 'strftime'):  # Ya es time
-                        showtime_time = showtime_time_str
-                    else:
-                        raise ValueError("Formato de hora inválido")
-                    
-                    showtime_datetime = datetime.combine(showtime_date, showtime_time)
-                    showtime_str = showtime_datetime.strftime("%Y-%m-%d %H:%M")  # Para mostrar al usuario
-
-                    # Calcular precio final con posibles descuentos
-                    price = TicketService.calculate_ticket_price(
+                    dt = safe_parse_datetime(
+                        selected_showtime['date'],
+                        selected_showtime['start_time']
+                    )
+                    price_per_ticket = TicketService.calculate_ticket_price(
                         room_type=movie['room_type'],
                         seat_type=purchase_data['seat_type'],
                         birth_date=birth_date,
-                        showtime=showtime_datetime
+                        showtime=dt
                     )
-                    
-                    # Mostrar resumen de compra al usuario
+                    total_price = price_per_ticket * qty
+
+                    # 9. Mostrar resumen
                     ticket_summary = {
                         'movie_title': movie['title'],
-                        'showtime': showtime_str,
-                        'seat_number': seat_number,
+                        'showtime': dt.strftime("%Y-%m-%d %H:%M"),
+                        'seat_number': ", ".join(seats),
                         'ticket_type': purchase_data['seat_type'],
-                        'price': price * purchase_data['quantity']
+                        'price': total_price
                     }
-                    
                     self.ticket_view.show_ticket_summary(ticket_summary)
-                    
-                    # Confirmación final del usuario
+
+                    # 10. Confirmación
                     if not self.menu_view.confirm_action("Confirmar compra?"):
                         raise Exception("Compra cancelada por el usuario")
-                    
-                    # Procesar pago según método seleccionado
+
+                    # 11. Procesar pago
                     payment_method = self.ticket_view.get_payment_method()
-                    payment_data = {
-                        'user_id': self.current_user['user_id'],
-                        'amount': ticket_summary['price'],
-                        'payment_method': payment_method
-                    }
-                    
                     if payment_method == "1":  # Efectivo
-                        cash = self.ticket_view.get_cash_amount(ticket_summary['price'])
-                        change = cash - ticket_summary['price']
-                        if change < 0:
-                            raise ValueError("Monto insuficiente")
-                        self.ticket_view.show_change(ticket_summary['price'], cash)
-                    
-                    # Crear registro del ticket (usando el datetime, no el string)
-                    ticket_data = {
-                        'user_id': self.current_user['user_id'],
-                        'movie_id': purchase_data['movie_id'],
-                        'showtime': showtime_datetime, 
-                        'seat_number': seat_number,
-                        'ticket_type': purchase_data['seat_type'],
-                        'price': price
-                    }
-                    
-                    new_ticket = self.ticket_controller.create_ticket(**ticket_data)
-                    payment_data['ticket_id'] = new_ticket['ticket_id']
-                    
-                    # Registrar el pago
-                    new_payment = self.payment_controller.create_payment(**payment_data)
-                    
-                    # Confirmar la reserva (convertir temporal a permanente)
-                    if not self.cinema_controller.confirm_reservation(
-                        selected_showtime['cinema_id'],
-                        purchase_data['seat_type'],
-                        seat_number
-                    ):
-                        raise Exception("Error al confirmar la reserva del asiento")
-                    
-                    # Mostrar confirmación final
-                    self.payment_view.show_payment_summary(new_payment)
-                    self.menu_view.show_message("Compra realizada con éxito!")
-                    
-                except ValueError as e:
-                    # Liberar asiento SIEMPRE que haya error
-                    self.cinema_controller.release_seat(
-                        selected_showtime['cinema_id'],
-                        purchase_data['seat_type'],
-                        seat_number
-                    )
-                    self.menu_view.show_message(f"Error en formato de fecha/hora: {str(e)}", is_error=True)
-                    return
+                        cash = self.ticket_view.get_cash_amount(total_price)
+                        self.ticket_view.show_change(total_price, cash)
+
+                    # 12. Crear tickets y pagos
+                    created_tickets = []
+                    for seat in seats:
+                        ticket_data = {
+                            'user_id': self.current_user['user_id'],
+                            'movie_id': purchase_data['movie_id'],
+                            'showtime': dt,
+                            'seat_number': seat,
+                            'ticket_type': purchase_data['seat_type'],
+                            'price': price_per_ticket
+                        }
+                        new_ticket = self.ticket_controller.create_ticket(**ticket_data)
+                        created_tickets.append(new_ticket)
+
+                        # Un pago POR CADA ticket
+                        pay = self.payment_controller.create_payment(
+                            user_id=self.current_user['user_id'],
+                            amount=price_per_ticket,
+                            payment_method=payment_method,
+                            ticket_id=new_ticket['ticket_id']
+                        )
+                        self.payment_view.show_payment_summary(pay)
+
+                    # 13. Confirmar asiento definitivo
+                    for seat in seats:
+                        self.cinema_controller.confirm_reservation(
+                            selected_showtime['cinema_id'],
+                            purchase_data['seat_type'],
+                            seat
+                        )
+
+                    self.menu_view.show_message("✅ Compra realizada con éxito!")
+
                 except Exception as e:
-                    # Liberar asiento SIEMPRE que haya error
-                    self.cinema_controller.release_seat(
-                        selected_showtime['cinema_id'],
-                        purchase_data['seat_type'],
-                        seat_number
-                    )
-                    self.menu_view.show_message(f"Error al procesar la compra: {str(e)}", is_error=True)
-                    return
-                    
+                    # Liberar todos los asientos temporales
+                    for seat in seats:
+                        self.cinema_controller.release_seat(
+                            selected_showtime['cinema_id'],
+                            purchase_data['seat_type'],
+                            seat
+                        )
+                    self.menu_view.show_message(f"Error al procesar la compra: {e}", is_error=True)
+
             except Exception as e:
-                self.menu_view.show_message(f"Error inesperado: {str(e)}", is_error=True)
-            
-            self.menu_view.press_enter_to_continue()
-        
+                self.menu_view.show_message(f"Error inesperado: {e}", is_error=True)
+
+            finally:
+                self.menu_view.press_enter_to_continue()
+
         elif choice == "2":  # Ver mis tickets
             tickets = self.ticket_controller.get_tickets_by_user(self.current_user['user_id'])
-            enriched_tickets = []
+            enriched = []
             for t in tickets:
                 movie = self.movie_controller.get_movie_by_id(t['movie_id'])
-                enriched_tickets.append({
-                    **t,
-                    'movie_title': movie['title'] if movie else "Película no disponible"
-                })
-            self.ticket_view.show_tickets(enriched_tickets)
+                enriched.append({**t, 'movie_title': movie['title'] if movie else "N/D"})
+            self.ticket_view.show_tickets(enriched)
             self.menu_view.press_enter_to_continue()
-        
+
         elif choice == "3":  # Cancelar ticket
             tickets = self.ticket_controller.get_tickets_by_user(self.current_user['user_id'])
             if not tickets:
                 self.menu_view.show_message("No tienes tickets para cancelar", is_error=True)
-                self.menu_view.press_enter_to_continue()
-                return
-            
-            enriched_tickets = []
-            for t in tickets:
-                movie = self.movie_controller.get_movie_by_id(t['movie_id'])
-                enriched_tickets.append({
-                    **t,
-                    'movie_title': movie['title'] if movie else "Película no disponible"
-                })
-            
-            ticket_id = int(self.console.input("Ingrese ID del ticket a cancelar: "))
-            if self.ticket_controller.cancel_ticket(ticket_id):
-                self.menu_view.show_message("Ticket cancelado con éxito!")
             else:
-                self.menu_view.show_message("Error al cancelar el ticket", is_error=True)
-            self.menu_view.press_enter_to_continue()    
+                ticket_id = int(self.console.input("Ingrese ID del ticket a cancelar: "))
+                ok = self.ticket_controller.cancel_ticket(ticket_id)
+                msg = "Ticket cancelado con éxito!" if ok else "Error al cancelar el ticket"
+                self.menu_view.show_message(msg, is_error=not ok)
+            self.menu_view.press_enter_to_continue()
+
+        elif choice == "0":  # Volver
+            return    
     
     def handle_reservation(self):
-        """Maneja el proceso completo de reservación con manejo robusto de errores."""
+        """Maneja el proceso completo de reservación, incluyendo selección de varios asientos."""
         choice = self.reservation_view.show_reservation_menu()
         
         if choice == "1":  # Hacer reservación
             try:
-                # Listar películas y horarios disponibles
+                # 1. Listar películas y horarios
                 movies = self.movie_controller.list_movies()
                 showtimes = self.showtime_controller.load_data("showtimes.json")
                 self.movie_view.show_movies(movies, showtimes)
                 
-                # Obtener datos de reservación
+                # 2. Obtener datos de reservación
                 reservation_data = self.reservation_view.get_reservation_data(movies, showtimes)
                 movie = self.movie_controller.get_movie_by_id(reservation_data['movie_id'])
                 
-                # Validar horario seleccionado
+                # 3. Validar horario y sala
                 selected_showtime = next(
-                    (st for st in showtimes if st['movie_id'] == reservation_data['movie_id'] 
-                    and st['showtime_id'] == reservation_data['showtime_id']),
+                    (st for st in showtimes
+                        if st['movie_id'] == reservation_data['movie_id']
+                        and st['showtime_id'] == reservation_data['showtime_id']),
                     None
                 )
-                
                 if not selected_showtime:
                     self.menu_view.show_message("Horario no encontrado", is_error=True)
                     return
-                
-                showtime_id = selected_showtime['showtime_id']
                 cinema_id = selected_showtime['cinema_id']
-                
-                # Validar sala
                 cinema = self.cinema_controller.get_cinema_by_id(cinema_id)
                 if not cinema:
                     self.menu_view.show_message("Sala no encontrada", is_error=True)
                     return
-                    
-                # Obtener asientos disponibles
+                
+                # 4. Obtener y reservar temporalmente N asientos
                 available_seats = self.showtime_controller.get_available_seats(
-                    showtime_id,
+                    selected_showtime['showtime_id'],
                     reservation_data['seat_type']
                 )
+                qty = reservation_data['quantity']
+                if qty > 1:
+                    seats = self.reservation_view.select_multiple_seats(available_seats, qty)
+                else:
+                    seats = [self.reservation_view.select_seat(available_seats)]
                 
-                if not available_seats:
-                    self.menu_view.show_message("No hay asientos disponibles", is_error=True)
-                    return
-                    
-                # Seleccionar asiento
-                seat_number = self.reservation_view.select_seat(available_seats)
-                
-                # Reserva temporal del asiento
-                if not self.cinema_controller.temp_reserve_seat(
-                    cinema_id,
-                    reservation_data['seat_type'],
-                    seat_number
-                ):
-                    self.menu_view.show_message("Error al reservar el asiento", is_error=True)
-                    return
+                for seat in seats:
+                    if not self.cinema_controller.temp_reserve_seat(
+                        cinema_id, reservation_data['seat_type'], seat
+                    ):
+                        self.menu_view.show_message("Error al reservar el asiento", is_error=True)
+                        return
                 
                 try:
-                    # Calcular precio
+                    # 5. Calcular precio y generar resumen
                     user = self.user_controller.get_user_by_id(self.current_user['user_id'])
                     birth_date = datetime.strptime(user['birth_date'], "%Y-%m-%d").date()
-                    
-                    # Parseo de fecha/hora
-                    showtime_date = selected_showtime['date']
-                    showtime_time = selected_showtime['start_time']
-                    
-                    if isinstance(showtime_date, str):
-                        showtime_date = datetime.strptime(showtime_date, "%Y-%m-%d").date()
-                    if isinstance(showtime_time, str):
-                        showtime_time = datetime.strptime(showtime_time, "%H:%M").time()
-                    
-                    showtime_datetime = datetime.combine(showtime_date, showtime_time)
-                    
-                    price = TicketService.calculate_ticket_price(
+                    dt = safe_parse_datetime(
+                        selected_showtime['date'],
+                        selected_showtime['start_time']
+                    )
+                    price_per_ticket = TicketService.calculate_ticket_price(
                         room_type=movie['room_type'],
                         seat_type=reservation_data['seat_type'],
                         birth_date=birth_date,
-                        showtime=showtime_datetime
+                        showtime=dt
                     )
+                    total_price = price_per_ticket * qty
                     
-                    # Mostrar resumen
                     reservation_summary = {
                         'movie_title': movie['title'],
-                        'showtime': f"{showtime_date} {showtime_time}",
-                        'seat_number': seat_number,
+                        'showtime': dt.strftime("%Y-%m-%d %H:%M"),
+                        'seat_number': ", ".join(seats),
                         'ticket_type': reservation_data['seat_type'],
-                        'price': price,
+                        'price': total_price,
                         'expiration': (datetime.now() + timedelta(hours=24)).strftime("%Y-%m-%d %H:%M")
                     }
-                    
                     self.reservation_view.show_reservation_summary(reservation_summary)
                     
-                    # Confirmar reserva
+                    # 6. Confirmar reserva
                     if not self.menu_view.confirm_action("Confirmar reserva?"):
                         raise Exception("Reserva cancelada por el usuario")
                     
-                    # Crear reserva en el sistema
-                    new_reservation = self.reservation_controller.create_reservation(
-                        user_id=self.current_user['user_id'],
-                        movie_id=reservation_data['movie_id'],
-                        showtime=f"{showtime_date} {showtime_time}",
-                        seat_number=seat_number,
-                        ticket_type=reservation_data['seat_type'],
-                        price=price,
-                        showtime_id=showtime_id,
-                        expiration_date=(datetime.now() + timedelta(hours=24)).isoformat()
-                    )                
-    
-                                        
-                    # Confirmar reserva del asiento
-                    self.cinema_controller.confirm_reservation(
-                        cinema_id,
-                        reservation_data['seat_type'],
-                        seat_number
-                    )
+                    # 7. Crear reservas permanentes y confirmar asientos
+                    created = []
+                    for seat in seats:
+                        res = self.reservation_controller.create_reservation(
+                            user_id=self.current_user['user_id'],
+                            movie_id=reservation_data['movie_id'],
+                            showtime=dt.strftime("%Y-%m-%d %H:%M"),
+                            seat_number=seat,
+                            ticket_type=reservation_data['seat_type'],
+                            price=price_per_ticket,
+                            showtime_id=selected_showtime['showtime_id'],
+                            expiration_date=(datetime.now() + timedelta(hours=24)).isoformat()
+                        )
+                        created.append(res)
+                        self.cinema_controller.confirm_reservation(
+                            cinema_id, reservation_data['seat_type'], seat
+                        )
                     
                     self.menu_view.show_message("✅ Reserva realizada con éxito! Válida por 24 horas.")
-                    
+                
                 except Exception as e:
-                    # Liberar asiento si hay error
-                    self.cinema_controller.release_seat(
-                        cinema_id,
-                        reservation_data['seat_type'],
-                        seat_number
-                    )
-                    raise e
-                    
-            except ValueError as e:
-                self.menu_view.show_message(f"Error de datos: {str(e)}", is_error=True)
+                    # Liberar todos los asientos temporales si hay error
+                    for seat in seats:
+                        self.cinema_controller.release_seat(
+                            cinema_id, reservation_data['ticket_type'], seat
+                        )
+                    self.menu_view.show_message(f"Error en la reserva: {e}", is_error=True)
+                    return
+            
             except Exception as e:
-                self.menu_view.show_message(f"Error inesperado: {str(e)}", is_error=True)
+                self.menu_view.show_message(f"Error inesperado: {e}", is_error=True)
             
             self.menu_view.press_enter_to_continue()
         

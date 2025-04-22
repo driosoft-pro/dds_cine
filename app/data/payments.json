@@ -43,5 +43,50 @@
     "payment_method": "Tarjeta",
     "status": "activo",
     "payment_date": "2025-04-22T02:54:23.571723"
+  },
+  {
+    "payment_id": 6,
+    "user_id": 2,
+    "ticket_id": 6,
+    "amount": 36000,
+    "payment_method": "Tarjeta",
+    "status": "activo",
+    "payment_date": "2025-04-22T03:17:41.334180"
+  },
+  {
+    "payment_id": 7,
+    "user_id": 2,
+    "ticket_id": 7,
+    "amount": 54000,
+    "payment_method": "Efectivo",
+    "status": "activo",
+    "payment_date": "2025-04-22T03:19:22.408884"
+  },
+  {
+    "payment_id": 8,
+    "user_id": 2,
+    "ticket_id": 18,
+    "amount": 18000,
+    "payment_method": "Efectivo",
+    "status": "activo",
+    "payment_date": "2025-04-22T09:32:41.985135"
+  },
+  {
+    "payment_id": 9,
+    "user_id": 2,
+    "ticket_id": 19,
+    "amount": 18000,
+    "payment_method": "Efectivo",
+    "status": "activo",
+    "payment_date": "2025-04-22T09:32:41.999461"
+  },
+  {
+    "payment_id": 10,
+    "user_id": 2,
+    "ticket_id": 20,
+    "amount": 18000,
+    "payment_method": "Tarjeta",
+    "status": "activo",
+    "payment_date": "2025-04-22T09:50:19.093600"
   }
 ]
