@@ -10,13 +10,14 @@ class UserController:
     def __init__(self, db: Database):
         self.db = db
         self.users_file = "users.json"
-    
+        
     def create_user(self, username: str, identification: str, name: str, 
                     email: str, birth_date: datetime, password: str, 
                     is_admin: bool = False) -> Dict:
         """Crea un nuevo usuario."""
         users = self.db.load_data(self.users_file)
-        user_id = self.db.get_next_id(self.users_file)
+        user_id = self.db.get_next_id("users.json", "user_id")
+        
         
         if any(u['username'] == username for u in users):
             raise ValueError("El nombre de usuario ya existe")

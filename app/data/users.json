@@ -13,23 +13,34 @@
   {
     "user_id": 2,
     "username": "client",
-    "identification": "11",
-    "name": "sa",
-    "email": "sa@gmail.com",
-    "birth_date": "2004-06-30",
+    "identification": "987654321",
+    "name": "Samuel Mosquera",
+    "email": "samu@ddscine.com",
+    "birth_date": "1990-05-15",
     "password": "b7827b17b0821b354fabf438d73691c2bf467af7a44c374f8c505a5ee08b0d5d",
     "status": "activo",
     "is_admin": false
   },
   {
     "user_id": 3,
-    "username": "samuel",
-    "identification": "1126",
-    "name": "samuel",
-    "email": "sam@izq.com",
-    "birth_date": "2004-12-03",
-    "password": "samuel",
+    "username": "SamuelI",
+    "identification": "1126591530",
+    "name": "Samuel Izquierdo",
+    "email": "sam@gmail.com",
+    "birth_date": "2004-06-30",
+    "password": "910a76831f2b7bf506490bd9171da316f4fdb9ea1a26a44c0ccdcacab24d4ab0",
     "status": "activo",
+    "is_admin": false
+  },
+  {
+    "user_id": 4,
+    "username": "samuelizq",
+    "identification": "1126591530",
+    "name": "samuel izquierdo",
+    "email": "sam@izq.com",
+    "birth_date": "2004-12-30",
+    "password": "samuel13",
+    "status": "inactivo",
     "is_admin": false
   }
 ]

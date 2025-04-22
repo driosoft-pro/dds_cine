@@ -4,11 +4,20 @@ from rich.panel import Panel
 from rich.prompt import Prompt
 from rich import box
 
-class MovieView():
+# Importando recursos necesarios
+from core.database import Database
+from controllers.cinema_controller import CinemaController
+
+# Configuración
+from config import Config
+
+class MovieView:
     """Vista para gestión de películas."""
     
     def __init__(self):
+        self.db = Database(str(Config.DATA_DIR))
         self.console = Console()
+        self.cinema_controller = CinemaController(self.db)
     
 
     def show_movie_menu(self, is_admin: bool):
@@ -142,23 +151,182 @@ class MovieView():
         
     def get_movie_data(self):
         """Obtiene datos para crear/actualizar una película."""
+
+        title = Prompt.ask("Título de la película")
+        if not title.strip():
+            self.console.print("[yellow]Ingresa un título válido.[/]")
+            return
+
+        director = Prompt.ask("Director")
+        if not director.strip():
+            self.console.print("[yellow]Ingresa un director válido.[/]")
+            return
+
+        release_year_input = Prompt.ask("Año de lanzamiento")
+        if not release_year_input.strip().isdigit():
+            print("[yellow]Ingresa un año válido.[/]")
+            return
+
+        release_year = int(release_year_input)
+
+        category_list = ["Acción", "Comedia", "Drama", "Documental", "Terror", "Animación"]
+
+        self.console.print("\n[bold]Categorías disponibles:[/]")
+        for i, cat in enumerate(category_list, start=1):
+            self.console.print(f"{i}. {cat}")
+
+        opcion = Prompt.ask("Ingresa el número de la categoría")
+
+        if not opcion.isdigit() or not (1 <= int(opcion) <= len(category_list)):
+            self.console.print("[yellow]Ingresa un número válido correspondiente a una categoría.[/]")
+            return
+
+        category = category_list[int(opcion) - 1]
+
+        synopsis = Prompt.ask("Sinopsis")
+        if not synopsis.strip():
+            self.console.print("[yellow]Ingresa una sinopsis válida.[/]")
+            return
+
+        duration_input = Prompt.ask("Duración (minutos)")
+        if not duration_input.strip().isdigit():
+            print("[yellow]Ingresa una duración válida en minutos.[/]")
+            return
+
+        duration = int(duration_input)
+
+        clasificaciones = [
+            ("G", "Apta para todo público"),
+            ("PG", "Supervisión de los padres sugerida"),
+            ("PG-13", "No recomendada para menores de 13 años"),
+            ("R", "Restringida a menores de 17 años sin acompañante adulto"),
+            ("C", "Solo para adultos")
+        ]
+
+        self.console.print("\n[bold]Clasificaciones disponibles:[/]")
+        for i, (clave, descripcion) in enumerate(clasificaciones, start=1):
+            self.console.print(f"{i}. [cyan]{clave}[/] - {descripcion}")
+
+        while True:
+            opcion = Prompt.ask("Ingresa el número de la clasificación")
+            if opcion.isdigit() and 1 <= int(opcion) <= len(clasificaciones):
+                age_rating = clasificaciones[int(opcion) - 1][0]
+                break
+            self.console.print("[yellow]Número no válido. Elige una opción del 1 al 5.[/]")
+
+        self.console.print(f"[green]Has seleccionado: {age_rating}[/]")
+
+        idiomas = [("Esp", "Español"), ("Ing", "Inglés")]
+
+        self.console.print("\n[bold]Idiomas disponibles:[/]")
+        for i, (clave, nombre) in enumerate(idiomas, start=1):
+            self.console.print(f"{i}. [cyan]{clave}[/] - {nombre}")
+
+        while True:
+            idioma_opcion = Prompt.ask("Ingresa el número del idioma")
+            if idioma_opcion.isdigit() and 1 <= int(idioma_opcion) <= len(idiomas):
+                language = idiomas[int(idioma_opcion) - 1][0]
+                break
+            self.console.print("[yellow]Número no válido. Elige una opción del 1 al 2.[/]")
+
+        while True:
+            origin = Prompt.ask("País de origen")
+            if origin and origin.strip():
+                break
+            self.console.print("[yellow]Ingresa un país de origen válido.[/]")
+
+        tipos_sala = [("2D", "Proyección en dos dimensiones"), ("3D", "Proyección en tres dimensiones")]
+
+        self.console.print("\n[bold]Tipos de sala disponibles:[/]")
+        for i, (clave, descripcion) in enumerate(tipos_sala, start=1):
+            self.console.print(f"{i}. [cyan]{clave}[/] - {descripcion}")
+
+        while True:
+            sala_opcion = Prompt.ask("Ingresa el número del tipo de sala")
+            if sala_opcion.isdigit() and 1 <= int(sala_opcion) <= len(tipos_sala):
+                room_type = tipos_sala[int(sala_opcion) - 1][0]
+                break
+            self.console.print("[yellow]Número no válido. Elige una opción del 1 al 2.[/]")
+
+        tipos_hall = [("regular", "Sala regular"), ("preferencial", "Sala preferencial (mayor comodidad)")]
+
+        self.console.print("\n[bold]Tipos de sala disponibles para seleccionar hall:[/]")
+        for i, (clave, descripcion) in enumerate(tipos_hall, start=1):
+            self.console.print(f"{i}. [cyan]{clave.capitalize()}[/] - {descripcion}")
+
+        while True:
+            hall_opcion = Prompt.ask("Ingresa el número del tipo de sala (hall)")
+            if hall_opcion.isdigit() and 1 <= int(hall_opcion) <= len(tipos_hall):
+                hall = tipos_hall[int(hall_opcion) - 1][0]
+                break
+            self.console.print("[yellow]Número no válido. Elige una opción del 1 al 2.[/]")
+
+        try:
+            ticket_price = float(Prompt.ask("Precio base del ticket"))
+        except ValueError:
+            self.console.print("[yellow]Ingresa un precio válido.[/]")
+            return
+
+        while True:
+            general_input = Prompt.ask("Cantidad de asientos generales disponibles")
+            if general_input.isdigit():
+                general_seats = int(general_input)
+                break
+            self.console.print("[yellow]Ingresa un número válido para asientos generales.[/]")
+
+        while True:
+            pref_input = Prompt.ask("Cantidad de asientos preferenciales disponibles")
+            if pref_input.isdigit():
+                pref_seats = int(pref_input)
+                break
+            self.console.print("[yellow]Ingresa un número válido para asientos preferenciales.[/]")
+
+        showtimes = []
+        self.console.print("\n[bold]Agregar horarios (máximo 3, deja vacío para terminar):[/]")
+        for i in range(3):
+            date = Prompt.ask(f"Fecha del horario #{i+1} (YYYY-MM-DD, vacío para salir)", default="")
+            if not date.strip():
+                break
+            start_time = Prompt.ask("Hora de inicio (HH:MM)")
+            end_time = Prompt.ask("Hora de fin (HH:MM)")
+            jornada = Prompt.ask("Jornada (mañana/tarde/noche)", choices=["mañana", "tarde", "noche"])
+
+            showtimes.append({
+                "showtime_id": i + 1,
+                "movie_id": 0,  # se asignará luego
+                "cinema_id": 0,  # opcional o editable luego
+                "date": date,
+                "start_time": start_time,
+                "end_time": end_time,
+                "jornada": jornada,
+                "available_seats": {
+                    "general": general_seats,
+                    "preferencial": pref_seats
+                }
+            })
+
         data = {
-            'title': Prompt.ask("Título de la película"),
-            'director': Prompt.ask("Director"),
-            'release_year': int(Prompt.ask("Año de lanzamiento")),
-            'category': Prompt.ask("Categoría"),
-            'synopsis': Prompt.ask("Sinopsis"),
-            'duration': int(Prompt.ask("Duración (minutos)")),
-            'age_rating': Prompt.ask("Clasificación (G, PG, PG-13, R, C)", choices=["G", "PG", "PG-13", "R", "C"]),
-            'language': Prompt.ask("Idioma (Esp/Ing)", choices=["Esp", "Ing"]),
-            'origin': Prompt.ask("País de origen"),
-            'room_type': Prompt.ask("Tipo de sala (2D/3D)", choices=["2D", "3D"]),
-            'hall': Prompt.ask("Tipo de sala (regular/premium)", choices=["regular", "premium"]),
-            'ticket_price': float(Prompt.ask("Precio base del ticket"))
+            'title': title,
+            'director': director,
+            'release_year': release_year,
+            'category': category,
+            'synopsis': synopsis,
+            'duration': duration,
+            'age_rating': age_rating,
+            'language': language,
+            'origin': origin,
+            'room_type': room_type,
+            'hall': hall,
+            'ticket_price': ticket_price,
+            'showtimes': showtimes,
+            'available_seats': {
+                'general': general_seats,
+                'preferencial': pref_seats
+            },
         }
-        
+
         return data
-    
+
     def show_showtimes(self, showtimes: list):
         """Muestra los horarios disponibles para una película."""
         if not showtimes:
@@ -180,6 +348,43 @@ class MovieView():
                 f"{st.get('start_time', '')}-{st.get('end_time', '')}",
                 st.get('jornada', ''),
                 f"{available} Boletas" if available > 0 else "Sin Boletas"
+            )
+        
+        self.console.print(table)
+        
+    def show_showtimes(self, showtimes: list):
+        """Muestra los horarios disponibles para una película."""
+        if not showtimes:
+            self.console.print("[yellow]No hay horarios disponibles para esta película[/]")
+            return
+        
+        table = Table(title="[bold]Horarios Disponibles[/]", box=box.ROUNDED)
+        table.add_column("ID", style="cyan")
+        table.add_column("Fecha", style="magenta")
+        table.add_column("Hora", style="white")
+        table.add_column("Jornada", style="green")
+        table.add_column("Disponibilidad", style="yellow")
+        
+        for st in showtimes:
+            # Obtener el cine correspondiente para la capacidad total
+            cinema = self.cinema_controller.get_cinema_by_id(st['cinema_id'])
+            if not cinema:
+                continue
+                
+            # Calcular disponibilidad
+            total_capacity = sum(cinema['capacity'].values())
+            available_seats = st.get('available_seats', {})
+            current_available = sum(available_seats.values()) if available_seats else total_capacity
+            
+            # Mostrar "100 Boletas" si está completo, o el valor real si hay reservas
+            disponibilidad = f"{current_available} Boletas" if current_available < total_capacity else f"{total_capacity} Boletas"
+            
+            table.add_row(
+                str(st['showtime_id']),
+                st['date'],
+                f"{st['start_time']}-{st['end_time']}",
+                st['jornada'],
+                disponibilidad
             )
         
         self.console.print(table)

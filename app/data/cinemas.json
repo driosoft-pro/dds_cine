@@ -333,13 +333,9 @@
     },
     "available_seats": {
       "general": [
-        "B1",
-        "B2",
         "B3",
-        "B4",
         "B5",
         "B6",
-        "B7",
         "B8",
         "B9",
         "B10",
@@ -415,7 +411,6 @@
         "B80"
       ],
       "preferencial": [
-        "P1",
         "P2",
         "P3",
         "P4",
@@ -437,7 +432,20 @@
         "P20"
       ]
     },
-    "temp_reservations": {},
-    "confirmed_seats": {}
+    "temp_reservations": {
+      "general": [],
+      "preferencial": []
+    },
+    "confirmed_seats": {
+      "general": [
+        "B1",
+        "B2",
+        "B4",
+        "B7"
+      ],
+      "preferencial": [
+        "P1"
+      ]
+    }
   }
 ]

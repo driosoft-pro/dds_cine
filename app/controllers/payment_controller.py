@@ -14,7 +14,7 @@ class PaymentController:
                         payment_method: str, ticket_id: Optional[int] = None) -> Dict:
         """Crea un nuevo registro de pago."""
         payments = self.db.load_data(self.payments_file)
-        payment_id = self.db.get_next_id(self.payments_file)
+        payment_id = self.db.get_next_id("payments.json", "payment_id")
         
         # Crear objeto Payment
         new_payment = Payment(

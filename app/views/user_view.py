@@ -36,7 +36,7 @@ class UserView:
         opciones_validas = [id for id, _ in opciones]
         
         while True:
-            opcion = Prompt.ask("Seleccione una opción", default="0")
+            opcion = Prompt.ask("Seleccione una opción \nEscriba 'volver' para regresar al menú", default="0")
             if opcion in opciones_validas:
                 return opcion
             else:
@@ -93,7 +93,7 @@ class UserView:
 
         def pedir_campo(nombre, password=False, opcionales=False):
             while True:
-                mensaje = f"{nombre} (escriba 'volver' para regresar al menú)"
+                mensaje = f"{nombre}"
                 valor = Prompt.ask(mensaje, password=password).strip()
                 if valor.lower() == "volver":
                     return "volver"

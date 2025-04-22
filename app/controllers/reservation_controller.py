@@ -18,7 +18,7 @@ class ReservationController:
         reservations = self.db.load_data(self.reservations_file)
         
         new_reservation = Reservation(
-            reservation_id=self.db.get_next_id(self.reservations_file),
+            reservation_id=self.db.get_next_id("reservations.json", "reservation_id"),
             user_id=user_id,
             movie_id=movie_id,
             showtime=showtime,

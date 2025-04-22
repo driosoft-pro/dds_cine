@@ -17,7 +17,7 @@ class MovieController:
                     ticket_price: float, available_seats: Dict) -> Dict:
         """Crea una nueva película."""
         movies = self.db.load_data(self.movies_file)
-        movie_id = self.db.get_next_id(self.movies_file)
+        movie_id = self.db.get_next_id("movies.json", "movie_id")
         
         new_movie = Movie(
             movie_id=movie_id,

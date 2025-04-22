@@ -13,7 +13,7 @@ class FoodController:
                         price: float, description: str, size: str = None) -> Dict:
         """Crea un nuevo ítem en el menú de comida."""
         food_items = self.db.load_data(self.food_file)
-        item_id = self.db.get_next_id(self.food_file)
+        item_id = self.db.get_next_id("food_menu.json", "item_id")
         
         new_item = Food(
             item_id=item_id,

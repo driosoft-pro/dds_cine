@@ -146,6 +146,9 @@ class DDSMovieApp:
 
         elif choice == "2":
             user_data = self.login_view.show_register()
+            if user_data is None:  # Verificación adicional por seguridad
+                self.menu_view.show_message("Error en el registro", is_error=True)
+                return
 
             # Validar datos
             valid, msg = self.validation_service.validate_email(user_data['email'])
@@ -178,7 +181,8 @@ class DDSMovieApp:
             self.menu_view.press_enter_to_continue()
 
         elif choice == "0":
-            self.running = False
+            self.console.print("[yellow]Saliendo del sistema...[/]")
+            exit(0)
 
                 
     def handle_main_menu(self):
@@ -323,12 +327,16 @@ class DDSMovieApp:
             
             elif choice == "3":  # Crear usuario
                 user_data = self.user_view.get_user_data()
-                user_data['birth_date'] = datetime.strptime(user_data['birth_date'], "%Y-%m-%d")
-                
+
                 if user_data is None:
                     self.menu_view.show_message("Operación cancelada. Volviendo al menú...")
                     return
+
                 try:
+                    # Convertir birth_date de string a datetime
+                    from datetime import datetime
+                    user_data['birth_date'] = datetime.strptime(user_data['birth_date'], "%Y-%m-%d")
+
                     new_user = self.user_controller.create_user(
                         username=user_data['username'],
                         identification=user_data['identification'],
@@ -341,8 +349,9 @@ class DDSMovieApp:
                     self.menu_view.show_message("Usuario creado con éxito!")
                 except Exception as e:
                     self.menu_view.show_message(str(e), is_error=True)
+
                 self.menu_view.press_enter_to_continue()
-            
+
             elif choice == "4":  # Actualizar usuario
                 users = self.user_controller.list_users(active_only=False)
                 self.user_view.show_users(users)
@@ -1006,10 +1015,11 @@ class DDSMovieApp:
             
             if cinema:
                 self.availability_view.show_availability(
-                    availability=showtime['available_seats'],
+                    showtime_id=showtime['showtime_id'],  # Nuevo parámetro
+                    cinema_id=cinema['cinema_id'],
                     cinema_name=cinema['name'],
                     movie_title=movie['title'],
-                    showtime=f"{showtime['date']} {showtime['start_time']}"
+                    showtime_str=f"{showtime['date']} {showtime['start_time']}"
                 )
             
             self.menu_view.press_enter_to_continue()
