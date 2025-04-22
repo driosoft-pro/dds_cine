@@ -4,12 +4,13 @@ from rich.panel import Panel
 from rich.prompt import Prompt
 from rich import box
 
-class MovieView:
+class MovieView():
     """Vista para gestión de películas."""
     
     def __init__(self):
         self.console = Console()
     
+
     def show_movie_menu(self, is_admin: bool):
         """Muestra el menú de películas según el tipo de usuario con estilo uniforme."""
         titulo = "Gestión de Películas" if is_admin else "Cartelera"
@@ -30,6 +31,7 @@ class MovieView:
                 ("5", "Desactivar película"),
                 ("0", "Volver al menú principal"),
             ]
+            valid_choices = ["1", "2", "3", "4", "5", "0"]
         else:
             opciones = [
                 ("1", "Ver cartelera completa"),
@@ -37,13 +39,20 @@ class MovieView:
                 ("3", "Buscar por fecha"),
                 ("0", "Volver al menú principal"),
             ]
+            valid_choices = ["1", "2", "3", "0"]
 
         for id, descripcion in opciones:
             table.add_row(id, descripcion)
 
         self.console.print(table)
-        return Prompt.ask("Seleccione una ID", choices=[id for id, _ in opciones])
-        
+
+        while True:
+            opcion = Prompt.ask("Seleccione una ID").strip()
+            if opcion in valid_choices:
+                return opcion
+            else:
+                self.console.print("[red]ID inválida. Intente nuevamente.[/]")
+
     def show_movies(self, movies: list, showtimes: list = None):
         """Muestra una lista de películas con sus horarios."""
         if not movies:
@@ -107,20 +116,30 @@ class MovieView:
         self.console.print(panel)
     
     def get_movie_search_criteria(self):
-        """Obtiene criterios de búsqueda de película."""
+        """Obtiene criterios de búsqueda de película o vuelve al menú si se presiona Enter."""
         self.console.print("\n[bold]Buscar Película[/]")
         self.console.print("1. Por título")
         self.console.print("2. Por categoría")
         self.console.print("3. Por fecha")
-        choice = Prompt.ask("Seleccione criterio", choices=["1", "2", "3"])
+        self.console.print("[dim]Presione Enter sin escribir nada para volver.[/]\n")
+
+        while True:
+            choice = Prompt.ask("Seleccione criterio (1-3)").strip()
+            if choice == "":
+                self.console.print("[yellow]Volviendo al menú...[/]")
+                return None 
+            elif choice == "1":
+                titulo = Prompt.ask("Ingrese título o parte del título").strip()
+                return {'title': titulo}
+            elif choice == "2":
+                categoria = Prompt.ask("Ingrese categoría").strip()
+                return {'category': categoria}
+            elif choice == "3":
+                fecha = Prompt.ask("Ingrese fecha (YYYY-MM-DD)").strip()
+                return {'date': fecha}
+            else:
+                self.console.print("[red]Opción inválida. Intente nuevamente.[/]")
         
-        if choice == "1":
-            return {'title': Prompt.ask("Ingrese título o parte del título")}
-        elif choice == "2":
-            return {'category': Prompt.ask("Ingrese categoría")}
-        else:
-            return {'date': Prompt.ask("Ingrese fecha (YYYY-MM-DD)")}
-    
     def get_movie_data(self):
         """Obtiene datos para crear/actualizar una película."""
         data = {

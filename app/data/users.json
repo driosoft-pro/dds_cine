@@ -13,11 +13,22 @@
   {
     "user_id": 2,
     "username": "client",
-    "identification": "987654321",
-    "name": "Samuel Mosquera",
-    "email": "samu@ddscine.com",
-    "birth_date": "1990-05-15",
+    "identification": "11",
+    "name": "sa",
+    "email": "sa@gmail.com",
+    "birth_date": "2004-06-30",
     "password": "b7827b17b0821b354fabf438d73691c2bf467af7a44c374f8c505a5ee08b0d5d",
+    "status": "activo",
+    "is_admin": false
+  },
+  {
+    "user_id": 3,
+    "username": "samuel",
+    "identification": "1126",
+    "name": "samuel",
+    "email": "sam@izq.com",
+    "birth_date": "2004-12-03",
+    "password": "samuel",
     "status": "activo",
     "is_admin": false
   }

@@ -2,6 +2,7 @@ from rich.console import Console
 from rich.table import Table
 from rich.prompt import Prompt
 from rich import box
+from datetime import datetime
 class UserView:
     """Vista para gestión de usuarios."""
     
@@ -31,7 +32,15 @@ class UserView:
             table.add_row(id, descripcion)
 
         self.console.print(table)
-        return Prompt.ask("Seleccione una ID", choices=[id for id, _ in opciones])
+
+        opciones_validas = [id for id, _ in opciones]
+        
+        while True:
+            opcion = Prompt.ask("Seleccione una opción", default="0")
+            if opcion in opciones_validas:
+                return opcion
+            else:
+                self.console.print("[red]Opción inválida. Por favor seleccione una opción del menú.[/red]")
     
     def show_users(self, users: list):
         """Muestra una lista de usuarios en formato de tabla."""
@@ -63,30 +72,75 @@ class UserView:
         self.console.print("1. Por ID")
         self.console.print("2. Por nombre de usuario")
         self.console.print("3. Por nombre")
-        choice = Prompt.ask("Seleccione criterio", choices=["1", "2", "3"])
+        self.console.print("[dim]Presione Enter sin escribir nada para volver al menú anterior.[/dim]")
         
+        choice = Prompt.ask("Seleccione criterio", choices=["1", "2", "3"], default="")
+        if choice == "":
+            return {}
+
         if choice == "1":
-            return {'id': Prompt.ask("Ingrese ID del usuario")}
+            value = Prompt.ask("Ingrese ID del usuario", default="")
+            return {'id': value} if value else {}
         elif choice == "2":
-            return {'username': Prompt.ask("Ingrese nombre de usuario")}
+            value = Prompt.ask("Ingrese nombre de usuario", default="")
+            return {'username': value} if value else {}
         else:
-            return {'name': Prompt.ask("Ingrese nombre del usuario")}
-    
+            value = Prompt.ask("Ingrese nombre del usuario", default="")
+            return {'name': value} if value else {}
+        
     def get_user_data(self, for_update: bool = False):
-        """Obtiene datos de usuario para creación/actualización."""
+        """Obtiene datos de usuario para creación/actualización. Escriba 'volver' en cualquier campo para cancelar y regresar al menú principal."""
+
+        def pedir_campo(nombre, password=False, opcionales=False):
+            while True:
+                mensaje = f"{nombre} (escriba 'volver' para regresar al menú)"
+                valor = Prompt.ask(mensaje, password=password).strip()
+                if valor.lower() == "volver":
+                    return "volver"
+                if valor == "" and not opcionales:
+                    self.console.print("[red]Este campo no puede estar vacío.[/red]")
+                else:
+                    return valor
+
         data = {}
+
         if not for_update:
-            data['username'] = Prompt.ask("Nombre de usuario")
-            data['password'] = Prompt.ask("Contraseña", password=True)
-        
-        data['identification'] = Prompt.ask("Número de identificación")
-        data['name'] = Prompt.ask("Nombre completo")
-        data['email'] = Prompt.ask("Correo electrónico")
-        data['birth_date'] = Prompt.ask("Fecha de nacimiento (YYYY-MM-DD)")
-        data['is_admin'] = Prompt.ask("Es administrador? (s/n)", choices=["s", "n"]) == "s"
-        
+            username = pedir_campo("Nombre de usuario")
+            if username == "volver": return None
+            password = pedir_campo("Contraseña", password=True)
+            if password == "volver": return None
+            data['username'] = username
+            data['password'] = password
+
+        identification = pedir_campo("Número de identificación")
+        if identification == "volver": return None
+        name = pedir_campo("Nombre completo")
+        if name == "volver": return None
+        email = pedir_campo("Correo electrónico")
+        if email == "volver": return None
+
+        # Fecha de nacimiento validada
+        while True:
+            birth_date_str = pedir_campo("Fecha de nacimiento (YYYY-MM-DD)")
+            if birth_date_str == "volver": return None
+            try:
+                birth_date = datetime.strptime(birth_date_str, "%Y-%m-%d")
+                data['birth_date'] = birth_date.strftime("%Y-%m-%d")
+                break
+            except ValueError:
+                self.console.print("[red]Formato de fecha inválido. Use YYYY-MM-DD.[/red]")
+
+        is_admin_str = Prompt.ask("Es administrador? — escriba 'volver' para regresar al menú", choices=["s", "n"], default="n")
+        if is_admin_str.lower() == "volver": return None
+        is_admin = is_admin_str.lower() == "s"
+
+        data['identification'] = identification
+        data['name'] = name
+        data['email'] = email
+        data['is_admin'] = is_admin
+
         return data
-    
+
     def show_user_details(self, user: dict):
         """Muestra los detalles de un usuario."""
         self.console.print("\n[bold]Detalles del Usuario[/]")
