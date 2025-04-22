@@ -101,7 +101,7 @@ class DDSMovieApp:
         self.menu_view.show_welcome()
         self.console.print(Panel.fit("[bold]Inicio de Sesión[/]", border_style="blue"))
 
-        """Muestra el menú de inicio de sesión con el mismo estilo del menú principal."""
+        # Menú de autenticación
         table = Table(box=box.ROUNDED, border_style="blue")
         table.add_column("ID", style="cyan")
         table.add_column("Opciones", style="magenta")
@@ -113,8 +113,8 @@ class DDSMovieApp:
         self.console.print(table)
 
         while True:
-            choice = Prompt.ask("Seleccione una ID [0/1/2]").strip()
-            
+            choice = Prompt.ask("Seleccione una ID [0/1/2] \nEscriba volver si desea regresar al menu").strip()
+
             if choice not in ["0", "1", "2"]:
                 self.console.print("[red]Por favor seleccione una opción válida: 0, 1 o 2.[/]")
                 continue
@@ -123,7 +123,10 @@ class DDSMovieApp:
         if choice == "1":
             username, password = self.login_view.show_login()
 
-            # Verificar si el usuario agotó los intentos
+            if username == "volver" or password == "volver":
+                self.menu_view.show_message("Inicio de sesión cancelado. Volviendo al menú...")
+                return
+
             if username is None or password is None:
                 self.menu_view.show_message("Se ha excedido el número de intentos. Intenta más tarde.", is_error=True)
                 self.menu_view.press_enter_to_continue()
@@ -132,11 +135,8 @@ class DDSMovieApp:
             user = self.auth_service.login(username, password)
 
             if user:
-                if user.get('is_admin', False):
-                    welcome_msg = f"Bienvenido, Administrador {user['name']}!"
-                else:
-                    welcome_msg = f"Bienvenido, {user['name']}!"
-
+                welcome_msg = f"Bienvenido, Administrador {user['name']}!" if user.get('is_admin', False) \
+                            else f"Bienvenido, {user['name']}!"
                 self.console.print(f"[green]{welcome_msg}[/]")
                 self.current_user = user
                 self.is_admin = user.get('is_admin', False)
@@ -146,8 +146,9 @@ class DDSMovieApp:
 
         elif choice == "2":
             user_data = self.login_view.show_register()
-            if user_data is None:  # Verificación adicional por seguridad
-                self.menu_view.show_message("Error en el registro", is_error=True)
+
+            if user_data is None or any(value == "volver" for value in user_data.values()):
+                self.menu_view.show_message("Registro cancelado. Volviendo al menú...")
                 return
 
             # Validar datos
@@ -183,8 +184,7 @@ class DDSMovieApp:
         elif choice == "0":
             self.console.print("[yellow]Saliendo del sistema...[/]")
             exit(0)
-
-                
+                    
     def handle_main_menu(self):
         """Maneja el menú principal según el tipo de usuario."""
         while True:
