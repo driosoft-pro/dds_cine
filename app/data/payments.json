@@ -34,5 +34,14 @@
     "payment_method": "Tarjeta",
     "status": "activo",
     "payment_date": "2025-04-22T01:18:00.785768"
+  },
+  {
+    "payment_id": 5,
+    "user_id": 2,
+    "ticket_id": 5,
+    "amount": 18000,
+    "payment_method": "Tarjeta",
+    "status": "activo",
+    "payment_date": "2025-04-22T02:54:23.571723"
   }
 ]

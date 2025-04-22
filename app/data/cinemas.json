@@ -333,7 +333,6 @@
     },
     "available_seats": {
       "general": [
-        "B3",
         "B5",
         "B6",
         "B8",
@@ -441,7 +440,8 @@
         "B1",
         "B2",
         "B4",
-        "B7"
+        "B7",
+        "B3"
       ],
       "preferencial": [
         "P1"

@@ -179,3 +179,18 @@ class ReservationView:
             'quantity': quantity
         }
     
+    def make_reservation(self, showtime_id: int, seat_type: str, seat_number: str):
+        """Registra una reserva y actualiza la disponibilidad."""
+        showtimes = self.showtime_controller.load_data("showtimes.json")
+        
+        for st in showtimes:
+            if st['showtime_id'] == showtime_id:
+                if 'occupied_seats' not in st:
+                    st['occupied_seats'] = {seat_type: []}
+                elif seat_type not in st['occupied_seats']:
+                    st['occupied_seats'][seat_type] = []
+                
+                st['occupied_seats'][seat_type].append(seat_number)
+                break
+        
+        self.showtime_controller.save_data("showtimes.json", showtimes)

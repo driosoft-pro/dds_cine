@@ -21,8 +21,9 @@ class AvailabilityView:
         self.cinema_controller = CinemaController(self.db)
         self.showtime_controller = ShowtimeController(self.db)
     
-    def show_availability(self, showtime_id: int, cinema_id: int, cinema_name: str, 
-                            movie_title: str, showtime_str: str):
+    def show_availability(self, showtime_id: int, cinema_id: int,
+                            cinema_name: str, movie_title: str,
+                            showtime_str: str):
         """Muestra disponibilidad detallada para un horario específico."""
         panel = Panel.fit(
             f"[bold]Disponibilidad de Asientos[/]\n\n"
@@ -32,30 +33,48 @@ class AvailabilityView:
             border_style="blue"
         )
         self.console.print(panel)
-        
-        # Obtener datos del cine y horario
-        cinema = self.cinema_controller.get_cinema_by_id(cinema_id)
-        showtime = next((st for st in self.showtime_controller.load_data("showtimes.json") 
-                        if st['showtime_id'] == showtime_id), None)
-        
-        if not cinema or not showtime:
-            self.console.print("[red]Error: Datos no encontrados[/]")
+
+        showtimes = self.showtime_controller.load_data("showtimes.json")
+        st = next((x for x in showtimes if x["showtime_id"] == showtime_id), None)
+        if not st:
+            self.console.print("[red]Error: Horario no encontrado[/]")
             return
-        
+
+        tickets = self.db.load_data("tickets.json")
+        reservations = self.db.load_data("reservations.json")
+        dt_str = showtime_str  # "YYYY-MM-DD HH:MM"
+
         table = Table(box=box.ROUNDED, header_style="bold cyan")
         table.add_column("Tipo", style="cyan", min_width=12)
         table.add_column("Disponibles", justify="right", style="green")
-        table.add_column("Total", justify="right")
-        
-        for seat_type, capacity in cinema['capacity'].items():
-            available = showtime['available_seats'].get(seat_type, capacity)
-            
+        table.add_column("Ocupados", justify="right", style="red")
+        table.add_column("Total", justify="right", style="white")
+
+        for seat_type, capacity in st.get("available_seats", {}).items():
+            # tickets activos de este tipo y horario
+            occ_t = sum(
+                1 for t in tickets
+                if t.get("showtime") == dt_str
+                    and t.get("ticket_type") == seat_type
+                    and t.get("status") == "activo"
+            )
+            # reservas activas de este tipo y horario
+            occ_r = sum(
+                1 for r in reservations
+                if r.get("showtime_id") == showtime_id
+                    and r.get("ticket_type") == seat_type
+                    and r.get("status") == "activo"
+            )
+            occupied = occ_t + occ_r
+            available = capacity - occupied
+
             table.add_row(
                 seat_type.capitalize(),
                 str(available),
+                str(occupied),
                 str(capacity)
             )
-        
+
         self.console.print(table)
     
     def select_seat(self, available_seats: dict):

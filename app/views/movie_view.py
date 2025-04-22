@@ -353,38 +353,54 @@ class MovieView:
         self.console.print(table)
         
     def show_showtimes(self, showtimes: list):
-        """Muestra los horarios disponibles para una película."""
+        """Muestra los horarios disponibles con disponibilidad real."""
         if not showtimes:
             self.console.print("[yellow]No hay horarios disponibles para esta película[/]")
             return
-        
+
+        # Cargo tickets y reservas para calcular ocupación
+        tickets = self.db.load_data("tickets.json")
+        reservations = self.db.load_data("reservations.json")
+
         table = Table(title="[bold]Horarios Disponibles[/]", box=box.ROUNDED)
         table.add_column("ID", style="cyan")
         table.add_column("Fecha", style="magenta")
         table.add_column("Hora", style="white")
         table.add_column("Jornada", style="green")
         table.add_column("Disponibilidad", style="yellow")
-        
+
         for st in showtimes:
-            # Obtener el cine correspondiente para la capacidad total
-            cinema = self.cinema_controller.get_cinema_by_id(st['cinema_id'])
-            if not cinema:
-                continue
-                
-            # Calcular disponibilidad
-            total_capacity = sum(cinema['capacity'].values())
-            available_seats = st.get('available_seats', {})
-            current_available = sum(available_seats.values()) if available_seats else total_capacity
-            
-            # Mostrar "100 Boletas" si está completo, o el valor real si hay reservas
-            disponibilidad = f"{current_available} Boletas" if current_available < total_capacity else f"{total_capacity} Boletas"
-            
-            table.add_row(
-                str(st['showtime_id']),
-                st['date'],
-                f"{st['start_time']}-{st['end_time']}",
-                st['jornada'],
-                disponibilidad
+            st_id = st["showtime_id"]
+            dt_str = f"{st['date']} {st['start_time']}"
+
+            # capacidad original por tipos
+            capacidad = sum(st.get("available_seats", {}).values())
+
+            # ocupados activos en tickets + reservas
+            occ_tickets = sum(
+                1 for t in tickets
+                if t.get("showtime") == dt_str and t.get("status") == "activo"
             )
-        
+            occ_res = sum(
+                1 for r in reservations
+                if r.get("showtime_id") == st_id and r.get("status") == "activo"
+            )
+            ocupados = occ_tickets + occ_res
+
+            disponibles = capacidad - ocupados
+
+            # formateo: si no hubo ocupación muestro "X Boletas", si no "Y/X Boletas"
+            if ocupados == 0:
+                disp_text = f"{capacidad} Boletas"
+            else:
+                disp_text = f"{disponibles}/{capacidad} Boletas"
+
+            table.add_row(
+                str(st_id),
+                st["date"],
+                f"{st['start_time']}-{st['end_time']}",
+                st["jornada"],
+                disp_text
+            )
+
         self.console.print(table)
