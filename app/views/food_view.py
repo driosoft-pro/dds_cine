@@ -3,6 +3,7 @@ from rich.table import Table
 from rich.panel import Panel
 from rich.prompt import Prompt
 from rich import box
+from typing import Optional, Dict
 
 class FoodView:
     """Vista para el menú de comida."""
@@ -10,6 +11,7 @@ class FoodView:
     def __init__(self):
         self.console = Console()
     
+
     def show_food_menu(self, is_admin: bool):
         """Muestra el menú de comida según el tipo de usuario con estilo uniforme."""
         titulo = "Gestión de Menú de Comida" if is_admin else "Menú de Comida"
@@ -41,8 +43,17 @@ class FoodView:
             table.add_row(id, descripcion)
 
         self.console.print(table)
-        return Prompt.ask("Seleccione una ID", choices=[id for id, _ in opciones])
-    
+
+        # Solicita la entrada del usuario y verifica si es válida
+        while True:
+            choice = Prompt.ask("Seleccione una ID", show_default=False).strip()
+
+            # Validamos si la opción es válida
+            if choice in [id for id, _ in opciones]:
+                return choice
+            else:
+                self.console.print("[bold red]Opción no válida. Por favor, seleccione una opción válida.[/bold red]")
+
     def show_food_items(self, items: list, by_category: bool = False):
         """Muestra los items del menú de comida."""
         if by_category:
@@ -86,22 +97,124 @@ class FoodView:
             
             self.console.print(table)
     
-    def get_food_item_data(self):
-        """Obtiene datos para crear/actualizar un item de comida."""
-        data = {
-            'item_id': Prompt.ask("ID del producto"),
-            'code': Prompt.ask("Código del producto"),
-            'category': Prompt.ask("Categoría"),
-            'product': Prompt.ask("Nombre del producto"),
-            'price': float(Prompt.ask("Precio")),
-            'description': Prompt.ask("Descripción")
-        }
-        
-        if Prompt.ask("Tiene tamaño? (s/n)", choices=["s", "n"]) == "s":
-            data['size'] = Prompt.ask("Tamaño", choices=["Pequeño", "Mediano", "Grande"])
-        
+    def get_food_item_data(self, include_id: bool = True, is_update: bool = False, current_data: Dict = None) -> Optional[Dict]:
+        data = {}
+
+        def cancelar(valor):
+            return valor.strip().lower() == "volver"
+
+        if include_id:
+            valor = Prompt.ask("ID del producto")
+            if cancelar(valor):
+                return None
+            if not valor.isdigit():
+                print("ID inválido.")
+                return None
+            data['item_id'] = int(valor)
+
+        # --- Código del producto ---
+        code_actual = current_data.get("code") if is_update else ""
+        prompt_code = f"Código del producto [{code_actual}]" if is_update else "Código del producto"
+        while True:
+            valor = Prompt.ask(prompt_code)
+            if cancelar(valor):
+                return None
+            if valor:
+                data['code'] = valor
+                break
+            elif is_update:
+                data['code'] = code_actual
+                break
+            else:
+                print("El código es obligatorio.")
+
+        # --- Categoría ---
+        cat_actual = current_data.get("category") if is_update else ""
+        prompt_cat = f"Categoría [{cat_actual}]" if is_update else "Categoría"
+        while True:
+            valor = Prompt.ask(prompt_cat)
+            if cancelar(valor):
+                return None
+            if valor:
+                data['category'] = valor
+                break
+            elif is_update:
+                data['category'] = cat_actual
+                break
+            else:
+                print("La categoría es obligatoria.")
+
+        # --- Nombre del producto ---
+        prod_actual = current_data.get("product") if is_update else ""
+        prompt_prod = f"Nombre del producto [{prod_actual}]" if is_update else "Nombre del producto"
+        while True:
+            valor = Prompt.ask(prompt_prod)
+            if cancelar(valor):
+                return None
+            if valor:
+                data['product'] = valor
+                break
+            elif is_update:
+                data['product'] = prod_actual
+                break
+            else:
+                print("El nombre es obligatorio.")
+
+        # --- Precio ---
+        price_actual = str(current_data.get("price")) if is_update else ""
+        prompt_price = f"Precio [{price_actual}]" if is_update else "Precio"
+        while True:
+            valor = Prompt.ask(prompt_price)
+            if cancelar(valor):
+                return None
+            if valor:
+                try:
+                    data['price'] = float(valor)
+                    break
+                except ValueError:
+                    print("Precio inválido. Debe ser un número.")
+            elif is_update:
+                data['price'] = current_data.get('price')
+                break
+            else:
+                print("El precio es obligatorio.")
+
+        # --- Descripción ---
+        desc_actual = current_data.get("description") if is_update else ""
+        prompt_desc = f"Descripción [{desc_actual}]" if is_update else "Descripción"
+        valor = Prompt.ask(prompt_desc)
+        if cancelar(valor):
+            return None
+        data['description'] = valor or desc_actual
+
+        # --- Tamaño (opcional) ---
+        tiene_tamano = Prompt.ask("¿Tiene tamaño? (s/n)", choices=["s", "n"])
+        if cancelar(tiene_tamano):
+            return None
+
+        if tiene_tamano == "s":
+            opciones = {"1": "Pequeño", "2": "Mediano", "3": "Grande"}
+            size_actual = current_data.get("size") if is_update else ""
+            prompt_size = "Seleccione tamaño:\n  1. Pequeño\n  2. Mediano\n  3. Grande\nIngrese número"
+            if is_update and size_actual:
+                prompt_size += f" (ENTER para mantener actual [{size_actual}])"
+            while True:
+                valor = Prompt.ask(prompt_size)
+                if cancelar(valor):
+                    return None
+                if valor == "":
+                    data['size'] = size_actual if is_update else None
+                    break
+                elif valor in opciones:
+                    data['size'] = opciones[valor]
+                    break
+                else:
+                    print("Opción inválida.")
+        else:
+            data['size'] = None
+
         return data
-    
+
     def select_food_items(self, items: list) -> list:
         """Permite seleccionar items del menú para agregar a una compra."""
         self.show_food_items(items)

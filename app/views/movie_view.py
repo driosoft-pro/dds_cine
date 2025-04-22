@@ -3,6 +3,7 @@ from rich.table import Table
 from rich.panel import Panel
 from rich.prompt import Prompt
 from rich import box
+from datetime import datetime
 
 # Importando recursos necesarios
 from core.database import Database
@@ -55,7 +56,7 @@ class MovieView:
         self.console.print(table)
 
         while True:
-            opcion = Prompt.ask("Seleccione una ID").strip()
+            opcion = Prompt.ask("Seleccione una ID \no escriba 'volver' para regresar al menu").strip()
             if opcion in valid_choices:
                 return opcion
             else:
@@ -128,11 +129,10 @@ class MovieView:
         self.console.print("\n[bold]Buscar Película[/]")
         self.console.print("1. Por título")
         self.console.print("2. Por categoría")
-        self.console.print("3. Por fecha")
         self.console.print("[dim]Presione Enter sin escribir nada para volver.[/]\n")
 
         while True:
-            choice = Prompt.ask("Seleccione criterio (1-3)").strip()
+            choice = Prompt.ask("Seleccione criterio (1-2)").strip()
             if choice == "":
                 self.console.print("[yellow]Volviendo al menú...[/]")
                 return None 
@@ -142,158 +142,246 @@ class MovieView:
             elif choice == "2":
                 categoria = Prompt.ask("Ingrese categoría").strip()
                 return {'category': categoria}
-            elif choice == "3":
-                fecha = Prompt.ask("Ingrese fecha (YYYY-MM-DD)").strip()
-                return {'date': fecha}
             else:
                 self.console.print("[red]Opción inválida. Intente nuevamente.[/]")
         
     def get_movie_data(self):
-        """Obtiene datos para crear/actualizar una película."""
+        """Obtiene datos para crear/actualizar una película con validaciones y opción de volver."""
 
-        title = Prompt.ask("Título de la película")
-        if not title.strip():
-            self.console.print("[yellow]Ingresa un título válido.[/]")
-            return
+        def cancelar_si_volver(valor):
+            return valor.strip().lower() == 'volver'
 
-        director = Prompt.ask("Director")
-        if not director.strip():
-            self.console.print("[yellow]Ingresa un director válido.[/]")
-            return
+        # Título
+        while True:
+            title = Prompt.ask("Título de la película").strip()
+            if cancelar_si_volver(title):
+                self.console.print("[red]Operación cancelada.[/]")
+                return None
+            if not title:
+                self.console.print("[yellow]Debes ingresar un título válido.[/]")
+            else:
+                break
 
-        release_year_input = Prompt.ask("Año de lanzamiento")
-        if not release_year_input.strip().isdigit():
-            print("[yellow]Ingresa un año válido.[/]")
-            return
+        # Director
+        while True:
+            director = Prompt.ask("Director").strip()
+            if cancelar_si_volver(director):
+                self.console.print("[red]Operación cancelada.[/]")
+                return None
+            if not director:
+                self.console.print("[yellow]Debes ingresar un director válido.[/]")
+            else:
+                break
 
-        release_year = int(release_year_input)
+        # Año de lanzamiento
+        while True:
+            release_year_input = Prompt.ask("Año de lanzamiento").strip()
+            if cancelar_si_volver(release_year_input):
+                self.console.print("[red]Operación cancelada.[/]")
+                return None
+            if not release_year_input.isdigit():
+                self.console.print("[yellow]Ingresa un año válido.[/]")
+            else:
+                release_year = int(release_year_input)
+                break
 
+        # Categoría
         category_list = ["Acción", "Comedia", "Drama", "Documental", "Terror", "Animación"]
-
         self.console.print("\n[bold]Categorías disponibles:[/]")
         for i, cat in enumerate(category_list, start=1):
             self.console.print(f"{i}. {cat}")
+        while True:
+            opcion = Prompt.ask("Ingresa el número de la categoría").strip()
+            if cancelar_si_volver(opcion):
+                self.console.print("[red]Operación cancelada.[/]")
+                return None
+            if not opcion.isdigit() or not (1 <= int(opcion) <= len(category_list)):
+                self.console.print("[yellow]Número de categoría inválido.[/]")
+            else:
+                category = category_list[int(opcion) - 1]
+                break
 
-        opcion = Prompt.ask("Ingresa el número de la categoría")
+        # Sinopsis
+        while True:
+            synopsis = Prompt.ask("Sinopsis").strip()
+            if cancelar_si_volver(synopsis):
+                self.console.print("[red]Operación cancelada.[/]")
+                return None
+            if not synopsis:
+                self.console.print("[yellow]Debes ingresar una sinopsis válida.[/]")
+            else:
+                break
 
-        if not opcion.isdigit() or not (1 <= int(opcion) <= len(category_list)):
-            self.console.print("[yellow]Ingresa un número válido correspondiente a una categoría.[/]")
-            return
+        # Duración
+        while True:
+            duration_input = Prompt.ask("Duración (minutos)").strip()
+            if cancelar_si_volver(duration_input):
+                self.console.print("[red]Operación cancelada.[/]")
+                return None
+            if not duration_input.isdigit():
+                self.console.print("[yellow]Duración no válida.[/]")
+            else:
+                duration = int(duration_input)
+                break
 
-        category = category_list[int(opcion) - 1]
-
-        synopsis = Prompt.ask("Sinopsis")
-        if not synopsis.strip():
-            self.console.print("[yellow]Ingresa una sinopsis válida.[/]")
-            return
-
-        duration_input = Prompt.ask("Duración (minutos)")
-        if not duration_input.strip().isdigit():
-            print("[yellow]Ingresa una duración válida en minutos.[/]")
-            return
-
-        duration = int(duration_input)
-
-        clasificaciones = [
-            ("G", "Apta para todo público"),
-            ("PG", "Supervisión de los padres sugerida"),
-            ("PG-13", "No recomendada para menores de 13 años"),
-            ("R", "Restringida a menores de 17 años sin acompañante adulto"),
-            ("C", "Solo para adultos")
-        ]
-
+        # Clasificación
+        clasificaciones = [("G", "Apta para todo público"), ("PG", "Supervisión de los padres sugerida"),
+                        ("PG-13", "No recomendada para menores de 13 años"), ("R", "Restringida a menores de 17 años"),
+                        ("C", "Solo para adultos")]
         self.console.print("\n[bold]Clasificaciones disponibles:[/]")
         for i, (clave, descripcion) in enumerate(clasificaciones, start=1):
             self.console.print(f"{i}. [cyan]{clave}[/] - {descripcion}")
-
         while True:
-            opcion = Prompt.ask("Ingresa el número de la clasificación")
-            if opcion.isdigit() and 1 <= int(opcion) <= len(clasificaciones):
+            opcion = Prompt.ask("Ingresa el número de la clasificación").strip()
+            if cancelar_si_volver(opcion):
+                self.console.print("[red]Operación cancelada.[/]")
+                return None
+            if not opcion.isdigit() or not (1 <= int(opcion) <= len(clasificaciones)):
+                self.console.print("[yellow]Número no válido.[/]")
+            else:
                 age_rating = clasificaciones[int(opcion) - 1][0]
                 break
-            self.console.print("[yellow]Número no válido. Elige una opción del 1 al 5.[/]")
 
-        self.console.print(f"[green]Has seleccionado: {age_rating}[/]")
-
+        # Idioma
         idiomas = [("Esp", "Español"), ("Ing", "Inglés")]
-
         self.console.print("\n[bold]Idiomas disponibles:[/]")
         for i, (clave, nombre) in enumerate(idiomas, start=1):
             self.console.print(f"{i}. [cyan]{clave}[/] - {nombre}")
-
         while True:
-            idioma_opcion = Prompt.ask("Ingresa el número del idioma")
-            if idioma_opcion.isdigit() and 1 <= int(idioma_opcion) <= len(idiomas):
+            idioma_opcion = Prompt.ask("Ingresa el número del idioma").strip()
+            if cancelar_si_volver(idioma_opcion):
+                self.console.print("[red]Operación cancelada.[/]")
+                return None
+            if not idioma_opcion.isdigit() or not (1 <= int(idioma_opcion) <= len(idiomas)):
+                self.console.print("[yellow]Número no válido.[/]")
+            else:
                 language = idiomas[int(idioma_opcion) - 1][0]
                 break
-            self.console.print("[yellow]Número no válido. Elige una opción del 1 al 2.[/]")
 
+        # País de origen
         while True:
-            origin = Prompt.ask("País de origen")
-            if origin and origin.strip():
+            origin = Prompt.ask("País de origen").strip()
+            if cancelar_si_volver(origin):
+                self.console.print("[red]Operación cancelada.[/]")
+                return None
+            if not origin:
+                self.console.print("[yellow]Debes ingresar un país de origen válido.[/]")
+            else:
                 break
-            self.console.print("[yellow]Ingresa un país de origen válido.[/]")
 
+        # Tipo de sala
         tipos_sala = [("2D", "Proyección en dos dimensiones"), ("3D", "Proyección en tres dimensiones")]
-
         self.console.print("\n[bold]Tipos de sala disponibles:[/]")
         for i, (clave, descripcion) in enumerate(tipos_sala, start=1):
             self.console.print(f"{i}. [cyan]{clave}[/] - {descripcion}")
-
         while True:
-            sala_opcion = Prompt.ask("Ingresa el número del tipo de sala")
-            if sala_opcion.isdigit() and 1 <= int(sala_opcion) <= len(tipos_sala):
+            sala_opcion = Prompt.ask("Ingresa el número del tipo de sala").strip()
+            if cancelar_si_volver(sala_opcion):
+                self.console.print("[red]Operación cancelada.[/]")
+                return None
+            if not sala_opcion.isdigit() or not (1 <= int(sala_opcion) <= len(tipos_sala)):
+                self.console.print("[yellow]Número no válido.[/]")
+            else:
                 room_type = tipos_sala[int(sala_opcion) - 1][0]
                 break
-            self.console.print("[yellow]Número no válido. Elige una opción del 1 al 2.[/]")
 
-        tipos_hall = [("regular", "Sala regular"), ("preferencial", "Sala preferencial (mayor comodidad)")]
-
-        self.console.print("\n[bold]Tipos de sala disponibles para seleccionar hall:[/]")
+        # Tipo de hall
+        tipos_hall = [("regular", "Sala regular"), ("preferencial", "Sala preferencial")]
+        self.console.print("\n[bold]Tipos de hall disponibles:[/]")
         for i, (clave, descripcion) in enumerate(tipos_hall, start=1):
             self.console.print(f"{i}. [cyan]{clave.capitalize()}[/] - {descripcion}")
-
         while True:
-            hall_opcion = Prompt.ask("Ingresa el número del tipo de sala (hall)")
-            if hall_opcion.isdigit() and 1 <= int(hall_opcion) <= len(tipos_hall):
+            hall_opcion = Prompt.ask("Ingresa el número del tipo de sala (hall)").strip()
+            if cancelar_si_volver(hall_opcion):
+                self.console.print("[red]Operación cancelada.[/]")
+                return None
+            if not hall_opcion.isdigit() or not (1 <= int(hall_opcion) <= len(tipos_hall)):
+                self.console.print("[yellow]Número no válido.[/]")
+            else:
                 hall = tipos_hall[int(hall_opcion) - 1][0]
                 break
-            self.console.print("[yellow]Número no válido. Elige una opción del 1 al 2.[/]")
 
-        try:
-            ticket_price = float(Prompt.ask("Precio base del ticket"))
-        except ValueError:
-            self.console.print("[yellow]Ingresa un precio válido.[/]")
-            return
-
+        # Precio ticket
         while True:
-            general_input = Prompt.ask("Cantidad de asientos generales disponibles")
+            ticket_input = Prompt.ask("Precio base del ticket").strip()
+            if cancelar_si_volver(ticket_input):
+                self.console.print("[red]Operación cancelada.[/]")
+                return None
+            try:
+                ticket_price = float(ticket_input)
+                break
+            except ValueError:
+                self.console.print("[yellow]Precio no válido.[/]")
+
+        # Asientos generales
+        while True:
+            general_input = Prompt.ask("Cantidad de asientos generales disponibles").strip()
+            if cancelar_si_volver(general_input):
+                self.console.print("[red]Operación cancelada.[/]")
+                return None
             if general_input.isdigit():
                 general_seats = int(general_input)
                 break
-            self.console.print("[yellow]Ingresa un número válido para asientos generales.[/]")
+            else:
+                self.console.print("[yellow]Número inválido para asientos generales.[/]")
 
+        # Asientos preferenciales
         while True:
-            pref_input = Prompt.ask("Cantidad de asientos preferenciales disponibles")
+            pref_input = Prompt.ask("Cantidad de asientos preferenciales disponibles").strip()
+            if cancelar_si_volver(pref_input):
+                self.console.print("[red]Operación cancelada.[/]")
+                return None
             if pref_input.isdigit():
                 pref_seats = int(pref_input)
                 break
-            self.console.print("[yellow]Ingresa un número válido para asientos preferenciales.[/]")
+            else:
+                self.console.print("[yellow]Número inválido para asientos preferenciales.[/]")
 
+        # Horarios
         showtimes = []
-        self.console.print("\n[bold]Agregar horarios (máximo 3, deja vacío para terminar):[/]")
+        self.console.print("\n[bold]Agregar horarios (máximo 3, escribe 'volver' o deja vacío para terminar):[/]")
         for i in range(3):
-            date = Prompt.ask(f"Fecha del horario #{i+1} (YYYY-MM-DD, vacío para salir)", default="")
-            if not date.strip():
+            date = Prompt.ask(f"Fecha del horario #{i+1} (YYYY-MM-DD, vacío para salir)", default="").strip()
+            if cancelar_si_volver(date):
+                self.console.print("[red]Operación cancelada.[/]")
+                return None
+            if not date:
                 break
-            start_time = Prompt.ask("Hora de inicio (HH:MM)")
-            end_time = Prompt.ask("Hora de fin (HH:MM)")
-            jornada = Prompt.ask("Jornada (mañana/tarde/noche)", choices=["mañana", "tarde", "noche"])
+            try:
+                datetime.strptime(date, "%Y-%m-%d")
+            except ValueError:
+                self.console.print("[yellow]Formato de fecha inválido. Usa YYYY-MM-DD.[/]")
+                break
+
+            start_time = Prompt.ask("Hora de inicio (HH:MM)").strip()
+            if cancelar_si_volver(start_time):
+                self.console.print("[red]Operación cancelada.[/]")
+                return None
+            try:
+                datetime.strptime(start_time, "%H:%M")
+            except ValueError:
+                self.console.print("[yellow]Formato de hora inválido. Usa HH:MM.[/]")
+                break
+
+            end_time = Prompt.ask("Hora de fin (HH:MM)").strip()
+            if cancelar_si_volver(end_time):
+                self.console.print("[red]Operación cancelada.[/]")
+                return None
+            try:
+                datetime.strptime(end_time, "%H:%M")
+            except ValueError:
+                self.console.print("[yellow]Formato de hora inválido. Usa HH:MM.[/]")
+                break
+
+            jornada = Prompt.ask("Jornada (mañana/tarde/noche)", choices=["mañana", "tarde", "noche"]).strip()
+            if cancelar_si_volver(jornada):
+                self.console.print("[red]Operación cancelada.[/]")
+                return None
 
             showtimes.append({
                 "showtime_id": i + 1,
-                "movie_id": 0,  # se asignará luego
-                "cinema_id": 0,  # opcional o editable luego
+                "movie_id": 0,
+                "cinema_id": 0,
                 "date": date,
                 "start_time": start_time,
                 "end_time": end_time,
@@ -304,7 +392,8 @@ class MovieView:
                 }
             })
 
-        data = {
+        # Resultado final
+        return {
             'title': title,
             'director': director,
             'release_year': release_year,
@@ -323,8 +412,6 @@ class MovieView:
                 'preferencial': pref_seats
             },
         }
-
-        return data
 
     def show_showtimes(self, showtimes: list):
         """Muestra los horarios disponibles para una película."""
