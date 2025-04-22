@@ -4,11 +4,20 @@ from rich.panel import Panel
 from rich.prompt import Prompt
 from rich import box
 
+# Importando recursos necesarios
+from core.database import Database
+from controllers.cinema_controller import CinemaController
+
+# Configuración
+from config import Config
+
 class MovieView:
     """Vista para gestión de películas."""
     
     def __init__(self):
+        self.db = Database(str(Config.DATA_DIR))
         self.console = Console()
+        self.cinema_controller = CinemaController(self.db)
     
     def show_movie_menu(self, is_admin: bool):
         """Muestra el menú de películas según el tipo de usuario con estilo uniforme."""
@@ -161,6 +170,43 @@ class MovieView:
                 f"{st.get('start_time', '')}-{st.get('end_time', '')}",
                 st.get('jornada', ''),
                 f"{available} Boletas" if available > 0 else "Sin Boletas"
+            )
+        
+        self.console.print(table)
+        
+    def show_showtimes(self, showtimes: list):
+        """Muestra los horarios disponibles para una película."""
+        if not showtimes:
+            self.console.print("[yellow]No hay horarios disponibles para esta película[/]")
+            return
+        
+        table = Table(title="[bold]Horarios Disponibles[/]", box=box.ROUNDED)
+        table.add_column("ID", style="cyan")
+        table.add_column("Fecha", style="magenta")
+        table.add_column("Hora", style="white")
+        table.add_column("Jornada", style="green")
+        table.add_column("Disponibilidad", style="yellow")
+        
+        for st in showtimes:
+            # Obtener el cine correspondiente para la capacidad total
+            cinema = self.cinema_controller.get_cinema_by_id(st['cinema_id'])
+            if not cinema:
+                continue
+                
+            # Calcular disponibilidad
+            total_capacity = sum(cinema['capacity'].values())
+            available_seats = st.get('available_seats', {})
+            current_available = sum(available_seats.values()) if available_seats else total_capacity
+            
+            # Mostrar "100 Boletas" si está completo, o el valor real si hay reservas
+            disponibilidad = f"{current_available} Boletas" if current_available < total_capacity else f"{total_capacity} Boletas"
+            
+            table.add_row(
+                str(st['showtime_id']),
+                st['date'],
+                f"{st['start_time']}-{st['end_time']}",
+                st['jornada'],
+                disponibilidad
             )
         
         self.console.print(table)

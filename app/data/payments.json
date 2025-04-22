@@ -1,1 +1,29 @@
-[]
+[
+  {
+    "payment_id": 1,
+    "user_id": 2,
+    "ticket_id": 1,
+    "amount": 25000,
+    "payment_method": "Tarjeta",
+    "status": "activo",
+    "payment_date": "2025-04-21T22:03:53.953913"
+  },
+  {
+    "payment_id": 1,
+    "user_id": 2,
+    "ticket_id": 1,
+    "amount": 18000,
+    "payment_method": "Tarjeta",
+    "status": "activo",
+    "payment_date": "2025-04-21T23:59:35.444133"
+  },
+  {
+    "payment_id": 1,
+    "user_id": 2,
+    "ticket_id": 1,
+    "amount": 18000,
+    "payment_method": "Transferencia",
+    "status": "activo",
+    "payment_date": "2025-04-22T00:01:03.629879"
+  }
+]

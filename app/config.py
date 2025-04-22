@@ -8,7 +8,6 @@ class Config:
     # Directorios y archivos
     BASE_DIR = Path(__file__).resolve().parent.parent
     DATA_DIR = BASE_DIR / "app/data"
-    LOGS_DIR = BASE_DIR / "app/logs"
     
     # Archivos de datos
     DATA_FILES = {
@@ -57,7 +56,6 @@ class Config:
     def initialize_directories(cls):
         """Crea los directorios necesarios si no existen."""
         os.makedirs(cls.DATA_DIR, exist_ok=True)
-        os.makedirs(cls.LOGS_DIR, exist_ok=True)
     
     @classmethod
     def to_dict(cls) -> Dict[str, Any]:

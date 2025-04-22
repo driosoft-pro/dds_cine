@@ -29,78 +29,87 @@ Este sistema es una aplicación de consola que permite la gestión completa de v
 ```bash
 dds_cine/
 ├── app/
-│   ├── __init__.py                   # Archivo de inicialización del paquete principal.
-│   ├── main.py                       # Punto de entrada de la aplicación.
-│   ├── config.py                     # Configuración global (rutas, constantes, etc.).
+│   ├── __init__.py                     # Archivo de inicialización del paquete principal.
+│   ├── main.py                         # Punto de entrada de la aplicación.
+│   ├── config.py                       # Configuración global (rutas, constantes, etc.).
+│   └── dependencies.py                 # Agrupacion las importaciones
 │
-│   ├── models/                       # Contiene las clases principales del dominio del sistema.
-│   │   ├── __init__.py               # Archivo de inicialización del paquete de modelos.
-│   │   ├── user.py                   # Define las clases Usuario y Admin.
-│   │   ├── movie.py                  # Define la clase Película.
-│   │   ├── showtime.py               # Define la clase para horarios de películas.
-│   │   ├── ticket.py                 # Define la clase Entrada.
-│   │   ├── reservation.py            # Define la clase Reserva.
-│   │   ├── payment.py                # Define la clase Pago.
-│   │   ├── food.py                   # Define la clase Menú de comida.
-│   │   └── cinema.py                 # Define la clase Cinema/Sala.
+│   ├── models/                         # Contiene las clases principales del dominio del sistema.
+│   │   ├── __init__.py                 # Archivo de inicialización del paquete de modelos.
+│   │   ├── user.py                     # Define las clases Usuario y Admin.
+│   │   ├── movie.py                    # Define la clase Película.
+│   │   ├── showtime.py                 # Define la clase para horarios de películas.
+│   │   ├── ticket.py                   # Define la clase Entrada.
+│   │   ├── reservation.py              # Define la clase Reserva.
+│   │   ├── payment.py                  # Define la clase Pago.
+│   │   ├── food.py                     # Define la clase Menú de comida.
+│   │   └── cinema.py                   # Define la clase Cinema/Sala.
 │
-│   ├── controllers/                  # Contiene la lógica de control para manejar las operaciones del sistema.
-│   │   ├── __init__.py               # Archivo de inicialización del paquete de controladores.
-│   │   ├── user_controller.py        # Controlador para operaciones relacionadas con usuarios.
-│   │   ├── movie_controller.py       # Controlador para operaciones relacionadas con películas.
-│   │   ├── showtime_controller.py    # Controlador para operaciones relacionadas con horarios.
-│   │   ├── ticket_controller.py      # Controlador para operaciones relacionadas con entradas.
-│   │   ├── reservation_controller.py # Controlador para operaciones relacionadas con reservas.
-│   │   ├── payment_controller.py     # Controlador para operaciones relacionadas con pagos.
-│   │   ├── food_controller.py        # Controlador para operaciones relacionadas con el menú de comida.
-│   │   └── cinema_controller.py      # Controlador para operaciones relacionadas con las salas de cine y sillas.
+│   ├── controllers/                    # Contiene la lógica de control para manejar las operaciones del sistema.
+│   │   ├── __init__.py                 # Archivo de inicialización del paquete de controladores.
+│   │   ├── user_controller.py          # Controlador para operaciones relacionadas con usuarios.
+│   │   ├── movie_controller.py         # Controlador para operaciones relacionadas con películas.
+│   │   ├── showtime_controller.py      # Controlador para operaciones relacionadas con horarios.
+│   │   ├── ticket_controller.py        # Controlador para operaciones relacionadas con entradas.
+│   │   ├── reservation_controller.py   # Controlador para operaciones relacionadas con reservas.
+│   │   ├── payment_controller.py       # Controlador para operaciones relacionadas con pagos.
+│   │   ├── food_controller.py          # Controlador para operaciones relacionadas con el menú de comida.
+│   │   └── cinema_controller.py        # Controlador para operaciones relacionadas con las salas de cine y sillas.
 │
-│   ├── services/                     # Contiene la lógica de negocio y servicios auxiliares.
-│   │   ├── __init__.py               # Archivo de inicialización del paquete de servicios.
-│   │   ├── auth_service.py           # Servicio para autenticación (registro, login, sesión).
-│   │   ├── validation_service.py     # Servicio para validaciones de entradas.
-│   │   ├── ticket_service.py         # Lógica de precios y promociones de entradas.
-│   │   ├── seat_service.py           # Lógica para la disponibilidad de sillas.
-│   │   ├── date_utils.py             # Utilidades para manejo de fechas.
-│   │   ├── report_service.py         # Servicio para generación de reportes.
-│   │   └── discount_service.py       # Servicio para manejo de promociones (2x1, descuentos, etc.).
+│   ├── handlers/
+│   │   ├── __init__.py                 # Archivo de inicialización del paquete de controladores.
+│   │   ├── handle_auth.py              # 
+│   │   ├── handle_availability.py      #
+│   │   ├── handle_food_management.py   #
+│   │   ├── handle_food_menu.py         #
+│   │   ├── handle_main_menu.py         #
+│   │   ├── handle_movie_listing.py     #
+│   │   ├── handle_movie_management.py  #
+│   │   ├── handle_reports.py           #
+│   │   ├── handle_ticket_purchase.py   #
+│   │   ├── handle_user_management.py   #
+│   │   └── handle_user_tickets.py      #
 │
-│   ├── core/                         # Contiene la lógica central del sistema.
-│   │   ├── __init__.py               # Archivo de inicialización del paquete core.
-│   │   ├── database.py               # Capa de acceso a datos (manejo de JSON y archivos).
-│   │   └── initial_data.py           # Datos precargados como películas y usuarios.
+│   ├── services/                       # Contiene la lógica de negocio y servicios auxiliares.
+│   │   ├── __init__.py                 # Archivo de inicialización del paquete de servicios.
+│   │   ├── auth_service.py             # Servicio para autenticación (registro, login, sesión).
+│   │   ├── validation_service.py       # Servicio para validaciones de entradas.
+│   │   ├── ticket_service.py           # Lógica de precios y promociones de entradas.
+│   │   ├── seat_service.py             # Lógica para la disponibilidad de sillas.
+│   │   ├── date_utils.py               # Utilidades para manejo de fechas.
+│   │   ├── report_service.py           # Servicio para generación de reportes.
+│   │   └── discount_service.py         # Servicio para manejo de promociones (2x1, descuentos, etc.).
 │
-│   ├── data/                         # Contiene los datos persistentes del sistema.
-│   │   ├── __init__.py               # Archivo de inicialización del paquete de datos.
-│   │   └── data.json                 # Base de datos simulada en formato JSON.
+│   ├── core/                           # Contiene la lógica central del sistema.
+│   │   ├── __init__.py                 # Archivo de inicialización del paquete core.
+│   │   ├── database.py                 # Capa de acceso a datos (manejo de JSON y archivos).
+│   │   └── initial_data.py             # Datos precargados como películas y usuarios.
 │
-│   ├── views/                        # Contiene las vistas para la interacción con el usuario.
-│   │   ├── __init__.py               # Archivo de inicialización del paquete de vistas.
-│   │   ├── menu_view.py              # Menú principal e interfaz de usuario.
-│   │   ├── login_view.py             # Vista para el login de usuarios.
-│   │   ├── user_view.py              # Vista para operaciones relacionadas con usuarios.
-│   │   ├── movie_view.py             # Vista para operaciones relacionadas con películas.
-│   │   ├── ticket_view.py            # Vista para operaciones relacionadas con entradas.
-│   │   ├── reservation_view.py       # Vista para operaciones relacionadas con reservas.
-│   │   ├── payment_view.py           # Vista para operaciones relacionadas con pagos.
-│   │   ├── food_menu_view.py         # Vista para operaciones relacionadas con el menú de comida.
-│   │   └── availability_view.py      # Vista para consultar disponibilidad de sillas.
+│   ├── data/                           # Contiene los datos persistentes del sistema.
+│   │   ├── __init__.py                 # Archivo de inicialización del paquete de datos.
+│   │   └── data.json                   # Base de datos simulada en formato JSON.
 │
-├── tests/                            # Contiene las pruebas unitarias e integrales del sistema.
-│   ├── __init__.py                   # Archivo de inicialización del paquete de pruebas.
-│   ├── test_models                   # Pruebas para las clases del paquete models.
-│   ├── test_controllers              # Pruebas para los controladores.
-│   └── test_services                 # Pruebas para los servicios.
+│   ├── views/                          # Contiene las vistas para la interacción con el usuario.
+│   │   ├── __init__.py                 # Archivo de inicialización del paquete de vistas.
+│   │   ├── menu_view.py                # Menú principal e interfaz de usuario.
+│   │   ├── login_view.py               # Vista para el login de usuarios.
+│   │   ├── user_view.py                # Vista para operaciones relacionadas con usuarios.
+│   │   ├── movie_view.py               # Vista para operaciones relacionadas con películas.
+│   │   ├── ticket_view.py              # Vista para operaciones relacionadas con entradas.
+│   │   ├── reservation_view.py         # Vista para operaciones relacionadas con reservas.
+│   │   ├── payment_view.py             # Vista para operaciones relacionadas con pagos.
+│   │   ├── food_menu_view.py           # Vista para operaciones relacionadas con el menú de comida.
+│   │   └── availability_view.py        # Vista para consultar disponibilidad de sillas.
 │
-├── doc/                              # Documentación del proyecto.
+├── doc/                                # Documentación del proyecto.
 │   ├── diagramClaseSDDS.png
 │   ├── diagramFlujoDDS.png
-|   ├── requerimientos.txt            # Requisitos funcionales y técnicos.
-│   └── requerimientosDetallados.txt  # Pruebas para los servicios.
+|   ├── requerimientos.txt              # Requisitos funcionales y técnicos.
+│   └── requerimientosDetallados.txt    # Pruebas para los servicios.
 |
-├── requirements.txt                  # Dependencias
-├── .gitignore                        # Archivos a ignorar
-└── README.md                         # Documentación principal
+├── requirements.txt                    # Dependencias
+├── .gitignore                          # Archivos a ignorar
+└── README.md                           # Documentación principal
 ```
 ## 📅 Reglas del Negocio
 - Sala 2D: Solo sillas generales (100 sillas).

@@ -35,7 +35,7 @@ class ShowtimeController:
                         jornada: str, available_seats: Dict[str, int]) -> Dict:
         """Crea un nuevo horario para una película."""
         showtimes = self.db.load_data(self.showtimes_file)
-        showtime_id = self.db.get_next_id(self.showtimes_file)
+        showtime_id = self.db.get_next_id("showtimes.json", "showtime_id")
         
         new_showtime = Showtime(
             showtime_id=showtime_id,

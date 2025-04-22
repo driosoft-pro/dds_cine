@@ -4,40 +4,56 @@ from rich.panel import Panel
 from rich.prompt import Prompt
 from rich import box
 
+# Importando recursos necesarios
+from core.database import Database
+from controllers.cinema_controller import CinemaController
+from controllers.showtime_controller import ShowtimeController
+
+# Configuración
+from config import Config
+
 class AvailabilityView:
     """Vista para consultar disponibilidad de asientos."""
     
     def __init__(self):
+        self.db = Database(str(Config.DATA_DIR))
         self.console = Console()
+        self.cinema_controller = CinemaController(self.db)
+        self.showtime_controller = ShowtimeController(self.db)
     
-    def show_availability(self, availability: dict, cinema_name: str, movie_title: str, showtime: str):
-        """Muestra la disponibilidad de asientos para una función."""
+    def show_availability(self, showtime_id: int, cinema_id: int, cinema_name: str, 
+                            movie_title: str, showtime_str: str):
+        """Muestra disponibilidad detallada para un horario específico."""
         panel = Panel.fit(
             f"[bold]Disponibilidad de Asientos[/]\n\n"
             f"Película: [magenta]{movie_title}[/]\n"
             f"Sala: [blue]{cinema_name}[/]\n"
-            f"Horario: [white]{showtime}[/]\n",
+            f"Horario: [white]{showtime_str}[/]\n",
             border_style="blue"
         )
         self.console.print(panel)
         
-        table = Table(box=box.ROUNDED)
-        table.add_column("Tipo de Asiento", style="cyan")
-        table.add_column("Asientos Disponibles", style="green")
+        # Obtener datos del cine y horario
+        cinema = self.cinema_controller.get_cinema_by_id(cinema_id)
+        showtime = next((st for st in self.showtime_controller.load_data("showtimes.json") 
+                        if st['showtime_id'] == showtime_id), None)
         
-        for seat_type, seats in availability.items():
-            # Manejar casos donde seats podría ser None o no iterable
-            if not seats or not isinstance(seats, (list, tuple, set)):
-                seats_display = "Ninguno"
-            else:
-                try:
-                    seats_display = ', '.join(str(seat) for seat in seats)
-                except (TypeError, AttributeError):
-                    seats_display = "Ninguno"
-                    
+        if not cinema or not showtime:
+            self.console.print("[red]Error: Datos no encontrados[/]")
+            return
+        
+        table = Table(box=box.ROUNDED, header_style="bold cyan")
+        table.add_column("Tipo", style="cyan", min_width=12)
+        table.add_column("Disponibles", justify="right", style="green")
+        table.add_column("Total", justify="right")
+        
+        for seat_type, capacity in cinema['capacity'].items():
+            available = showtime['available_seats'].get(seat_type, capacity)
+            
             table.add_row(
                 seat_type.capitalize(),
-                seats_display
+                str(available),
+                str(capacity)
             )
         
         self.console.print(table)

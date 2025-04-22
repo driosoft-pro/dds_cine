@@ -139,6 +139,9 @@ class DDSMovieApp:
 
         elif choice == "2":
             user_data = self.login_view.show_register()
+            if user_data is None:  # Verificación adicional por seguridad
+                self.menu_view.show_message("Error en el registro", is_error=True)
+                return
 
             # Validar datos
             valid, msg = self.validation_service.validate_email(user_data['email'])
@@ -171,7 +174,8 @@ class DDSMovieApp:
             self.menu_view.press_enter_to_continue()
 
         elif choice == "0":
-            self.running = False
+            self.console.print("[yellow]Saliendo del sistema...[/]")
+            exit(0)
 
                 
     def handle_main_menu(self):
@@ -953,10 +957,11 @@ class DDSMovieApp:
             
             if cinema:
                 self.availability_view.show_availability(
-                    availability=showtime['available_seats'],
+                    showtime_id=showtime['showtime_id'],  # Nuevo parámetro
+                    cinema_id=cinema['cinema_id'],
                     cinema_name=cinema['name'],
                     movie_title=movie['title'],
-                    showtime=f"{showtime['date']} {showtime['start_time']}"
+                    showtime_str=f"{showtime['date']} {showtime['start_time']}"
                 )
             
             self.menu_view.press_enter_to_continue()

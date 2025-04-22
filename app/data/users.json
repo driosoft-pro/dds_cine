@@ -20,5 +20,60 @@
     "password": "b7827b17b0821b354fabf438d73691c2bf467af7a44c374f8c505a5ee08b0d5d",
     "status": "activo",
     "is_admin": false
+  },
+  {
+    "user_id": 3,
+    "username": "test",
+    "identification": "123456789",
+    "name": "Tester",
+    "email": "test@dds.com",
+    "birth_date": "1999-12-21",
+    "password": "1095b31490de5d8009970ff96a2414ee55aedeb4b86e7e867ec68f4f523109fc",
+    "status": "activo",
+    "is_admin": false
+  },
+  {
+    "user_id": 4,
+    "username": "asda",
+    "identification": "12345678",
+    "name": "asd",
+    "email": "asd@dds.com",
+    "birth_date": "1999-12-21",
+    "password": "3b612c75a7b5048a435fb6ec81e52ff92d6d795a8b5a9c17070f6a63c97a53b2",
+    "status": "activo",
+    "is_admin": false
+  },
+  {
+    "user_id": 5,
+    "username": "samu",
+    "identification": "23456789",
+    "name": "samuel",
+    "email": "samu@dds.com",
+    "birth_date": "1999-12-12",
+    "password": "ad66df66076f1a63b0906436af94a8789672c850b77514897238cbb996cc492e",
+    "status": "activo",
+    "is_admin": false
+  },
+  {
+    "user_id": 5,
+    "username": "danna",
+    "identification": "123456789",
+    "name": "dannna",
+    "email": "danna@dds.com",
+    "birth_date": "1888-12-12",
+    "password": "4ed623801ab2d85d4166b212cf8c48ec82cd57fa4bedaa0feea302e5cb8a33b0",
+    "status": "activo",
+    "is_admin": false
+  },
+  {
+    "user_id": 6,
+    "username": "juan",
+    "identification": "234567890",
+    "name": "Juan David",
+    "email": "davi@dds.com",
+    "birth_date": "1999-12-12",
+    "password": "06036e2343750e3a5b0aa55724748fb0c6659214ae087a852c20d5e743151d67",
+    "status": "activo",
+    "is_admin": false
   }
 ]

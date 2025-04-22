@@ -11,12 +11,12 @@ class Database:
         self.data_dir = data_dir
         os.makedirs(self.data_dir, exist_ok=True)
     
-    def get_next_id(self, filename: str) -> int:
-        """Obtiene el próximo ID disponible para un archivo."""
+    def get_next_id(self, filename: str, id_field: str = "id") -> int:
+        """Obtiene el próximo ID disponible para un archivo, basado en el campo de ID especificado."""
         data = self.load_data(filename)
         if not data:
             return 1
-        return max((item.get('id', item.get('user_id', item.get('movie_id', 0))) for item in data)) + 1
+        return max((item.get(id_field, 0) for item in data)) + 1
     
     def load_data(self, filename: str) -> List[Dict[str, Any]]:
         """Carga datos desde un archivo JSON."""

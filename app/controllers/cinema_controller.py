@@ -9,7 +9,7 @@ class CinemaController:
     def __init__(self, db: Database):
         self.db = db
         self.cinemas_file = "cinemas.json"
-    
+        
     def load_data(self, filename: str) -> List[Dict]:
         """Carga datos desde un archivo JSON."""
         return self.db.load_data(filename)
@@ -18,7 +18,7 @@ class CinemaController:
                         capacity: Dict[str, int], seats: Dict[str, List[str]]) -> Dict:
         """Crea una nueva sala de cine con asientos definidos"""
         cinemas = self.db.load_data(self.cinemas_file)
-        cinema_id = self.db.get_next_id(self.cinemas_file)
+        cinema_id = self.db.get_next_id("cinemas.json", "cinema_id")
         
         new_cinema = Cinema(
             cinema_id=cinema_id,
@@ -31,6 +31,13 @@ class CinemaController:
         cinemas.append(new_cinema.to_dict())
         self.db.save_data(self.cinemas_file, cinemas)
         return new_cinema.to_dict()
+    
+    def get_available_all_seats(self, cinema_id: int) -> Dict[str, List[str]]:
+        """Obtiene asientos disponibles para una sala de cine."""
+        cinema = self.get_cinema_by_id(cinema_id)
+        if cinema:
+            return cinema['available_seats']
+        return {}
     
     def get_available_seats_by_type(self, cinema_id: int, seat_type: str) -> List[str]:
         """Obtiene asientos disponibles para un tipo específico."""

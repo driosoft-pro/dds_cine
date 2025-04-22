@@ -1,8 +1,8 @@
 from rich.console import Console
 from rich.panel import Panel
 from rich.prompt import Prompt
-from getpass import getpass
 from datetime import datetime
+import pwinput
 
 # Importando recursos necesarios
 from core.database import Database
@@ -25,7 +25,7 @@ class LoginView:
         self.console.print("1. Iniciar sesión")
         self.console.print("2. Registrarse")
         self.console.print("0. Salir")
-        return Prompt.ask("Seleccione una ID:",choice=["1", "2", "0"])
+        return Prompt.ask("Seleccione una ID:", choice=["1", "2", "0"])
         
     def show_login(self):
         """Muestra el formulario de login con límite de intentos."""
@@ -48,8 +48,9 @@ class LoginView:
             for pwd_attempt in range(self.max_attempts):
                 try:
                     self.console.print("[cyan]Contraseña:[/]", end=" ")
-                    password = getpass("")
-                    if password is None or password.strip() == "":
+                    password = pwinput.pwinput(prompt="", mask="*")  
+                    
+                    if password.strip() == "":
                         raise ValueError("La contraseña no puede estar vacía")
                         
                     if self.user_controller.check_password_user(username, password):
@@ -74,64 +75,20 @@ class LoginView:
         return None, None
 
     def show_register(self):
-        """Muestra el formulario de registro."""
+        """Muestra el formulario de registro y devuelve los datos del usuario."""
         self.console.print(Panel.fit("[bold]Registro de Nuevo Usuario[/]", border_style="blue"))
 
-        while True:
-            username = Prompt.ask("[cyan]Nombre de usuario[/]")
-            if username.strip() == "":
-                self.console.print("[red]Error: El nombre de usuario no puede estar vacío.[/]")
-                self.console.print("[cyan]Ejemplo: usuario123[/]")
-            elif len(username) < 3:
-                self.console.print("[red]Error: El nombre de usuario debe tener al menos 3 caracteres.[/]")
-                self.console.print("[cyan]Ejemplo: usuario123[/]")
-            else:
-                break
-
-        while True:
-            identification = Prompt.ask("[cyan]Número de identificación[/]")
-            if identification.strip() == "":
-                self.console.print("[red]Error: El número de identificación no puede estar vacío.[/]")
-                self.console.print("[cyan]Ejemplo: 12345678[/]")
-            elif not identification.isdigit():
-                self.console.print("[red]Error: El número de identificación debe ser un número.[/]")
-                self.console.print("[cyan]Ejemplo: 12345678[/]")
-            else:
-                break
-
-        while True:
-            name = Prompt.ask("[cyan]Nombre completo[/]")
-            if name.strip() == "":
-                self.console.print("[red]Error: El nombre completo no puede estar vacío.[/]")
-                self.console.print("[cyan]Ejemplo: Juan Pérez[/]")
-            else:
-                break
-
-        while True:
-            email = Prompt.ask("[cyan]Correo electrónico[/]")
-            if email.strip() == "":
-                self.console.print("[red]Error: El correo electrónico no puede estar vacío.[/]")
-                self.console.print("[cyan]Ejemplo: ejemplo@dds.com[/]")
-            elif "@" not in email:
-                self.console.print("[red]Error: El correo electrónico debe contener el símbolo @.[/]")
-                self.console.print("[cyan]Ejemplo: ejemplo@dds.com[/]")
-            else:
-                break
-
-        while True:
-            birth_date = Prompt.ask("[cyan]Fecha de nacimiento (YYYY-MM-DD)[/]")
-            try:
-                datetime.strptime(birth_date, "%Y-%m-%d")
-                break
-            except ValueError:
-                self.console.print("[red]Error: La fecha de nacimiento debe estar en el formato YYYY-MM-DD.[/]")
-                self.console.print("[cyan]Ejemplo: 1990-01-01[/]")
+        username = self._ask_with_validation("[cyan]Nombre de usuario[/]", "usuario123", 3)
+        identification = self._ask_digits("[cyan]Número de identificación[/]", "12345678")
+        name = self._ask_required("[cyan]Nombre completo[/]", "Juan Pérez")
+        email = self._ask_email()
+        birth_date = self._ask_birth_date()
 
         while True:
             try:
                 self.console.print("[cyan]Contraseña:[/]", end=" ")
-                password = getpass("")
-                if password is None or password.strip() == "":
+                password = pwinput.pwinput(prompt="", mask="*")  
+                if password.strip() == "":
                     self.console.print("[red]Error: La contraseña no puede estar vacía.[/]")
                     continue
                 elif len(password) < 8:
@@ -143,9 +100,10 @@ class LoginView:
 
         while True:
             try:
-                confirm_password = getpass("[cyan]Confirmar contraseña:[/]")
-                if confirm_password is None or confirm_password.strip() == "":
-                    self.console.print("[red]Error: La confirmación de la contraseña no puede estar vacía.[/]")
+                self.console.print("[cyan]Confirmar Contraseña:[/]", end=" ")
+                confirm_password = pwinput.pwinput(prompt="", mask="*")  
+                if confirm_password.strip() == "":
+                    self.console.print("[red]Error: La confirmación no puede estar vacía.[/]")
                     continue
                 if confirm_password != password:
                     self.console.print("[red]Error: Las contraseñas no coinciden.[/]")
@@ -154,12 +112,67 @@ class LoginView:
             except Exception as e:
                 self.console.print(f"[red]Error al confirmar la contraseña: {e}[/]")
 
-        self.show_register_success()
-        # Aquí iría el llamado para guardar el nuevo usuario
+        return {
+            'username': username,
+            'identification': identification,
+            'name': name,
+            'email': email,
+            'birth_date': birth_date,
+            'password': password,
+            'confirm_password': confirm_password
+        }
+
+    def _ask_required(self, prompt, example):
+        while True:
+            value = Prompt.ask(prompt)
+            if value.strip() == "":
+                self.console.print(f"[red]Error: Este campo no puede estar vacío.[/]")
+                self.console.print(f"[cyan]Ejemplo: {example}[/]")
+            else:
+                return value
+
+    def _ask_with_validation(self, prompt, example, min_len):
+        while True:
+            value = Prompt.ask(prompt)
+            if value.strip() == "":
+                self.console.print("[red]Error: Este campo no puede estar vacío.[/]")
+            elif len(value) < min_len:
+                self.console.print(f"[red]Error: Debe tener al menos {min_len} caracteres.[/]")
+            else:
+                return value
+
+    def _ask_digits(self, prompt, example):
+        while True:
+            value = Prompt.ask(prompt)
+            if value.strip() == "":
+                self.console.print("[red]Error: Este campo no puede estar vacío.[/]")
+            elif not value.isdigit():
+                self.console.print("[red]Error: Debe ser un número.[/]")
+            else:
+                return value
+
+    def _ask_email(self):
+        while True:
+            email = Prompt.ask("[cyan]Correo electrónico[/]")
+            if email.strip() == "":
+                self.console.print("[red]Error: El correo electrónico no puede estar vacío.[/]")
+            elif "@" not in email:
+                self.console.print("[red]Error: Debe contener el símbolo @.[/]")
+            else:
+                return email
+
+    def _ask_birth_date(self):
+        while True:
+            birth_date = Prompt.ask("[cyan]Fecha de nacimiento (YYYY-MM-DD)[/]")
+            try:
+                datetime.strptime(birth_date, "%Y-%m-%d")
+                return birth_date
+            except ValueError:
+                self.console.print("[red]Error: Formato incorrecto (YYYY-MM-DD)[/]")
 
     def show_login_success(self):
         """Muestra mensaje de login exitoso."""
-        self.console.print(f"\n[green]✓ Conexión exitosa...")
+        self.console.print(f"\n[green]✓ Conexión exitosa...[/]")
 
     def show_login_error(self):
         """Muestra mensaje de error en login."""

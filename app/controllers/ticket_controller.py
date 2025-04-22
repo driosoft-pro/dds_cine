@@ -14,7 +14,8 @@ class TicketController:
                         seat_number: str, ticket_type: str, price: float) -> Dict:
         """Crea un nuevo ticket."""
         tickets = self.db.load_data(self.tickets_file)
-        ticket_id = self.db.get_next_id(self.tickets_file)
+        ticket_id = self.db.get_next_id("tickets.json", "ticket_id")
+        
         
         new_ticket = Ticket(
             ticket_id=ticket_id,
