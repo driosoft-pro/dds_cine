@@ -28,49 +28,55 @@ class LoginView:
         return Prompt.ask("Seleccione una ID:", choice=["1", "2", "0"])
         
     def show_login(self):
-        """Muestra el formulario de login con límite de intentos."""
+        """Muestra el formulario de login con límite de intentos y opción de 'volver'."""
         self.console.print(Panel.fit("[bold]Iniciar Sesión[/]", border_style="blue"))
         
         for attempt in range(self.max_attempts):
-            username = Prompt.ask("[cyan]Usuario[/]").strip()
+            username = Prompt.ask("[cyan]Usuario:[/]").strip()
             
+            if username.lower() == "volver":
+                return "volver", "volver"
+
             if not username:
                 self.console.print("[red]Error: El usuario no puede estar vacío[/]")
                 continue
-                
+
             if not self.user_controller.exists_user(username):
                 remaining = self.max_attempts - (attempt + 1)
                 self.console.print(f"[red]Error: El usuario no existe. Intentos restantes: {remaining}[/]")
                 if remaining == 0:
                     break
                 continue
-                
+
             for pwd_attempt in range(self.max_attempts):
                 try:
                     self.console.print("[cyan]Contraseña:[/]", end=" ")
-                    password = pwinput.pwinput(prompt="", mask="*")  
-                    
-                    if password.strip() == "":
+                    password = pwinput.pwinput(prompt="", mask="*").strip()
+
+                    if password.lower() == "volver":
+                        return "volver", "volver"
+
+                    if password == "":
                         raise ValueError("La contraseña no puede estar vacía")
-                        
+
                     if self.user_controller.check_password_user(username, password):
                         self.show_login_success()
                         return username, password
-                        
+
                     remaining = self.max_attempts - (pwd_attempt + 1)
                     if remaining > 0:
                         self.console.print(f"[red]Contraseña incorrecta. Intentos restantes: {remaining}[/]")
-                        
+
                 except (EOFError, KeyboardInterrupt):
                     self.console.print("\n[red]Entrada interrumpida. Abortando proceso de login.[/]")
                     return None, None
                 except Exception as e:
                     self.console.print(f"[red]Error al ingresar la contraseña: {e}[/]")
                     break
-                    
+
             if (attempt + 1) < self.max_attempts:
                 self.console.print(f"[yellow]Intento {attempt + 1} de {self.max_attempts} fallido. Intente nuevamente.[/]")
-        
+
         self.console.print("[red]Ha excedido el número máximo de intentos. Volviendo al menú principal...[/]")
         return None, None
 
@@ -79,15 +85,26 @@ class LoginView:
         self.console.print(Panel.fit("[bold]Registro de Nuevo Usuario[/]", border_style="blue"))
 
         username = self._ask_with_validation("[cyan]Nombre de usuario[/]", "usuario123", 3)
+        if username == "volver": return None
+
         identification = self._ask_digits("[cyan]Número de identificación[/]", "12345678")
+        if identification == "volver": return None
+
         name = self._ask_required("[cyan]Nombre completo[/]", "Juan Pérez")
+        if name == "volver": return None
+
         email = self._ask_email()
+        if email == "volver": return None
+
         birth_date = self._ask_birth_date()
+        if birth_date == "volver": return None
 
         while True:
             try:
                 self.console.print("[cyan]Contraseña:[/]", end=" ")
-                password = pwinput.pwinput(prompt="", mask="*")  
+                password = pwinput.pwinput(prompt="", mask="*")
+                if password.strip().lower() == "volver":
+                    return None
                 if password.strip() == "":
                     self.console.print("[red]Error: La contraseña no puede estar vacía.[/]")
                     continue
@@ -101,7 +118,9 @@ class LoginView:
         while True:
             try:
                 self.console.print("[cyan]Confirmar Contraseña:[/]", end=" ")
-                confirm_password = pwinput.pwinput(prompt="", mask="*")  
+                confirm_password = pwinput.pwinput(prompt="", mask="*")
+                if confirm_password.strip().lower() == "volver":
+                    return None
                 if confirm_password.strip() == "":
                     self.console.print("[red]Error: La confirmación no puede estar vacía.[/]")
                     continue
@@ -125,6 +144,8 @@ class LoginView:
     def _ask_required(self, prompt, example):
         while True:
             value = Prompt.ask(prompt)
+            if value.strip().lower() == "volver":
+                return "volver"
             if value.strip() == "":
                 self.console.print(f"[red]Error: Este campo no puede estar vacío.[/]")
                 self.console.print(f"[cyan]Ejemplo: {example}[/]")
@@ -134,6 +155,8 @@ class LoginView:
     def _ask_with_validation(self, prompt, example, min_len):
         while True:
             value = Prompt.ask(prompt)
+            if value.strip().lower() == "volver":
+                return "volver"
             if value.strip() == "":
                 self.console.print("[red]Error: Este campo no puede estar vacío.[/]")
             elif len(value) < min_len:
@@ -144,6 +167,8 @@ class LoginView:
     def _ask_digits(self, prompt, example):
         while True:
             value = Prompt.ask(prompt)
+            if value.strip().lower() == "volver":
+                return "volver"
             if value.strip() == "":
                 self.console.print("[red]Error: Este campo no puede estar vacío.[/]")
             elif not value.isdigit():
@@ -154,6 +179,8 @@ class LoginView:
     def _ask_email(self):
         while True:
             email = Prompt.ask("[cyan]Correo electrónico[/]")
+            if email.strip().lower() == "volver":
+                return "volver"
             if email.strip() == "":
                 self.console.print("[red]Error: El correo electrónico no puede estar vacío.[/]")
             elif "@" not in email:
@@ -164,6 +191,8 @@ class LoginView:
     def _ask_birth_date(self):
         while True:
             birth_date = Prompt.ask("[cyan]Fecha de nacimiento (YYYY-MM-DD)[/]")
+            if birth_date.strip().lower() == "volver":
+                return "volver"
             try:
                 datetime.strptime(birth_date, "%Y-%m-%d")
                 return birth_date
