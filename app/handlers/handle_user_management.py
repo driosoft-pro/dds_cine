@@ -1,7 +1,7 @@
 def handle_user_management(self):
     """Maneja la gestión de usuarios (admin)."""
     while True:
-        choice = self.user_view.show_user_menu()
+        choice = self.user_view.show_user_menu(is_admin=True)
         
         if choice == "1":  # Listar usuarios
             users = self.user_controller.list_users(active_only=False)
@@ -16,13 +16,13 @@ def handle_user_management(self):
             if 'id' in criteria:
                 user = self.user_controller.get_user_by_id(int(criteria['id']))
                 if user:
-                    self.user_view.show_user_details(user)
+                    self.user_view.show_user_details(user, is_admin=True)
                 else:
                     self.menu_view.show_message("Usuario no encontrado", is_error=True)
             elif 'username' in criteria:
                 user = self.user_controller.get_user_by_username(criteria['username'])
                 if user:
-                    self.user_view.show_user_details(user)
+                    self.user_view.show_user_details(user, is_admin=True)
                 else:
                     self.menu_view.show_message("Usuario no encontrado", is_error=True)
             else:
@@ -97,3 +97,6 @@ def handle_user_management(self):
                 self.menu_view.show_message("Error al desactivar el usuario", is_error=True)
                 
             self.menu_view.press_enter_to_continue()
+        
+        elif choice == "0": #Volver al menu principal
+            return

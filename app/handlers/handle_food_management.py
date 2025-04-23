@@ -28,7 +28,7 @@ def handle_food_management(self):
             elif choice == "4":  # Actualizar item
                 items = self.food_controller.list_food_items()
                 self.food_view.show_food_items(items)
-                item_id_input = self.console.input("Ingrese ID del ítem a actualizar (o 'volver' para cancelar): ").strip()
+                item_id_input = self.console.input("Ingrese ID del ítem a actualizar o 'volver' para cancelar: ").strip()
                 if item_id_input.lower() == "volver":
                     self.menu_view.show_message("Operación cancelada.")
                     self.menu_view.press_enter_to_continue()

@@ -68,6 +68,7 @@ dds_cine/
 │   │   ├── handle_ticket_purchase.py   # Maneja la compra de tickets por parte del cliente.
 │   │   ├── handle_user_management.py   # Permite al administrador gestionar usuarios (CRUD).
 │   │   ├── handle_reservation.py       # Permite hacer, listar, cancelar o convertir reservas en tickets.
+│   │   ├── handle_user_perfil.py       # Permite ver y actualizar perfil de usuario.
 │   │   └── handle_user_tickets.py      # Muestra al usuario sus tickets y reservas activas.
 │
 │   ├── services/                       # Contiene la lógica de negocio y servicios auxiliares.

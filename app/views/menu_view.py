@@ -48,6 +48,7 @@ class MenuView:
             menu.add_row("4", "Mis Tickets/Reservas")
             menu.add_row("5", "Menú de Comida")
             menu.add_row("6", "Consultar Disponibilidad")
+            menu.add_row("7", "Mi Perfil")
             menu.add_row("0", "Salir")
         
         self.console.print(menu)
@@ -74,4 +75,4 @@ class MenuView:
     
     def press_enter_to_continue(self):
         """Espera que el usuario presione Enter para continuar."""
-        self.console.input("\n[dim]Presione Enter para continuar...[/]")
+        self.console.input("\n[dim]Presione Enter para volver al menú...[/]")

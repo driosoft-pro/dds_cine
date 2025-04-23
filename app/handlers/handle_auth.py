@@ -1,7 +1,8 @@
+import sys
 from rich.panel import Panel
 from rich.table import Table
-from rich import box
 from rich.prompt import Prompt
+from rich import box
 
 def handle_auth(app):
     """Maneja el proceso de autenticación."""

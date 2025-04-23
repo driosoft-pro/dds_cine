@@ -32,12 +32,14 @@ class FoodView:
                 ("5", "Desactivar item"),
                 ("0", "Volver al menú principal"),
             ]
+            valid_choices = ["1", "2", "3", "4", "5", "0"]
         else:
             opciones = [
                 ("1", "Ver menú completo"),
                 ("2", "Buscar por categoría"),
                 ("0", "Volver al menú principal"),
             ]
+            valid_choices = ["1", "2", "0"]
 
         for id, descripcion in opciones:
             table.add_row(id, descripcion)
@@ -46,13 +48,11 @@ class FoodView:
 
         # Solicita la entrada del usuario y verifica si es válida
         while True:
-            choice = Prompt.ask("Seleccione una ID", show_default=False).strip()
-
-            # Validamos si la opción es válida
-            if choice in [id for id, _ in opciones]:
-                return choice
+            opcion = Prompt.ask("Escriba 0 o 'volver' para regresar al menú \nSeleccione una ID ").strip()
+            if opcion in valid_choices:
+                return opcion
             else:
-                self.console.print("[bold red]Opción no válida. Por favor, seleccione una opción válida.[/bold red]")
+                self.console.print("[red]ID inválida. Intente nuevamente.[/]")
 
     def show_food_items(self, items: list, by_category: bool = False):
         """Muestra los items del menú de comida."""

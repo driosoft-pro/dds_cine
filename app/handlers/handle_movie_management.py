@@ -27,6 +27,7 @@ def handle_movie_management(self):
                 except Exception as e:
                     self.menu_view.show_message(str(e), is_error=True)
             self.menu_view.press_enter_to_continue()
+        
         elif choice == "4":  # Actualizar película
             movies = self.movie_controller.list_movies()
             self.movie_view.show_movies(movies)
@@ -49,5 +50,6 @@ def handle_movie_management(self):
             else:
                 self.menu_view.show_message("Error al desactivar la película", is_error=True)
             self.menu_view.press_enter_to_continue()
+        
         elif choice == "0": #Volver al menu principal
             return

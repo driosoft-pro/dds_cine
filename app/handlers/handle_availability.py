@@ -6,6 +6,7 @@ def handle_availability(self):
         self.movie_view.show_movies(movies, showtimes)
         movie_id = int(self.console.input("Ingrese ID de la película: "))
         movie = next((m for m in movies if m['movie_id'] == movie_id), None)
+        
         if not movie:
             self.menu_view.show_message("Película no encontrada", is_error=True)
             return
@@ -13,11 +14,13 @@ def handle_availability(self):
         self.movie_view.show_showtimes(movie_showtimes)
         showtime_id = int(self.console.input("Ingrese ID del horario: "))
         showtime = next((st for st in movie_showtimes if st['showtime_id'] == showtime_id), None)
+        
         if not showtime:
             self.menu_view.show_message("Horario no encontrado", is_error=True)
             return
         cinema = next((c for c in self.cinema_controller.list_cinemas()
                         if c['room_type'] == movie['room_type']), None)
+        
         if cinema:
             self.availability_view.show_availability(
                 showtime_id=showtime['showtime_id'],

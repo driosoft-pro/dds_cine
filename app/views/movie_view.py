@@ -2,8 +2,8 @@ from rich.console import Console
 from rich.table import Table
 from rich.panel import Panel
 from rich.prompt import Prompt
-from rich import box
 from datetime import datetime
+from rich import box
 
 # Importando recursos necesarios
 from core.database import Database
@@ -16,11 +16,10 @@ class MovieView:
     """Vista para gestión de películas."""
     
     def __init__(self):
-        self.db = Database(str(Config.DATA_DIR))
         self.console = Console()
+        self.db = Database(str(Config.DATA_DIR))
         self.cinema_controller = CinemaController(self.db)
     
-
     def show_movie_menu(self, is_admin: bool):
         """Muestra el menú de películas según el tipo de usuario con estilo uniforme."""
         titulo = "Gestión de Películas" if is_admin else "Cartelera"
@@ -56,7 +55,7 @@ class MovieView:
         self.console.print(table)
 
         while True:
-            opcion = Prompt.ask("Seleccione una ID \no escriba 'volver' para regresar al menu").strip()
+            opcion = Prompt.ask("Escriba 0 o 'volver' para regresar al menú \nSeleccione una ID ").strip()
             if opcion in valid_choices:
                 return opcion
             else:
