@@ -32,7 +32,6 @@ dds_cine/
 │   ├── __init__.py                     # Archivo de inicialización del paquete principal.
 │   ├── main.py                         # Punto de entrada de la aplicación.
 │   ├── config.py                       # Configuración global (rutas, constantes, etc.).
-│   └── dependencies.py                 # Agrupacion las importaciones
 │
 │   ├── models/                         # Contiene las clases principales del dominio del sistema.
 │   │   ├── __init__.py                 # Archivo de inicialización del paquete de modelos.
@@ -56,19 +55,20 @@ dds_cine/
 │   │   ├── food_controller.py          # Controlador para operaciones relacionadas con el menú de comida.
 │   │   └── cinema_controller.py        # Controlador para operaciones relacionadas con las salas de cine y sillas.
 │
-│   ├── handlers/
-│   │   ├── __init__.py                 # Archivo de inicialización del paquete de controladores.
-│   │   ├── handle_auth.py              # 
-│   │   ├── handle_availability.py      #
-│   │   ├── handle_food_management.py   #
-│   │   ├── handle_food_menu.py         #
-│   │   ├── handle_main_menu.py         #
-│   │   ├── handle_movie_listing.py     #
-│   │   ├── handle_movie_management.py  #
-│   │   ├── handle_reports.py           #
-│   │   ├── handle_ticket_purchase.py   #
-│   │   ├── handle_user_management.py   #
-│   │   └── handle_user_tickets.py      #
+│   ├── handlers/                       # Contiene funciones que manejan la lógica de interacción por flujo (handlers).
+│   │   ├── __init__.py                 # Archivo de inicialización del paquete de handlers.
+│   │   ├── handle_auth.py              # Maneja el inicio de sesión, registro y autenticación de usuarios.
+│   │   ├── handle_availability.py      # Muestra la disponibilidad de asientos por película y horario.
+│   │   ├── handle_food_management.py   # Maneja la administración del menú de comida (CRUD para admins).
+│   │   ├── handle_food_menu.py         # Muestra el menú de comida para clientes y permite búsquedas.
+│   │   ├── handle_main_menu.py         # Muestra y gestiona el menú principal, redirigiendo a los demás handlers.
+│   │   ├── handle_movie_listing.py     # Muestra la cartelera disponible para los clientes y permite buscar/ver detalles.
+│   │   ├── handle_movie_management.py  # Maneja la gestión de películas para administradores (listar, agregar, actualizar, eliminar).
+│   │   ├── handle_reports.py           # Genera reportes estadísticos por ventas, película o usuario.
+│   │   ├── handle_ticket_purchase.py   # Maneja la compra de tickets por parte del cliente.
+│   │   ├── handle_user_management.py   # Permite al administrador gestionar usuarios (CRUD).
+│   │   ├── handle_reservation.py       # Permite hacer, listar, cancelar o convertir reservas en tickets.
+│   │   └── handle_user_tickets.py      # Muestra al usuario sus tickets y reservas activas.
 │
 │   ├── services/                       # Contiene la lógica de negocio y servicios auxiliares.
 │   │   ├── __init__.py                 # Archivo de inicialización del paquete de servicios.
