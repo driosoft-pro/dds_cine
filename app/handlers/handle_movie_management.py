@@ -33,8 +33,22 @@ def handle_movie_management(self):
             self.movie_view.show_movies(movies)
             movie_id = int(self.console.input("Ingrese ID de la película a actualizar: "))
             
-            movie_data = self.movie_view.get_movie_data()
-            if self.movie_controller.update_movie(movie_id, **movie_data):
+            current = self.movie_controller.get_movie_by_id(movie_id)
+            if not current:
+                self.menu_view.show_message("Película no encontrada", is_error=True)
+                continue
+
+            # Pedir datos en modo update, mostrando defaults
+            movie_data = self.movie_view.get_movie_data(
+                for_update=True,
+                current_data=current
+            )
+            if movie_data is None:
+                # El usuario decidió cancelar
+                continue
+
+            updated = self.movie_controller.update_movie(movie_id, **movie_data)
+            if updated:
                 self.menu_view.show_message("Película actualizada con éxito!")
             else:
                 self.menu_view.show_message("Error al actualizar la película", is_error=True)

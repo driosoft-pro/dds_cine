@@ -56,25 +56,43 @@ def handle_user_management(self):
             except Exception as e:
                 self.menu_view.show_message(str(e), is_error=True)
             self.menu_view.press_enter_to_continue()
+            
         elif choice == "4":  # Actualizar usuario
             users = self.user_controller.list_users(active_only=False)
             self.user_view.show_users(users)
+
             while True:
-                user_id_input = self.console.input("Ingrese ID del usuario a actualizar (escriba 'volver' para regresar al menú): ").strip()
+                user_id_input = self.console.input(
+                    "Ingrese ID del usuario a actualizar (o 'volver'): "
+                ).strip()
                 if user_id_input.lower() == "volver":
-                    return
+                    break  # o return, según flujo
                 if not user_id_input.isdigit():
-                    self.menu_view.show_message("Por favor, ingrese un número válido de ID o 'volver'.", is_error=True)
+                    self.menu_view.show_message("ID inválido.", is_error=True)
                     continue
                 user_id = int(user_id_input)
                 break
-            user_data = self.user_view.get_user_data(for_update=True)
+
+            current = self.user_controller.get_user_by_id(user_id)
+            if not current:
+                self.menu_view.show_message("Usuario no encontrado.", is_error=True)
+                continue
+
+            # Aquí pasamos current_data al prompt
+            user_data = self.user_view.get_user_data(
+                for_update=True,
+                current_data=current
+            )
             if user_data is None:
-                return 
-            if self.user_controller.update_user(user_id, **user_data):
+                # usuario canceló
+                continue
+
+            updated = self.user_controller.update_user(user_id, **user_data)
+            if updated:
                 self.menu_view.show_message("Usuario actualizado con éxito!")
             else:
-                self.menu_view.show_message("Error al actualizar el usuario", is_error=True)
+                self.menu_view.show_message("Error al actualizar usuario", is_error=True)
+
             self.menu_view.press_enter_to_continue()
         
         elif choice == "5":  # Desactivar usuario

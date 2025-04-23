@@ -5,7 +5,7 @@
     "category": "Combos de Crispetas",
     "product": "Combo Crispetas Pequeñas + Gaseosa Pequeña",
     "size": "Pequeño",
-    "price": 15000,
+    "price": 15000.0,
     "description": "Crispetas pequeñas + gaseosa pequeña",
     "status": "activo"
   },

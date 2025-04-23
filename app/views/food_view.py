@@ -97,121 +97,117 @@ class FoodView:
             
             self.console.print(table)
     
-    def get_food_item_data(self, include_id: bool = True, is_update: bool = False, current_data: Dict = None) -> Optional[Dict]:
-        data = {}
+    def get_food_item_data(self,include_id: bool = True,is_update: bool = False,
+        current_data: Dict = None) -> Optional[Dict]:
+        data: Dict = {}
 
-        def cancelar(valor):
-            return valor.strip().lower() == "volver"
+        def ask_text(label: str, key: str, required: bool = True) -> Optional[str]:
+            default = None
+            if is_update and current_data and key in current_data:
+                default = str(current_data[key] or "")
+            prompt = label + (f" [{default}]" if default else "")
+            val = Prompt.ask(prompt, default=default).strip()
+            if val.lower() == "volver":
+                return None
+            if required and val == "":
+                # campo obligatorio
+                self.console.print("[red]Este campo es obligatorio.[/]")
+                return ask_text(label, key, required)
+            return val or default
 
+        def ask_float(label: str, key: str) -> Optional[float]:
+            while True:
+                txt = ask_text(label, key, required=not is_update)
+                if txt is None:
+                    return None
+                try:
+                    return float(txt)
+                except ValueError:
+                    self.console.print("[red]Ingresa un número válido.[/]")
+
+        def ask_int(label: str, key: str) -> Optional[int]:
+            while True:
+                txt = ask_text(label, key, required=not is_update)
+                if txt is None:
+                    return None
+                if txt.isdigit():
+                    return int(txt)
+                self.console.print("[red]Ingresa un entero válido.[/]")
+
+        # --- ID (solo en admin y si include_id) ---
         if include_id:
-            valor = Prompt.ask("ID del producto")
-            if cancelar(valor):
+            id_label = "ID del producto"
+            default_id = str(current_data.get("item_id")) if (is_update and current_data) else None
+            val = Prompt.ask(id_label, default=default_id).strip()
+            if val.lower() == "volver":
                 return None
-            if not valor.isdigit():
-                print("ID inválido.")
+            if not val.isdigit():
+                self.console.print("[red]ID inválido.[/]")
                 return None
-            data['item_id'] = int(valor)
+            data["item_id"] = int(val)
 
-        # --- Código del producto ---
-        code_actual = current_data.get("code") if is_update else ""
-        prompt_code = f"Código del producto [{code_actual}]" if is_update else "Código del producto"
-        while True:
-            valor = Prompt.ask(prompt_code)
-            if cancelar(valor):
-                return None
-            if valor:
-                data['code'] = valor
-                break
-            elif is_update:
-                data['code'] = code_actual
-                break
-            else:
-                print("El código es obligatorio.")
+        # --- Código ---
+        code = ask_text("Código del producto", "code")
+        if code is None: return None
+        data["code"] = code
 
         # --- Categoría ---
-        cat_actual = current_data.get("category") if is_update else ""
-        prompt_cat = f"Categoría [{cat_actual}]" if is_update else "Categoría"
-        while True:
-            valor = Prompt.ask(prompt_cat)
-            if cancelar(valor):
-                return None
-            if valor:
-                data['category'] = valor
-                break
-            elif is_update:
-                data['category'] = cat_actual
-                break
-            else:
-                print("La categoría es obligatoria.")
+        category = ask_text("Categoría", "category")
+        if category is None: return None
+        data["category"] = category
 
-        # --- Nombre del producto ---
-        prod_actual = current_data.get("product") if is_update else ""
-        prompt_prod = f"Nombre del producto [{prod_actual}]" if is_update else "Nombre del producto"
-        while True:
-            valor = Prompt.ask(prompt_prod)
-            if cancelar(valor):
-                return None
-            if valor:
-                data['product'] = valor
-                break
-            elif is_update:
-                data['product'] = prod_actual
-                break
-            else:
-                print("El nombre es obligatorio.")
+        # --- Producto ---
+        product = ask_text("Nombre del producto", "product")
+        if product is None: return None
+        data["product"] = product
 
         # --- Precio ---
-        price_actual = str(current_data.get("price")) if is_update else ""
-        prompt_price = f"Precio [{price_actual}]" if is_update else "Precio"
-        while True:
-            valor = Prompt.ask(prompt_price)
-            if cancelar(valor):
-                return None
-            if valor:
-                try:
-                    data['price'] = float(valor)
-                    break
-                except ValueError:
-                    print("Precio inválido. Debe ser un número.")
-            elif is_update:
-                data['price'] = current_data.get('price')
-                break
-            else:
-                print("El precio es obligatorio.")
+        price = ask_float("Precio", "price")
+        if price is None: return None
+        data["price"] = price
 
-        # --- Descripción ---
-        desc_actual = current_data.get("description") if is_update else ""
-        prompt_desc = f"Descripción [{desc_actual}]" if is_update else "Descripción"
-        valor = Prompt.ask(prompt_desc)
-        if cancelar(valor):
+        # --- Descripción (opcional) ---
+        desc = ask_text("Descripción", "description", required=False)
+        if desc is None and not is_update:
+            desc = ""
+        if desc is None:
             return None
-        data['description'] = valor or desc_actual
+        data["description"] = desc
 
         # --- Tamaño (opcional) ---
-        tiene_tamano = Prompt.ask("¿Tiene tamaño? (s/n)", choices=["s", "n"])
-        if cancelar(tiene_tamano):
+        size_default = ""
+        if is_update and current_data:
+            size_default = current_data.get("size") or ""
+        # Usamos default="" para que Prompt.ask nunca devuelva None
+        has_size = Prompt.ask(
+            f"¿Tiene tamaño? (s/n){' ['+size_default+']' if size_default else ''}",
+            choices=["s","n"],
+            default="s" if size_default else "n"
+        ).strip()
+        if has_size.lower() == "volver":
             return None
 
-        if tiene_tamano == "s":
-            opciones = {"1": "Pequeño", "2": "Mediano", "3": "Grande"}
-            size_actual = current_data.get("size") if is_update else ""
-            prompt_size = "Seleccione tamaño:\n  1. Pequeño\n  2. Mediano\n  3. Grande\nIngrese número"
-            if is_update and size_actual:
-                prompt_size += f" (ENTER para mantener actual [{size_actual}])"
+        if has_size == "s":
+            opts = {"1": "Pequeño", "2": "Mediano", "3": "Grande"}
+            prompt = "Selecciona tamaño:\n" + "\n".join(f"{k}. {v}" for k,v in opts.items())
+            if size_default:
+                prompt += f" (ENTER para mantener [{size_default}])"
             while True:
-                valor = Prompt.ask(prompt_size)
-                if cancelar(valor):
+                # <-- aquí cambiamos default=None a default=""
+                raw = Prompt.ask(prompt, default="")  
+                choice = raw.strip()
+                if choice.lower() == "volver":
                     return None
-                if valor == "":
-                    data['size'] = size_actual if is_update else None
+                if choice == "" and size_default:
+                    data["size"] = size_default
                     break
-                elif valor in opciones:
-                    data['size'] = opciones[valor]
+                if choice in opts:
+                    data["size"] = opts[choice]
                     break
-                else:
-                    print("Opción inválida.")
+                self.console.print("[red]Opción inválida.[/]")
+
         else:
-            data['size'] = None
+            data["size"] = None
 
         return data
 

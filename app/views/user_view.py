@@ -4,6 +4,7 @@ from rich.table import Table
 from rich.prompt import Prompt
 from datetime import datetime
 from rich import box
+from typing import Optional
 
 # Importando recursos necesarios
 from core.database import Database
@@ -86,68 +87,90 @@ class UserView:
         
         self.console.print(table)
     
-    def get_user_data(self, for_update: bool = False):
-            """Obtiene datos de usuario para creación/actualización. Escriba 'volver' en cualquier campo para cancelar y regresar al menú principal."""
+    def get_user_data(self,for_update: bool = False,current_data: Optional[dict] = None) -> Optional[dict]:
+            """
+            Si for_update=True y current_data provisto, muestra los defaults.
+            Devuelve None si el usuario escribe 'volver'.
+            """
+            def ask(field_label: str, key: str, password: bool = False, optional: bool = False):
+                """
+                Prompt con default=current_data[key] cuando corresponda.
+                """
+                default_val = None
+                if for_update and current_data and key in current_data:
+                    default_val = str(current_data[key])
 
-            def pedir_campo(nombre, password=False, opcionales=False):
-                while True:
-                    if password:
-                        self.console.print(f"[cyan]{nombre}:[/]", end=" ")
-                        valor = pwinput.pwinput(prompt="", mask="*").strip()
-                    else:
-                        valor = Prompt.ask(f"[cyan]{nombre}[/]").strip()
-                    
-                    if valor.lower() == "volver":
-                        return "volver"
-                    if valor == "" and not opcionales:
-                        self.console.print("[red]Este campo no puede estar vacío.[/red]")
-                    else:
-                        return valor
+                if password:
+                    prompt_text = f"{field_label}"
+                    self.console.print(f"[cyan]{prompt_text}[/] ", end="")
+                    val = pwinput.pwinput(prompt="", mask="*").strip() or default_val or ""
+                else:
+                    prompt_text = f"{field_label}"
+                    if default_val:
+                        prompt_text += f" [{default_val}]"
+                    val = Prompt.ask(prompt_text, default=default_val).strip()
+
+                # Cancelación
+                if val.lower() == "volver":
+                    return None
+                if not optional and val == "":
+                    # Re-llamar a sí mismo hasta que no sea vacío
+                    self.console.print("[red]Este campo no puede estar vacío.[/]")
+                    return ask(field_label, key, password, optional)
+                return val
 
             data = {}
 
+            # Sólo solicitamos usuario/clave en modo creación
             if not for_update:
-                username = pedir_campo("Nombre de usuario")
-                if username == "volver": return None
+                username = ask("Nombre de usuario", "username", password=False)
+                if username is None: return None
+                password = ask("Contraseña", "password", password=True)
+                if password is None: return None
+                data["username"] = username
+                data["password"] = password
 
-                password = pedir_campo("Contraseña", password=True)
-                if password == "volver": return None
+            # Para actualización o creación, pedimos siempre estos campos, usando defaults si for_update
+            identification = ask("Número de identificación", "identification")
+            if identification is None: return None
 
-                data['username'] = username
-                data['password'] = password
+            name = ask("Nombre completo", "name")
+            if name is None: return None
 
-            identification = pedir_campo("Número de identificación")
-            if identification == "volver": return None
+            email = ask("Correo electrónico", "email")
+            if email is None: return None
 
-            name = pedir_campo("Nombre completo")
-            if name == "volver": return None
-
-            email = pedir_campo("Correo electrónico")
-            if email == "volver": return None
-
-            # Fecha de nacimiento validada
+            # Fecha de nacimiento
             while True:
-                birth_date_str = pedir_campo("Fecha de nacimiento (YYYY-MM-DD)")
-                if birth_date_str == "volver": return None
+                bd_str = ask("Fecha de nacimiento (YYYY-MM-DD)", "birth_date")
+                if bd_str is None: return None
                 try:
-                    birth_date = datetime.strptime(birth_date_str, "%Y-%m-%d")
-                    data['birth_date'] = birth_date.strftime("%Y-%m-%d")
+                    # permitimos default en modo update
+                    bd = datetime.strptime(bd_str, "%Y-%m-%d")
+                    data["birth_date"] = bd.strftime("%Y-%m-%d")
                     break
                 except ValueError:
-                    self.console.print("[red]Formato de fecha inválido. Use YYYY-MM-DD.[/red]")
+                    self.console.print("[red]Formato inválido. Use YYYY-MM-DD[/]")
 
-            is_admin_str = Prompt.ask(
-                "[cyan]¿Es administrador?[/] — escriba 'volver' para regresar al menú", 
-                choices=["s", "n"], 
-                default="n"
-            )
-            if is_admin_str.lower() == "volver": return None
-            is_admin = is_admin_str.lower() == "s"
+            # Sólo admins pueden setear is_admin
+            if for_update:
+                # En modo update, si current_data tiene is_admin, lo usamos como default
+                default_admin = current_data.get("is_admin", False) if current_data else False
+                is_admin_str = Prompt.ask(
+                    f"¿Es administrador? [s/n] [{ 's' if default_admin else 'n' }]",
+                    choices=["s", "n"],
+                    default="s" if default_admin else "n"
+                ).strip()
+                is_admin = is_admin_str.lower() == "s"
+            else:
+                is_admin = False
 
-            data['identification'] = identification
-            data['name'] = name
-            data['email'] = email
-            data['is_admin'] = is_admin
+            data.update({
+                "identification": identification,
+                "name": name,
+                "email": email,
+                "is_admin": is_admin
+            })
 
             return data
 
