@@ -52,6 +52,7 @@ dds_cine/
 │   │   ├── ticket_controller.py        # Controlador para operaciones relacionadas con entradas.
 │   │   ├── reservation_controller.py   # Controlador para operaciones relacionadas con reservas.
 │   │   ├── payment_controller.py       # Controlador para operaciones relacionadas con pagos.
+│   │   ├── report_controller.py        # Controlador para generacion de reportes del sistema
 │   │   ├── food_controller.py          # Controlador para operaciones relacionadas con el menú de comida.
 │   │   └── cinema_controller.py        # Controlador para operaciones relacionadas con las salas de cine y sillas.
 │
@@ -99,6 +100,7 @@ dds_cine/
 │   │   ├── ticket_view.py              # Vista para operaciones relacionadas con entradas.
 │   │   ├── reservation_view.py         # Vista para operaciones relacionadas con reservas.
 │   │   ├── payment_view.py             # Vista para operaciones relacionadas con pagos.
+│   │   ├── report_view.py              # Vista para generacion de reportes.
 │   │   ├── food_menu_view.py           # Vista para operaciones relacionadas con el menú de comida.
 │   │   └── availability_view.py        # Vista para consultar disponibilidad de sillas.
 │

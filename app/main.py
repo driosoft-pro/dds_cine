@@ -21,6 +21,7 @@ from controllers.ticket_controller import TicketController
 from controllers.reservation_controller import ReservationController
 from controllers.payment_controller import PaymentController
 from controllers.showtime_controller import ShowtimeController
+from controllers.report_controller import ReportController
 
 # Vistas
 from views.menu_view import MenuView
@@ -32,6 +33,7 @@ from views.reservation_view import ReservationView
 from views.payment_view import PaymentView
 from views.food_view import FoodView
 from views.availability_view import AvailabilityView
+from views.report_view import ReportView
 
 # Handlers
 from handlers.handle_auth import handle_auth
@@ -67,6 +69,7 @@ class DDSMovieApp:
         self.reservation_controller = ReservationController(self.db)
         self.payment_controller     = PaymentController(self.db)
         self.showtime_controller    = ShowtimeController(self.db)
+        self.report_controller      = ReportController(self.db)
         
         # Vistas
         self.menu_view        = MenuView()
@@ -78,6 +81,7 @@ class DDSMovieApp:
         self.payment_view     = PaymentView()
         self.food_view        = FoodView()
         self.availability_view= AvailabilityView()
+        self.report_view      = ReportView()
     
     def run(self):
         """Método principal que inicia la aplicación."""

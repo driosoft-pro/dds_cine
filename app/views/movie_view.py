@@ -2,7 +2,6 @@ from rich.console import Console
 from rich.table import Table
 from rich.panel import Panel
 from rich.prompt import Prompt
-from datetime import datetime
 from rich import box
 
 # Importando recursos necesarios
