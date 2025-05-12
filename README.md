@@ -196,4 +196,3 @@ Si deseas colaborar, puedes abrir issues o enviar pull requests.
 ✍️ **Colaborador 01:** **Danna Isabella Mosquera Mosquera**  
 ✍️ **Colaborador 02:** **Samuel Izquierdo Bonilla**  
 📅 **Fecha:** 2025  
-📧 **Contacto:** [deyton007@gmail.com](mailto:deyton007@gmail.com)
